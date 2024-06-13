@@ -1,8 +1,12 @@
 // test main.cpp
 #include <iostream>
-
-int main()
+#include <QtWidgets/QApplication>
+#include "UI/mainwidget.h"
+int main(int argc, char *argv[])
 {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    std::cout << "SRendererLab set up!" << std::endl;
+    QApplication a(argc, argv);
+    MainWidget m;
+    m.show();
+    return a.exec();
 }

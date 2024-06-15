@@ -49,7 +49,7 @@ void FrameBuffer::DrawPixels(const unsigned int x, const unsigned int y, const V
 {
     if (x < 0 || x >= m_Width || y < 0 || y >= m_Height)
         return;
-    int ind = y * m_Width + x;
+    int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
     m_ColorBuffer[ind * m_Channels + 0] = static_cast<unsigned char>(255.0f * color.r);
     m_ColorBuffer[ind * m_Channels + 1] = static_cast<unsigned char>(255.0f * color.g);
     m_ColorBuffer[ind * m_Channels + 2] = static_cast<unsigned char>(255.0f * color.b);

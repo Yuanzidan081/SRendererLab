@@ -16,6 +16,7 @@ set(BIN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)  # 指定可执行文件的输出�
 
 
 set(MATH_LIB libmath)
+set(RENDER_LIB librender)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_PATH})
 set(LIBRARY_OUTPUT_PATH ${LIB_PATH})
@@ -56,6 +57,7 @@ if (BUILD_GoogleTest)
     enable_testing()
     include(GoogleTest)
     add_subdirectory(test/mathTest)
+    add_subdirectory(test/modelTest)
 endif()
 
 

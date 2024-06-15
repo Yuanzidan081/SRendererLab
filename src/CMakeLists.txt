@@ -31,3 +31,5 @@ ${SRC_PATH} ${MATH_DIR} ${UI_DIR} ${CORE_DIR} ${RENDER_DIR})
 
 add_library(${MATH_LIB} STATIC ${MATH_FILES})
 target_include_directories(${MATH_LIB} PRIVATE ${MATH_DIR})
+add_library(${RENDER_LIB} STATIC "${RENDER_DIR}/Model.cpp" "${RENDER_DIR}/Model.h" ${MATH_FILES})
+target_include_directories(${RENDER_LIB} PRIVATE ${RENDER_DIR} ${MATH_DIR} ${SRC_PATH})

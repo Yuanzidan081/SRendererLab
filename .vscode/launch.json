@@ -5,6 +5,7 @@
             "name": "launch SRendererLab",
             "type": "cppvsdbg",
             "request": "launch",
+            //"program": "${workspaceFolder}/bin/Debug/modelTest.exe", //程序可执行文件的完整路径。
             "program": "${workspaceFolder}/bin/Debug/SRendererLab.exe", //程序可执行文件的完整路径。
             "args": [],
             "stopAtEntry": false,

@@ -3,6 +3,7 @@
 #include "Render/FrameBuffer.h"
 #include "Core/Base.h"
 #include "Math/Vec.h"
+#include "Render/Model.h"
 class Pipeline
 {
 
@@ -11,6 +12,7 @@ public:
     ~Pipeline();
 
     void DrawLine(int x1, int y1, int x2, int y2, Vec4f &color);
+    void DrawTriangle(Model &model, Vec4f &color);
     void ClearBuffers(const Vec4f &color);
     unsigned char *Output();
     void SwapBuffer();

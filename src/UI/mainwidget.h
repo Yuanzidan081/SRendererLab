@@ -16,6 +16,7 @@ class MainWidget : public QWidget
 public:
     explicit MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
+    void DisplayFps(int fps);
 
 private:
     Ui::MainWidget *ui;

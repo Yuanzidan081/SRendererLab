@@ -146,6 +146,8 @@ struct Vec<4, T>
 typedef Vec<2, float> Vec2f;
 typedef Vec<3, float> Vec3f;
 typedef Vec<4, float> Vec4f;
+typedef Vec<2, int> Vec2i;
+typedef Vec<3, int> Vec3i;
 
 /**************************************************/
 /******************2. 矢量运算**********************/
@@ -237,11 +239,31 @@ inline Vec<N, T> operator*(const Vec<N, T> &a, T x)
     return b;
 }
 
+// (a * x)
+template <size_t N, typename T1, typename T2>
+inline Vec<N, T1> operator*(const Vec<N, T1> &a, T2 x)
+{
+    Vec<N, T1> b;
+    for (size_t i = 0; i < N; ++i)
+        b[i] = a[i] * x;
+    return b;
+}
+
 // (x * a)
 template <size_t N, typename T>
 inline Vec<N, T> operator*(T x, const Vec<N, T> &a)
 {
     Vec<N, T> b;
+    for (size_t i = 0; i < N; ++i)
+        b[i] = a[i] * x;
+    return b;
+}
+
+// (x * a)
+template <size_t N, typename T1, typename T2>
+inline Vec<N, T1> operator*(T2 x, const Vec<N, T1> &a)
+{
+    Vec<N, T1> b;
     for (size_t i = 0; i < N; ++i)
         b[i] = a[i] * x;
     return b;
@@ -427,4 +449,18 @@ inline std::ostream &operator<<(std::ostream &out, const Vec<N, T> &v)
     return out;
 }
 
+inline Vec3f VecBaryCentric(Vec3f &A, Vec3f &B, Vec3f &C, Vec3f &P)
+{
+    /* P = (1-u-v)*A + u*B + v*C */
+    /* calculate [AB_x, AC_x, PA_x] and [AB_y, AC_y, PA_y] */
+    Vec3f vx(B.x - A.x, C.x - A.x, A.x - P.x);
+    Vec3f vy(B.y - A.y, C.y - A.y, A.y - P.y);
+    /*the cross of vx & vy should be k[u, v, 1]*/
+    Vec3f vCross(VecGetCrossProduct(vx, vy));
+    /* if AB_x / AC_x == AB_y / AC_y  then the cross(vx, vy).z = 0*/
+    if (std::abs(vCross.z) > 1e-2)
+        return Vec3f(1.0f - (vCross.x + vCross.y) / vCross.z, vCross.x / vCross.z, vCross.y / vCross.z);
+    /* 点在线上怎么办 */
+    return Vec3f(-1.0f, 1.0f, 1.0f);
+}
 #endif // VEC_H

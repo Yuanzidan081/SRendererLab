@@ -13,15 +13,15 @@ public:
 
     void loadObjModel(const char *filename);
     Vec3f GetVetices(int i) { return m_Vetices[i]; }
-    std::vector<int> GetFaces(int i) { return m_Faces[i]; }
+    std::vector<int> GetIndices(int i) { return m_Indices[i]; }
     int GetVerticesSize() { return m_VeticesSize; }
-    int GetFacesSize() { return m_FacesSize; }
+    int GetIndicesSize() { return m_IndicesSize; }
 
 private:
     std::vector<Vec3f> m_Vetices;
-    std::vector<std::vector<int>> m_Faces;
+    std::vector<std::vector<int>> m_Indices;
     int m_VeticesSize;
-    int m_FacesSize;
+    int m_IndicesSize;
 };
 
 #endif // MODEL_H

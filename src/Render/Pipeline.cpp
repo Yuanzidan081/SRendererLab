@@ -1,7 +1,8 @@
 #include "Pipeline.h"
 #include "UI/window.h"
 #include <cmath>
-Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height), m_backBuffer(nullptr), m_frontBuffer(nullptr)
+Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height),
+                                            m_backBuffer(nullptr), m_frontBuffer(nullptr), m_depthBuffer(nullptr)
 {
 }
 
@@ -11,75 +12,121 @@ Pipeline::~Pipeline()
         delete m_backBuffer;
     if (m_frontBuffer)
         delete m_frontBuffer;
+    if (m_depthBuffer)
+        delete m_depthBuffer;
     m_backBuffer = nullptr;
     m_frontBuffer = nullptr;
+    m_depthBuffer = nullptr;
 }
 
-void Pipeline::DrawLine(int x1, int y1, int x2, int y2, Vec4f &color)
+void Pipeline::DrawLine(Vec3i v1, Vec3i v2, Vec4f &color)
 {
-
-    /* naive version 1*/
-    /* for (float t = 0.0f; t < 1.0f; t += 0.01f)
-    {
-        int x = x1 * (1.0f - t) + x2 * t;
-        int y = y1 * (1.0f - t) + y2 * t;
-        m_backBuffer->DrawPixels(x, y, color);
-    } */
-    /* naive version 2*/
-    /* if (x1 > x2)
-    { // 当x0>x1时，调换两个点的坐标
-        std::swap(x1, x2);
-        std::swap(y1, y2);
-    }
-    for (int x = x1; x <= x2; ++x)
-    {
-        float t = (float)(x - x1) / (float)(x2 - x1);
-        int y = y1 * (1.0f - t) + y2 * t;
-        m_backBuffer->DrawPixels(x, y, color);
-    } */
     bool steep = false;
-    if (std::abs(x1 - x2) < std::abs(y1 - y2))
+    if (std::abs(v1.x - v2.x) < std::abs(v1.y - v2.y))
     {
-        std::swap(x1, y1);
-        std::swap(x2, y2);
+        std::swap(v1.x, v1.y);
+        std::swap(v2.x, v2.y);
         steep = true;
     }
-    if (x1 > x2)
+    if (v1.x > v2.x)
     { // 当x0>x1时，调换两个点的坐标
-        std::swap(x1, x2);
-        std::swap(y1, y2);
+        std::swap(v1, v2);
     }
-    for (int x = x1; x <= x2; ++x)
+    for (int x = v1.x; x <= v2.x; ++x)
     {
-        float t = (float)(x - x1) / (float)(x2 - x1);
-        int y = y1 * (1.0f - t) + y2 * t;
+        float t = (float)(x - v1.x) / (float)(v2.x - v1.x);
+        int y = v1.y * (1.0f - t) + v2.y * t;
         if (steep)
-            m_backBuffer->DrawPixels(y, x, color);
+            m_backBuffer->SetPixelColor(y, x, color);
         else
-            m_backBuffer->DrawPixels(x, y, color);
+            m_backBuffer->SetPixelColor(x, y, color);
     }
 }
 
-void Pipeline::DrawTriangle(Model &model, Vec4f &color)
+void Pipeline::DrawTriangle(Vec2i v1, Vec2i v2, Vec2i v3, Vec4f &color, const SRendererType &type)
 {
-    for (int i = 0; i < model.GetFacesSize(); ++i)
+    DrawTriangle(Vec3i(v2.x, v2.y, 0.0f), Vec3i(v3.x, v3.y, 0.0f), Vec3i(v1.x, v1.y, 0.0f), color, type);
+}
+void Pipeline::DrawTriangle(Vec3i v1, Vec3i v2, Vec3i v3, Vec4f &color, const SRendererType &type)
+{
+    if (type == SRendererType::SLine)
     {
-        std::vector<int> f = model.GetFaces(i);
         // std::cout << f[0] << " " << f[1] << " " << f[2] << std::endl;
-        for (int j = 0; j < 3; ++j)
+        DrawLine(v1, v2, color);
+        DrawLine(v2, v3, color);
+        DrawLine(v3, v1, color);
+    }
+    else if (type == SRendererType::SFill)
+    {
+        if (v1.y == v3.y && v1.y == v2.y)
+            return;
+        // v1.y <= v2.y <= v3.y
+        if (v1.y > v2.y)
+            std::swap(v1, v2);
+        if (v1.y > v3.y)
+            std::swap(v1, v3);
+        if (v2.y > v3.y)
+            std::swap(v2, v3);
+        int total_height = v3.y - v1.y;
+        for (int i = 0; i <= total_height; ++i)
         {
-            Vec3f v1 = model.GetVetices(f[j]);
-            Vec3f v2 = model.GetVetices(f[(j + 1) % 3]);
+            // 根据t1将三角形分为上下两部分
+            bool second_half = i > v2.y - v1.y || v2.y == v1.y;
+            int segment_height = second_half ? v3.y - v2.y : v2.y - v1.y;
+            float alpha = (float)i / total_height;
+            float beta = (float)(i - (second_half ? v2.y - v1.y : 0)) / segment_height;
+            Vec3i A = v1 + (v3 - v1) * alpha;
+            Vec3i B = second_half ? v2 + (v3 - v2) * beta : v1 + (v2 - v1) * beta;
+            if (A.x > B.x)
+                std::swap(A, B);
 
-            int x1 = (v1.x + 1.0f) * (float)m_Width / 2.0f;
-            int y1 = (v1.y + 1.0f) * (float)m_Height / 2.0f;
-            int x2 = (v2.x + 1.0f) * (float)m_Width / 2.0f;
-            int y2 = (v2.y + 1.0f) * (float)m_Height / 2.0f;
-            DrawLine(x1, y1, x2, y2, color);
+            // 下面这个是不对的，会有浮点数的误差，导致出现一些白点
+            // DrawLine(Vec3i(A.x, v1.y + i, 0), Vec3i(B.x, v1.y + i, 0), color);
+            for (int j = A.x; j <= B.x; ++j)
+                m_backBuffer->SetPixelColor(j, v1.y + i, color);
         }
     }
 }
+void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const SRendererType &type)
+{
+    for (int i = 0; i < model.GetIndicesSize(); ++i)
+    {
+        std::vector<int> ind = model.GetIndices(i);
+        Vec3i v1 = CoordWorld2Screen(model.GetVetices(ind[0]));
+        Vec3i v2 = CoordWorld2Screen(model.GetVetices(ind[1]));
+        Vec3i v3 = CoordWorld2Screen(model.GetVetices(ind[2]));
+        DrawTriangle(v1, v2, v3, color, type);
+    }
+}
 
+void Pipeline::DrawModelNormal(Model &model, Vec3f &lightDir, Vec4f &color, const SRendererType &type)
+{
+    for (int i = 0; i < model.GetIndicesSize(); ++i)
+    {
+        Vec3i screenCoord[3];
+        Vec3f worldCoord[3];
+        std::vector<int> ind = model.GetIndices(i);
+        for (int j = 0; j < 3; ++j)
+        {
+            screenCoord[j] = CoordWorld2Screen(model.GetVetices(ind[j]));
+            worldCoord[j] = model.GetVetices(ind[j]);
+        }
+        /* normal vector，这里obj定义的顶点顺序是逆时针 v1->v2->v3 */
+        Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
+        /* intensity */
+        float intensity = VecGetDotProduct(normal, lightDir);
+        if (intensity > 0)
+            DrawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], Vec4f(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), type);
+    }
+}
+Vec3i Pipeline::CoordWorld2Screen(Vec3f &v)
+{
+    Vec3i res;
+    res.x = (v.x + 1.0f) * m_Width / 2.0f;
+    res.y = (v.y + 1.0f) * m_Height / 2.0f;
+    res.z = v.z;
+    return res;
+}
 void Pipeline::ClearBuffers(const Vec4f &color)
 {
     m_backBuffer->ClearBuffers(color);

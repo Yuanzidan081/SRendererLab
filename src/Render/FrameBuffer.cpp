@@ -7,26 +7,21 @@ FrameBuffer::FrameBuffer(int width, int height) : m_Width(width), m_Height(heigh
 
 int &FrameBuffer::GetHeight()
 {
-    // TODO: 在此处插入 return 语句
     return m_Height;
 }
 
 int &FrameBuffer::GetWidth()
 {
-    // TODO: 在此处插入 return 语句
     return m_Width;
-    ;
 }
 
 int &FrameBuffer::GetChannels()
 {
-    // TODO: 在此处插入 return 语句
     return m_Channels;
 }
 
 unsigned char *FrameBuffer::GetColorBuffer()
 {
-    // TODO: 在此处插入 return 语句
     return m_ColorBuffer.data();
 }
 
@@ -45,7 +40,7 @@ void FrameBuffer::ClearBuffers(const Vec4f &color)
     }
 }
 
-void FrameBuffer::DrawPixels(const unsigned int x, const unsigned int y, const Vec4f &color)
+void FrameBuffer::SetPixelColor(const unsigned int x, const unsigned int y, const Vec4f &color)
 {
     if (x < 0 || x >= m_Width || y < 0 || y >= m_Height)
         return;

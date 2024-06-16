@@ -51,7 +51,6 @@ void Model::loadObjModel(const char *filename)
             Vec3f v;
             buf >> v.x >> v.y >> v.z;
             m_Vetices.push_back(v);
-            // std::cout << "v: " << v.x << " " << v.y << " " << v.z << " " << std::endl;
         }
         else if (!line.compare(0, 2, "f "))
         {
@@ -62,12 +61,11 @@ void Model::loadObjModel(const char *filename)
             {
                 f.push_back(vIdx - 1);
             }
-            m_Faces.push_back(f);
-            // std::cout << "f: " << f[0] << " " << f[1] << " " << f[2] << " " << std::endl;
+            m_Indices.push_back(f);
         }
     }
     m_VeticesSize = m_Vetices.size();
-    m_FacesSize = m_Faces.size();
+    m_IndicesSize = m_Indices.size();
     file.close();
     return;
 }

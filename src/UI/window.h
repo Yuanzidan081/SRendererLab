@@ -6,7 +6,7 @@
 
 #include "Core/Base.h"
 #include "Core/Application.h"
-
+#include <QTimer>
 namespace Ui
 {
     class Window;
@@ -21,14 +21,11 @@ public:
     ~Window();
     void paintEvent(QPaintEvent *event) override;
     void reveiveFrame(unsigned char *image);
+    void WinodwFpsUpdate();
     static int window_Width, window_Height;
     static Window *m_window;
 signals:
-    void windowResized();
-
-protected:
-    void showEvent(QShowEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
+    void fpsUpdate(int fps);
 
 private:
     Ui::Window *ui;
@@ -36,6 +33,7 @@ private:
 
     Application *m_app;
     QThread *m_appThread;
+    QTimer *timer;
 };
 
 #endif // WINDOW_H

@@ -15,7 +15,7 @@ public:
     int &GetChannels();
     unsigned char *GetColorBuffer();
     void ClearBuffers(const Vec4f &color);
-    void DrawPixels(const unsigned int x, const unsigned int y, const Vec4f &color);
+    void SetPixelColor(const unsigned int x, const unsigned int y, const Vec4f &color);
 
 private:
     int m_Width, m_Height, m_Channels;

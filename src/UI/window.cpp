@@ -12,11 +12,14 @@ Window::Window(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
+    timer = new QTimer();
+    connect(timer, &QTimer::timeout, this, &Window::WinodwFpsUpdate);
+
     m_app = new Application(width(), height());
     window_Width = width();
     window_Height = height();
     m_window = this;
-    m_appThread = new QThread;
+    m_appThread = new QThread(this);
 
     m_app->moveToThread(m_appThread);
     connect(m_appThread, &QThread::started, m_app, &Application::Run);
@@ -24,6 +27,7 @@ Window::Window(QWidget *parent) : QWidget(parent),
     connect(m_appThread, &QThread::finished, m_app, &QObject::deleteLater); // 线程结束以后将线程里的程序删除
 
     m_appThread->start();
+    timer->start(1000);
 }
 
 Window::~Window()
@@ -49,10 +53,6 @@ void Window::paintEvent(QPaintEvent *event)
     {
         QPainter painter(this);
         painter.drawImage(0, 0, *m_canvas);
-        // painter.setPen(Qt::gray);
-        // painter.setBrush(Qt::green);
-        // qDebug() << m_canvas[0];
-        // painter.drawRect(0, 0, width(), height());
     }
     QWidget::paintEvent(event);
 }
@@ -71,14 +71,9 @@ void Window::reveiveFrame(unsigned char *image)
     repaint();
 }
 
-void Window::showEvent(QShowEvent *event)
+void Window::WinodwFpsUpdate()
 {
-    QWidget::showEvent(event);
-    emit windowResized();
-}
-
-void Window::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-    emit windowResized();
+    int fps = m_app->GetFps();
+    m_app->ResetFps();
+    emit fpsUpdate(fps);
 }

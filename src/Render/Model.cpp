@@ -7,6 +7,22 @@ Model::Model(const char *filename)
     loadModel(filename);
 }
 
+Model::Model(const Model &model) : m_Vetices(model.GetFullVetices()), m_Indices(model.GetFullIndcies()),
+                                   m_VeticesSize(model.GetVerticesSize()), m_IndicesSize(model.GetIndicesSize())
+{
+}
+
+Model &Model::operator=(const Model &model)
+{
+    if (&model == this)
+        return *this;
+    m_Vetices = model.GetFullVetices();
+    m_Indices = model.GetFullIndcies();
+    m_VeticesSize = model.GetVerticesSize();
+    m_IndicesSize = model.GetIndicesSize();
+    return *this;
+}
+
 void Model::loadModel(const char *filename)
 {
     std::string fileStr = filename;

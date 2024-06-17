@@ -19,4 +19,27 @@ constexpr Scope<T> MakeScope(Args &&...args)
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
+template <typename T>
+T Max(T a, T b)
+{
+    return (a > b) ? a : b;
+}
+
+template <typename T, typename... Args>
+T Max(T first, Args... args)
+{
+    return Max(first, Max(args...));
+}
+
+template <typename T>
+T Min(T a, T b)
+{
+    return (a < b) ? a : b;
+}
+
+template <typename T, typename... Args>
+T Min(T first, Args... args)
+{
+    return Min(first, Min(args...));
+}
 #endif // BASE_H

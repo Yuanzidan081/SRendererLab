@@ -94,6 +94,10 @@ struct Vec<3, T>
         {
             T r, g, b;
         };
+        struct
+        {
+            T u, v, w;
+        };
         T vec[3];
     };
     inline Vec() : x(T()), y(T()), z(T()) {}
@@ -449,7 +453,7 @@ inline std::ostream &operator<<(std::ostream &out, const Vec<N, T> &v)
     return out;
 }
 
-inline Vec3f VecBaryCentric(Vec3f &A, Vec3f &B, Vec3f &C, Vec3f &P)
+inline Vec3f VecGetBaryCentric(Vec3f &A, Vec3f &B, Vec3f &C, Vec3f &P)
 {
     /* P = (1-u-v)*A + u*B + v*C */
     /* calculate [AB_x, AC_x, PA_x] and [AB_y, AC_y, PA_y] */
@@ -462,5 +466,45 @@ inline Vec3f VecBaryCentric(Vec3f &A, Vec3f &B, Vec3f &C, Vec3f &P)
         return Vec3f(1.0f - (vCross.x + vCross.y) / vCross.z, vCross.x / vCross.z, vCross.y / vCross.z);
     /* 点在线上怎么办 */
     return Vec3f(-1.0f, 1.0f, 1.0f);
+}
+
+template <size_t N, typename T>
+inline Vec<N, T> VecGetMax2(const Vec<N, T> &v1, const Vec<N, T> &v2)
+{
+    Vec<N, T> res;
+    for (size_t i = 0; i < N; ++i)
+    {
+        res[i] = (v1[i] > v2[i]) ? v1[i] : v2[i];
+    }
+    return res;
+}
+
+template <size_t N, typename T>
+inline Vec<N, T> VecGetMin2(const Vec<N, T> &v1, const Vec<N, T> &v2)
+{
+    Vec<N, T> res;
+    for (size_t i = 0; i < N; ++i)
+    {
+        res[i] = (v1[i] < v2[i]) ? v1[i] : v2[i];
+    }
+    return res;
+}
+
+template <size_t N, typename T>
+inline Vec<N, T> VecGetBetween(const Vec<N, T> &v, const Vec<N, T> &vmin, const Vec<N, T> &vmax)
+{
+    return VecGetMin2(VecGetMax2(v, vmin), vmax);
+}
+
+template <size_t N, typename T>
+inline Vec<N, T> VecGetClamp(const Vec<N, T> &v, T minx = 0, T maxx = 1)
+{
+    Vec<N, T> res;
+    for (size_t i = 0; i < N; ++i)
+    {
+        res[i] = (v[i] < minx) ? minx : (v[i] > maxx) ? maxx
+                                                      : v[i];
+    }
+    return res;
 }
 #endif // VEC_H

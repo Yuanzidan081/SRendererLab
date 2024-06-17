@@ -303,10 +303,64 @@ TEST(VecTest, FuncVecIsNearEqualDouble)
     EXPECT_TRUE(VecIsNearEqual(a3, b3, 0.00000001));
 }
 
+TEST(VecTest, FuncVecGetBaryCentric)
+{
+    Vec3f A(0, 0, 0);
+    Vec3f B(1, 0, 0);
+    Vec3f C(0, 1, 0);
+
+    Vec3f P(0.25, 0.25, 0);
+    Vec3f result = VecGetBaryCentric(A, B, C, P);
+    std::cout << result << std::endl;
+
+    Vec3f P2(0.1, 0.1, 0);
+    Vec3f result2 = VecGetBaryCentric(A, B, C, P2);
+    std::cout << result2 << std::endl;
+
+    Vec3f P3(0.3, 0.3, 0);
+    Vec3f result3 = VecGetBaryCentric(A, B, C, P3);
+    std::cout << result3 << std::endl;
+
+    Vec3f P4(0.2, 0.1, 0);
+    Vec3f result4 = VecGetBaryCentric(A, B, C, P4);
+    std::cout << result4 << std::endl;
+
+    Vec3f P5(0.4, 0.2, 0);
+    Vec3f result5 = VecGetBaryCentric(A, B, C, P5);
+    std::cout << result5 << std::endl;
+}
+
+TEST(VecTest, FuncVecRange)
+{
+    Vec<2, int> a1(1, 4);
+    Vec<2, int> b1(3, 2);
+    Vec<2, int> mmax(3, 4);
+    Vec<2, int> mmin(1, 2);
+    Vec<2, int> mclamp1(1, 2);
+    Vec<2, int> mclamp2(2, 4);
+    Vec<2, int> mclamp3(1, 4);
+    Vec<2, int> mBetween1(2, 4);
+    Vec<2, int> mBetween2(1, 4);
+    Vec<2, int> mBetween3(2, 2);
+    Vec<2, int> mBetween4(3, 2);
+    Vec<2, int> mBetween5(3, 1);
+
+    EXPECT_EQ(mmax, VecGetMax2(a1, b1));
+    EXPECT_EQ(mmin, VecGetMin2(a1, b1));
+    EXPECT_EQ(mclamp1, VecGetClamp(a1, -1, 2));
+    EXPECT_EQ(mclamp2, VecGetClamp(a1, 2, 6));
+    EXPECT_EQ(mclamp3, VecGetClamp(a1, 0, 6));
+    EXPECT_EQ(mBetween1, VecGetBetween(a1, Vec2i(2, 4), Vec2i(3, 8)));
+    EXPECT_EQ(mBetween2, VecGetBetween(a1, Vec2i(0, 0), Vec2i(6, 5)));
+    EXPECT_EQ(mBetween3, VecGetBetween(b1, Vec2i(0, 0), Vec2i(2, 3)));
+    EXPECT_EQ(mBetween4, VecGetBetween(b1, Vec2i(0, 0), Vec2i(6, 8)));
+    EXPECT_EQ(mBetween5, VecGetBetween(b1, Vec2i(0, 0), Vec2i(4, 1)));
+}
+
 /*           矩阵              */
 
 // a == b
-TEST(VecTest, OperatorMatEqualMat)
+TEST(MatTest, OperatorMatEqualMat)
 {
     Mat3x3f a1(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
     Mat3x3f b1(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
@@ -318,7 +372,7 @@ TEST(VecTest, OperatorMatEqualMat)
 }
 
 // a == b
-TEST(VecTest, OperatorMatUnEqualMat)
+TEST(MatTest, OperatorMatUnEqualMat)
 {
     Mat3x3f a1(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
     Mat3x3f b1(0.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);

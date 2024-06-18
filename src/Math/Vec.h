@@ -200,6 +200,16 @@ inline Vec<N, T> operator+(const Vec<N, T> &a, const Vec<N, T> &b)
     return c;
 }
 
+// (a + x)
+template <size_t N, typename T>
+inline Vec<N, T> operator+(const Vec<N, T> &a, T x)
+{
+    Vec<N, T> c;
+    for (size_t i = 0; i < N; ++i)
+        c[i] = a[i] + x;
+    return c;
+}
+
 // (a - b)
 template <size_t N, typename T>
 inline Vec<N, T> operator-(const Vec<N, T> &a, const Vec<N, T> &b)
@@ -304,6 +314,15 @@ inline Vec<N, T> &operator+=(Vec<N, T> &a, const Vec<N, T> &b)
 {
     for (size_t i = 0; i < N; ++i)
         a[i] += b[i];
+    return a;
+}
+
+// a += x
+template <size_t N, typename T>
+inline Vec<N, T> &operator+=(Vec<N, T> &a, T x)
+{
+    for (size_t i = 0; i < N; ++i)
+        a[i] += x;
     return a;
 }
 

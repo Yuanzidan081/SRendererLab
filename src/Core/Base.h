@@ -42,4 +42,10 @@ T Min(T first, Args... args)
 {
     return Min(first, Min(args...));
 }
+
+enum class SRendererType
+{
+    SLine = 0,
+    SFill
+};
 #endif // BASE_H

@@ -2,8 +2,11 @@
 #define PIPELINE_H
 #include "Render/FrameBuffer.h"
 #include "Render/Model.h"
+#include "Render/Camera.h"
+
 #include "Core/Base.h"
 #include "Math/Vec.h"
+#include "Math/Mat.h"
 #include "Algorithm/DrawLine.h"
 #include "Algorithm/DrawTriangle.h"
 class Pipeline
@@ -30,11 +33,16 @@ public:
     int GetHeight() { return m_Height; }
     void CheckResize();
 
+    void SetCameraPosZ(float z);
+
 private:
     int m_Width;
     int m_Height;
     FrameBuffer *m_backBuffer;
     FrameBuffer *m_frontBuffer;
+    Camera *m_camera;
+    Mat4x4f m_viewPortMat;
+    Mat4x4f m_projectionMat;
 };
 
 #endif // PIPELINE_H

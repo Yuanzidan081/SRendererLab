@@ -873,4 +873,35 @@ inline static Mat4x4f Mat4x4GetViewport(float left, float bottom, float width, f
     res.mat[1][3] = bottom + height * 0.5f; */
     return res; // z坐标不需要管，投影到屏幕上，这里认为视口的坐标原点位于左下角
 }
+
+inline static Mat4x4f Mat4x4GetViewportNaive(float left, float bottom, float width, float height, float depthScale)
+{
+    Mat4x4f res(
+        width * 0.5f, 0.0f, 0.0f, left + width * 0.5f,
+        0.0f, height * 0.5f, 0.0f, bottom + height * 0.5f,
+        0.0f, 0.0f, depthScale * 0.5f, depthScale * 0.5f,
+        0.0f, 0.0f, 0.0f, 1.0f);
+    return res;
+}
+
+inline static Mat4x4f Mat4x4GetProjectionNaive(float cameraZ)
+{
+    Mat4x4f res(
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, -1.0f / cameraZ, 1.0f);
+    return res;
+}
+
+inline static Vec4f Vec3fToVec4f(Vec3f &v)
+{
+    return Vec4f(v.x, v.y, v.z, 1.0f);
+}
+
+// Vec4f最后转换的是做了齐次除法的Vec3f
+inline static Vec3f Vec4fToVec3f(Vec4f &v)
+{
+    return Vec3f(v.x / v.w, v.y / v.w, v.z / v.w);
+}
 #endif

@@ -5,6 +5,12 @@
 Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height),
                                             m_backBuffer(nullptr), m_frontBuffer(nullptr)
 {
+    m_camera = new Camera;
+    m_camera->SetCameraPos(0.0f, 0.0f, 3.0f); // camera不需要反复地初始化写在这里
+    m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_Width, (float)m_Height, 255.0f);
+    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetCameraPos().z);
+    // std::cout << m_viewPortMat << std::endl;
+    std::cout << m_projectionMat << std::endl;
 }
 
 Pipeline::~Pipeline()
@@ -13,9 +19,12 @@ Pipeline::~Pipeline()
         delete m_backBuffer;
     if (m_frontBuffer)
         delete m_frontBuffer;
+    if (m_camera)
+        delete m_camera;
 
     m_backBuffer = nullptr;
     m_frontBuffer = nullptr;
+    m_camera = nullptr;
 }
 
 void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const SRendererType &type)
@@ -57,14 +66,14 @@ void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f
 {
     for (int i = 0; i < model.GetIndicesSize(); ++i)
     {
-        Vec3i screenCoord[3];
+        // Vec3i screenCoord[3];
         Vec3f screenCoordf[3];
         Vec3f worldCoord[3];
         std::vector<int> ind = model.GetIndices(i);
         for (int j = 0; j < 3; ++j)
         {
-            screenCoord[j] = CoordWorldFloatToScreenInt(model.GetVetices(ind[j]));
-            screenCoordf[j] = CoordWorldFloatToScreenFloat(model.GetVetices(ind[j]));
+            // screenCoord[j] = CoordWorldFloatToScreenInt(model.GetVetices(ind[j]));
+            screenCoordf[j] = Vec4fToVec3f(m_viewPortMat * m_projectionMat * Vec3fToVec4f(model.GetVetices(ind[j])));
             worldCoord[j] = model.GetVetices(ind[j]);
         }
         // std::cout << "w0: " << worldCoord[0] << "w1: " << worldCoord[1] << "w2: " << worldCoord[2] << std::endl;
@@ -131,6 +140,13 @@ void Pipeline::CheckResize()
     {
         m_Width = Window::m_window->width();
         m_Height = Window::m_window->height();
+        m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_Width, (float)m_Height, 255.0f);
         Init();
     }
+}
+
+void Pipeline::SetCameraPosZ(float z)
+{
+    m_camera->SetCameraPosZ(z);
+    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetCameraPos().z);
 }

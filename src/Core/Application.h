@@ -16,6 +16,7 @@ public:
     int GetWidth() { return m_pipeline->GetHeight(); }
     int GetFps() { return m_fps; }
     void ResetFps() { m_fps = 0; }
+    static float s_cameraZ;
 
 signals:
     void frameReady(unsigned char *image);

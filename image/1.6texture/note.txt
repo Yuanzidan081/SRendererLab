@@ -1,0 +1,8 @@
+texture1是错误的结果，因为把alpha通道也给同时乘了系数intensity
+Vec4f color = intensity * texture.SampleTexture(texel);
+
+更改：只对r,g,b三个通道乘系数intensity即可：
+Vec4f color = texture.SampleTexture(texel);
+color.r *= intensity;
+color.g *= intensity;
+color.b *= intensity;

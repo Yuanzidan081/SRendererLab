@@ -67,6 +67,7 @@ void Window::reveiveFrame(unsigned char *image)
     if (m_canvas)
         delete m_canvas;
     m_canvas = new QImage(image, width(), height(), QImage::Format_RGBA8888);
+    //m_canvas = new QImage(image, width(), height(), QImage::Format_RGB888);
     // qDebug() << width() << " " << height();
     repaint();
 }

@@ -7,8 +7,11 @@ Model::Model(const char *filename)
     loadModel(filename);
 }
 
-Model::Model(const Model &model) : m_Vetices(model.GetFullVetices()), m_Indices(model.GetFullIndcies()),
-                                   m_VeticesSize(model.GetVerticesSize()), m_IndicesSize(model.GetIndicesSize())
+Model::Model(const Model &model) : m_Vertices(model.GetFullVetices()), m_VIndices(model.GetFullVIndcies()),
+                                   m_UVCoords(model.GetFullUVCoords()), m_UVIndices(model.GetFullUVIndices()),
+                                   m_VerticesSize(model.GetVerticesSize()), m_VIndicesSize(model.GetVIndicesSize()),
+                                   m_UVCoordsSize(model.GetUVCoordsSize()), m_UVIndicesSize(model.GetUVIndicesSize())
+
 {
 }
 
@@ -16,10 +19,10 @@ Model &Model::operator=(const Model &model)
 {
     if (&model == this)
         return *this;
-    m_Vetices = model.GetFullVetices();
-    m_Indices = model.GetFullIndcies();
-    m_VeticesSize = model.GetVerticesSize();
-    m_IndicesSize = model.GetIndicesSize();
+    m_Vertices = model.GetFullVetices();
+    m_VIndices = model.GetFullVIndcies();
+    m_VerticesSize = model.GetVerticesSize();
+    m_VIndicesSize = model.GetVIndicesSize();
     return *this;
 }
 
@@ -66,22 +69,37 @@ void Model::loadObjModel(const char *filename)
             buf >> trash; // trash: filter "v"
             Vec3f v;
             buf >> v.x >> v.y >> v.z;
-            m_Vetices.push_back(v);
+            m_Vertices.push_back(v);
+        }
+        else if (!line.compare(0, 3, "vt "))
+        {
+            buf >> trash >> trash; // trash: filter "vt"
+            Vec2f vt;
+            buf >> vt.x >> vt.y; // the vt is the representation of 0.588, 0.975, 0.000
+            m_UVCoords.push_back(vt);
         }
         else if (!line.compare(0, 2, "f "))
         {
             buf >> trash; // trash: filter "f"
-            std::vector<int> f;
-            int itrash, vIdx; // itrash: filter "f"
-            while (buf >> vIdx >> trash >> itrash >> trash >> itrash)
+            std::vector<int> vIdxVec;
+            std::vector<int> uvIndVec;
+            int itrash, vIdx, uvIdx; // itrash: filter "f"
+
+            while (buf >> vIdx >> trash >> uvIdx >> trash >> itrash)
             {
-                f.push_back(vIdx - 1);
+
+                vIdxVec.push_back(vIdx - 1);
+
+                uvIndVec.push_back(uvIdx - 1);
             }
-            m_Indices.push_back(f);
+            m_VIndices.push_back(vIdxVec);
+            m_UVIndices.push_back(uvIndVec);
         }
     }
-    m_VeticesSize = m_Vetices.size();
-    m_IndicesSize = m_Indices.size();
+    m_VerticesSize = m_Vertices.size();
+    m_VIndicesSize = m_VIndices.size();
+    m_UVCoordsSize = m_UVCoords.size();
+    m_UVIndicesSize = m_UVIndices.size();
     file.close();
     return;
 }

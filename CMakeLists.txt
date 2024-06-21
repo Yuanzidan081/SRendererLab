@@ -8,12 +8,15 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-
+if (Win32)
+    add_compile_options("$<$<CONFIG:>: /utf-8>")
+endif()
 
 set(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib) # 指定库的输出路径
 set(SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src) # 指定源文件的输出路径
 set(BIN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)  # 指定可执行文件的输出路径
-
+set(DEP_BASE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/dep) # 第三方库的路径
+set(DEP_PATH ${DEP_BASE_PATH}/stb)
 
 set(MATH_LIB libmath)
 set(RENDER_LIB librender)
@@ -22,13 +25,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_PATH})
 set(LIBRARY_OUTPUT_PATH ${LIB_PATH})
 
 
+
+# 添加库的依赖
+#set(DEP_ALL_PATH ${DEP_STB_LIB_PATH})
+add_subdirectory(dep)
+
 set(BUILD_SRENDERERLAB ON)
-
-
-message("cmake inclue path is ${CMAKE_INCLUDE_PATH}")
 if (BUILD_SRENDERERLAB)
     add_subdirectory(src)
 endif()
+
+
 
 
 #  ---------------------------- GoogleTest配置 ------------------------------- 

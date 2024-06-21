@@ -1,15 +1,16 @@
+project(mathTest)
 add_executable(
-  mathTest
+  ${PROJECT_NAME}
   mathTest.cpp
 )
-target_include_directories(mathTest PRIVATE ${SRC_PATH})
-target_link_directories(mathTest PRIVATE ${LIB_PATH})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_PATH})
+target_link_directories(${PROJECT_NAME} PRIVATE ${LIB_PATH})
 target_link_libraries(
-  mathTest
+    ${PROJECT_NAME}
   GTest::gtest_main
   ${MATH_LIB}
 )
 
-gtest_discover_tests(mathTest)
+gtest_discover_tests(${PROJECT_NAME})
 
 

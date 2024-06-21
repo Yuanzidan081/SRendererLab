@@ -1,7 +1,7 @@
 #include "Application.h"
 #include <QDebug>
 #include "Render/Model.h"
-
+#include "Render/Texture2D.h"
 float Application::s_cameraZ = 3.0f;
 Application::Application(int width, int height) : m_stopped(false), m_fps(0)
 {
@@ -23,7 +23,7 @@ void Application::Run()
     m_pipeline->Init();
     Model model("obj/head/african_head.obj");
     // Model model("obj/cube/cube.obj");
-
+    Texture2D texture1("obj/head/african_head_diffuse.tga");
     m_fps = 0;
     while (!m_stopped)
     {
@@ -32,7 +32,8 @@ void Application::Run()
         m_pipeline->ClearBuffers(Vec4f(1.0f, 1.0f, 1.0f, 1.0f));
         // m_pipeline->DrawModelPureColor(model, Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
         //  m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f), SRendererType::SFill);
-        m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
+        // m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
+        m_pipeline->DrawModelWithTexture(model, Vec3f(0.0f, 0.0f, 1.0f), texture1);
         ++m_fps;
         m_pipeline->SwapBuffer();
         emit frameReady(m_pipeline->Output());

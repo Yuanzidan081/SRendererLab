@@ -18,6 +18,14 @@ file(GLOB CORE_FILES "${CORE_DIR}/*.cpp" "${CORE_DIR}/*.h")
 file(GLOB RENDER_FILES "${RENDER_DIR}/*.cpp" "${RENDER_DIR}/*.h")
 file(GLOB ALGORITHM_FILES "${ALGORITHM_DIR}/*.cpp" "${ALGORITHM_DIR}/*.h")
 
+set(SRC_PATH
+${SRC_PATH} 
+${MATH_DIR} 
+${UI_DIR} 
+${CORE_DIR} 
+${RENDER_DIR} 
+${ALGORITHM_DIR}
+)
 
 set(SRC_FILES
 main.cpp
@@ -29,11 +37,16 @@ ${ALGORITHM_FILES}
 )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets stb_lib)
 target_include_directories(${PROJECT_NAME} PRIVATE 
-${SRC_PATH} ${MATH_DIR} ${UI_DIR} ${CORE_DIR} ${RENDER_DIR} ${ALGORITHM_DIR})
+${SRC_PATH} ${DEP_PATH})
 
 add_library(${MATH_LIB} STATIC ${MATH_FILES})
-target_include_directories(${MATH_LIB} PRIVATE ${MATH_DIR})
-add_library(${RENDER_LIB} STATIC "${RENDER_DIR}/Model.cpp" "${RENDER_DIR}/Model.h" ${MATH_FILES})
-target_include_directories(${RENDER_LIB} PRIVATE ${RENDER_DIR} ${MATH_DIR} ${SRC_PATH} ${ALGORITHM_DIR})
+target_include_directories(${MATH_LIB} PUBLIC ${MATH_DIR})
+add_library(${RENDER_LIB} STATIC 
+"${RENDER_DIR}/Model.cpp" 
+"${RENDER_DIR}/Model.h" 
+"${RENDER_DIR}/Texture2D.h" 
+"${RENDER_DIR}/Texture2D.cpp" 
+${MATH_FILES})
+target_include_directories(${RENDER_LIB} PUBLIC ${SRC_PATH} ${DEP_PATH})

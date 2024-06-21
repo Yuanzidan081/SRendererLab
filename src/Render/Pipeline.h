@@ -3,6 +3,7 @@
 #include "Render/FrameBuffer.h"
 #include "Render/Model.h"
 #include "Render/Camera.h"
+#include "Render/Texture2D.h"
 
 #include "Core/Base.h"
 #include "Math/Vec.h"
@@ -23,6 +24,8 @@ public:
     */
     void DrawModelNormalWithoutDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const SRendererType &type = SRendererType::SFill);
     void DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const SRendererType &type = SRendererType::SFill);
+    void DrawModelWithTexture(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type = SRendererType::SFill);
+
     Vec3i CoordWorldFloatToScreenInt(Vec3f &v);
     Vec3f CoordWorldFloatToScreenFloat(Vec3f &v);
     void ClearBuffers(const Vec4f &color);

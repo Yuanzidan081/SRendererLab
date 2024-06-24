@@ -3,23 +3,33 @@
 #include "Math/Vec.h"
 #include <vector>
 #include <string>
+using std::vector;
+
 /*
 Vertex:
     Vec3f GetVetices(int i);
-    const std::vector<Vec3f> &GetFullVetices() const;
-    std::vector<Vec3f> &GetFullVetices();
+    const vector<Vec3f> &GetFullVetices() const;
+    vector<Vec3f> &GetFullVetices();
 VIndices:
-    std::vector<int> GetVIndices(int i);
-    const std::vector<std::vector<int>> &GetFullVIndcies() const;
-    std::vector<std::vector<int>> &GetFullVIndcies();
+    vector<int> GetVIndices(int i);
+    const vector<vector<int>> &GetFullVIndcies() const;
+    vector<vector<int>> &GetFullVIndcies();
 UVCoords:
     Vec2f GetUVCoords(int i);
-    const std::vector<Vec2f> &GetFullUVCoords() const;
-    std::vector<Vec2f> &GetFullUVCoords();
+    const vector<Vec2f> &GetFullUVCoords() const;
+    vector<Vec2f> &GetFullUVCoords();
 UVIndices
-    std::vector<int> GetUVIndices(int i);
-    const std::vector<std::vector<int>> &GetFullUVIndices() const;
-    std::vector<std::vector<int>> &GetFullUVIndices();
+    vector<int> GetUVIndices(int i);
+    const vector<vector<int>> &GetFullUVIndices() const;
+    vector<vector<int>> &GetFullUVIndices();
+Normals
+    Vec3f GetNormals(int i);
+    const vector<Vec3f> &GetFullNormals() const;
+    vector<Vec3f> &GetFullNormals();
+NormalIndices
+    vector<int> GetNormalIndices(int i);
+    const vector<vector>> &GetFullNormalIndices() const;
+    vector<vector<int>> &GetFullNormalIndices();
 
 VerticesSize:
     const int GetVerticesSize() const;
@@ -33,6 +43,12 @@ UVCoordsSize:
 UVIndicesSize:
     const int GetUVIndicesSize() const;
     int GetUVIndicesSize();
+NormalsSize:
+    const int GetNormalsSize() const;
+    int GetNormalsSize();
+NormalsIndicesSize
+    const int GetNormalsIndicesSize() const;
+    int GetNormalsIndicesSize();
 */
 
 class Model
@@ -58,21 +74,21 @@ public:
         return m_Vertices[i];
     }
 
-    const std::vector<Vec3f> &GetFullVetices() const { return m_Vertices; }
-    std::vector<Vec3f> &GetFullVetices() { return m_Vertices; }
+    const vector<Vec3f> &GetFullVetices() const { return m_Vertices; }
+    vector<Vec3f> &GetFullVetices() { return m_Vertices; }
 
     // VIndices
-    std::vector<int> GetVIndices(int i)
+    vector<int> GetVIndices(int i)
     {
         if (i < 0 && i >= m_VIndices.size())
         {
             std::cout << "VIndices: i is out of range!";
-            return std::vector<int>({0, 0, 0});
+            return vector<int>({0, 0, 0});
         }
         return m_VIndices[i];
     }
-    const std::vector<std::vector<int>> &GetFullVIndcies() const { return m_VIndices; }
-    std::vector<std::vector<int>> &GetFullVIndcies() { return m_VIndices; }
+    const vector<vector<int>> &GetFullVIndcies() const { return m_VIndices; }
+    vector<vector<int>> &GetFullVIndcies() { return m_VIndices; }
 
     // UVCoords
     Vec2f GetUVCoords(int i)
@@ -84,22 +100,47 @@ public:
         }
         return m_UVCoords[i];
     }
-    const std::vector<Vec2f> &GetFullUVCoords() const { return m_UVCoords; }
-    std::vector<Vec2f> &GetFullUVCoords() { return m_UVCoords; }
+    const vector<Vec2f> &GetFullUVCoords() const { return m_UVCoords; }
+    vector<Vec2f> &GetFullUVCoords() { return m_UVCoords; }
 
     // UVIndices
-    std::vector<int> GetUVIndices(int i)
+    vector<int> GetUVIndices(int i)
     {
         if (i < 0 && i >= m_UVIndices.size())
         {
             std::cout << "UVIndices: i is out of range!";
-            return std::vector<int>({0, 0});
+            return vector<int>({0, 0});
         }
         return m_UVIndices[i];
     }
-    const std::vector<std::vector<int>> &GetFullUVIndices() const { return m_UVIndices; }
-    std::vector<std::vector<int>> &GetFullUVIndices() { return m_UVIndices; }
+    const vector<vector<int>> &GetFullUVIndices() const { return m_UVIndices; }
+    vector<vector<int>> &GetFullUVIndices() { return m_UVIndices; }
 
+    // Normals
+    Vec3f GetNormals(int i)
+    {
+        if (i < 0 && i >= m_Normals.size())
+        {
+            std::cout << "Normals: i is out of range!";
+            return Vec3f({0.0f, 0.0f, 1.0f});
+        }
+        return m_Normals[i];
+    }
+    const vector<Vec3f> &GetFullNormals() const { return m_Normals; }
+    vector<Vec3f> &GetFullNormals() { return m_Normals; }
+
+    // NormalIndices
+    vector<int> GetNormalIndices(int i)
+    {
+        if (i < 0 && i >= m_NormalIndices.size())
+        {
+            std::cout << "NormalIndices: i is out of range!";
+            return vector<int>({0, 0, 1});
+        }
+        return m_NormalIndices[i];
+    }
+    const vector<vector<int>> &GetFullNormalIndices() const { return m_NormalIndices; }
+    vector<vector<int>> &GetFullNormalIndices() { return m_NormalIndices; }
     // VerticesSize
     const int GetVerticesSize() const { return m_VerticesSize; }
     int GetVerticesSize() { return m_VerticesSize; }
@@ -116,15 +157,26 @@ public:
     const int GetUVIndicesSize() const { return m_UVIndicesSize; }
     int GetUVIndicesSize() { return m_UVIndicesSize; }
 
+    // NormalsSize:
+    const int GetNormalsSize() const {return m_NormalsSize; }
+    int GetNormalsSize(){return m_NormalsSize; }
+    // NormalsIndicesSize
+    const int GetNormalsIndicesSize() const{return m_NormalsIndicesSize;}
+    int GetNormalsIndicesSize(){return m_NormalsIndicesSize;}
+
 private:
-    std::vector<Vec3f> m_Vertices;
-    std::vector<std::vector<int>> m_VIndices;
-    std::vector<Vec2f> m_UVCoords;
-    std::vector<std::vector<int>> m_UVIndices;
+    vector<Vec3f> m_Vertices;
+    vector<vector<int>> m_VIndices;
+    vector<Vec2f> m_UVCoords;
+    vector<vector<int>> m_UVIndices;
+    vector<Vec3f> m_Normals;
+    vector<vector<int>> m_NormalIndices;
     int m_VerticesSize;
     int m_VIndicesSize;
     int m_UVCoordsSize;
     int m_UVIndicesSize;
+    int m_NormalsSize;
+    int m_NormalsIndicesSize;
 };
 
 #endif // MODEL_H

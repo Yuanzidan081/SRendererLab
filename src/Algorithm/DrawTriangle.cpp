@@ -1,7 +1,8 @@
 #include "DrawTriangle.h"
 #include "Render/FrameBuffer.h"
-
+#include "UI/window.h"
 #include "DrawLine.h"
+
 void DrawTriangleWithoutDepthInfo(Vec2i v1, Vec2i v2, Vec2i v3, const Vec4f &color, const void *buffer, const SRendererType &type)
 {
     DrawTriangleWithoutDepthInfo(Vec3i(v2.x, v2.y, 0), Vec3i(v3.x, v3.y, 0), Vec3i(v1.x, v1.y, 0), color, buffer, type);
@@ -192,6 +193,8 @@ void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float intensity, Vec2f *texC
     {
         for (int y = boxMin.y; y <= boxMax.y; ++y)
         {
+            if (x >= Window::window_Width || y >= Window::window_Height || x < 0 || y < 0)
+                continue;
             Vec3f bcScreen = VecGetBaryCentric(v[0], v[1], v[2], Vec3f(x + 0.5f, y + 0.5f, 0.0f));
             // std::cout << "bcScreen:" << bcScreen << " v1:" << v1 << " v2:" << v2 << " v3:" << v3 << " P:" << P << std::endl;
             if (bcScreen.x < 0 || bcScreen.y < 0 || bcScreen.z < 0)
@@ -207,6 +210,51 @@ void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float intensity, Vec2f *texC
                 color.r *= intensity;
                 color.g *= intensity;
                 color.b *= intensity;
+                // std::cout << P << std::endl;
+                ((FrameBuffer *)buffer)->SetPixelDepth(x, y, zt);
+                ((FrameBuffer *)buffer)->SetPixelColor(x, y, color);
+            }
+        }
+    }
+}
+
+// use the vertices normals
+void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float *intensity, Vec2f *texCoords, const Texture2D &texture, const void *buffer)
+{
+    // version 2
+    Vec2i boxMax;
+    Vec2i boxMin;
+    // find the box that the triangle is inside
+    boxMax.x = Max(v[0].x, v[1].x, v[2].x);
+    boxMax.y = Max(v[0].y, v[1].y, v[2].y);
+    boxMin.x = Min(v[0].x, v[1].x, v[2].x);
+    boxMin.y = Min(v[0].y, v[1].y, v[2].y);
+    /* boxMax = VecGetBetween(boxMax, Vec2i(0, 0), Vec2i(m_Width - 1, m_Height - 1));
+    boxMin = VecGetBetween(boxMin, Vec2i(0, 0), Vec2i(m_Width - 1, m_Height - 1)); */
+
+    for (int x = boxMin.x; x <= boxMax.x; ++x)
+    {
+        for (int y = boxMin.y; y <= boxMax.y; ++y)
+        {
+            // std::cout << x << " " << y << std::endl;
+            if (x >= Window::window_Width || y >= Window::window_Height || x < 0 || y < 0)
+                continue;
+            Vec3f bcScreen = VecGetBaryCentric(v[0], v[1], v[2], Vec3f(x + 0.5f, y + 0.5f, 0.0f));
+            // std::cout << "bcScreen:" << bcScreen << " v1:" << v1 << " v2:" << v2 << " v3:" << v3 << " P:" << P << std::endl;
+            if (bcScreen.x < 0 || bcScreen.y < 0 || bcScreen.z < 0)
+                continue;
+            // float z = bcScreen.u * v1.z + bcScreen.v * v2.z + bcScreen.w * v3.z;
+            float zt = 1.0f / (bcScreen.u / v[0].z + bcScreen.v / v[1].z + bcScreen.w / v[2].z);
+            Vec2f texel = (bcScreen.u * texCoords[0] / v[0].z + bcScreen.v * texCoords[1] / v[1].z + bcScreen.w * texCoords[2] / v[2].z) * zt;
+            // Vec2f texel = bcScreen.u * texCoords[0] + bcScreen.v * texCoords[1] + bcScreen.w * texCoords[2];
+            float intensityP = (bcScreen.u * intensity[0] / v[0].z + bcScreen.v * intensity[1] / v[1].z + bcScreen.w * intensity[2] / v[2].z) * zt;
+            intensityP = (intensityP > 1.f ? 1.f : (intensityP < 0.f ? 0.f : intensityP));
+            if (((FrameBuffer *)buffer)->GetPixelDepth(x, y) < zt)
+            {
+                Vec4f color = texture.SampleTexture(texel);
+                color.r *= intensityP;
+                color.g *= intensityP;
+                color.b *= intensityP;
                 // std::cout << P << std::endl;
                 ((FrameBuffer *)buffer)->SetPixelDepth(x, y, zt);
                 ((FrameBuffer *)buffer)->SetPixelColor(x, y, color);

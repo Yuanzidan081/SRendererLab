@@ -2,13 +2,15 @@
 #include "UI/window.h"
 #include <cmath>
 #include <iostream>
+const int useviewMat = 1;
 Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height),
                                             m_backBuffer(nullptr), m_frontBuffer(nullptr)
 {
-    m_camera = new Camera;
-    m_camera->SetCameraPos(0.0f, 0.0f, 3.0f); // camera不需要反复地初始化写在这里
+    m_camera = new Camera(Vec3f({2.0f, 1.0f, 3.0f}));
+    // m_camera->SetCameraPos({2.0f, 1.0f, 3.0f}); // camera不需要反复地初始化写在这里
     m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_Width, (float)m_Height, 255.0f);
     m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetCameraPos().z);
+    m_viewMat = m_camera->GetCameraLookAt();
     // std::cout << m_viewPortMat << std::endl;
     // std::cout << m_projectionMat << std::endl;
 }
@@ -90,28 +92,68 @@ void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f
 }
 void Pipeline::DrawModelWithTexture(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type)
 {
-
-    for (int i = 0; i < model.GetVIndicesSize(); ++i)
+    if (useviewMat == 0)
     {
-        Vec3f screenCoordf[3];
-        Vec3f worldCoord[3];
-        Vec2f texCoords[3];
-        std::vector<int> ind = model.GetVIndices(i);
-        std::vector<int> tind = model.GetUVIndices(i);
-        for (int j = 0; j < 3; ++j)
+        for (int i = 0; i < model.GetVIndicesSize(); ++i)
         {
-            screenCoordf[j] = Vec4fToVec3f(m_viewPortMat * m_projectionMat * Vec3fToVec4f(model.GetVetices(ind[j])));
-            worldCoord[j] = model.GetVetices(ind[j]);
-            texCoords[j] = model.GetUVCoords(tind[j]);
-        }
+            Vec3f screenCoordf[3];
+            Vec3f worldCoord[3];
+            Vec2f texCoords[3];
+            // float intensity[3];
+            std::vector<int> ind = model.GetVIndices(i);
+            std::vector<int> tind = model.GetUVIndices(i);
+            for (int j = 0; j < 3; ++j)
+            {
+                screenCoordf[j] = Vec4fToVec3f(m_viewPortMat * m_projectionMat * Vec3fToVec4f(model.GetVetices(ind[j])));
+                worldCoord[j] = model.GetVetices(ind[j]);
+                texCoords[j] = model.GetUVCoords(tind[j]);
+                // intensity[j] = VecGetDotProduct(model.Get, lightDir);
+            }
 
-        /* normal vector，这里obj定义的顶点顺序是逆时针 v1->v2->v3 */
-        Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
-        /* intensity */
-        float intensity = VecGetDotProduct(normal, lightDir);
-        if (intensity > 0)
+            /*normal vector，这里obj定义的顶点顺序是逆时针 v1->v2->v3 */
+            Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
+            /* intensity */
+            float intensity = VecGetDotProduct(normal, lightDir);
+            if (intensity > 0)
+            {
+                // DrawTriangleWithDepthInfo(screenCoord[0], screenCoord[1], screenCoord[2], Vec4f(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_backBuffer, type);
+                DrawTriangleFillModeWithDepthTexture(screenCoordf, intensity, texCoords, texture, (void *)m_backBuffer);
+            }
+            // DrawTriangleFillModeWithDepthTexture(screenCoordf, intensity, texCoords, texture, (void *)m_backBuffer);
+        }
+    }
+    else if (useviewMat == 1)
+    {
+        /*         std::cout << "---------" << std::endl;
+                std::cout << m_viewMat << std::endl;
+                std::cout << m_projectionMat << std::endl;
+                std::cout << m_viewPortMat << std::endl; */
+        for (int i = 0; i < model.GetVIndicesSize(); ++i)
         {
-            // DrawTriangleWithDepthInfo(screenCoord[0], screenCoord[1], screenCoord[2], Vec4f(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_backBuffer, type);
+            Vec3f screenCoordf[3];
+            Vec3f worldCoord[3];
+            Vec2f texCoords[3];
+            float intensity[3];
+            std::vector<int> ind = model.GetVIndices(i);
+            std::vector<int> tind = model.GetUVIndices(i);
+
+            for (int j = 0; j < 3; ++j)
+            {
+                screenCoordf[j] = Vec4fToVec3f(m_viewPortMat * m_projectionMat * m_viewMat * Vec3fToVec4f(model.GetVetices(ind[j])));
+                worldCoord[j] = model.GetVetices(ind[j]);
+                texCoords[j] = model.GetUVCoords(tind[j]);
+                intensity[j] = VecGetDotProduct(model.GetNormals(ind[j]), lightDir);
+            }
+
+            /*normal vector，这里obj定义的顶点顺序是逆时针 v1->v2->v3 */
+            // Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
+            /* intensity */
+            // float intensity = VecGetDotProduct(normal, lightDir);
+            // if (intensity > 0)
+            // {
+            //     // DrawTriangleWithDepthInfo(screenCoord[0], screenCoord[1], screenCoord[2], Vec4f(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_backBuffer, type);
+            //     DrawTriangleFillModeWithDepthTexture(screenCoordf, intensity, texCoords, texture, (void *)m_backBuffer);
+            // }
             DrawTriangleFillModeWithDepthTexture(screenCoordf, intensity, texCoords, texture, (void *)m_backBuffer);
         }
     }
@@ -177,4 +219,16 @@ void Pipeline::SetCameraPosZ(float z)
 {
     m_camera->SetCameraPosZ(z);
     m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetCameraPos().z);
+}
+
+void Pipeline::SetCameraPos(const Vec3f &eye)
+{
+    m_camera->SetCameraPos(eye);
+}
+
+void Pipeline::SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up)
+{
+    m_camera->SetCameraLookAt(eye, center, up);
+    m_projectionMat = Mat4x4GetProjectionNaive(eye, center);
+    m_viewMat = m_camera->GetCameraLookAt();
 }

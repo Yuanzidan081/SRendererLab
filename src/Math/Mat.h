@@ -837,12 +837,16 @@ inline static Mat4x4f Mat4x4GetLookAt(const Vec3f &eye, const Vec3f &target, con
     Vec3f Z = VecGetNormalize(eye - target);
     Vec3f X = VecGetNormalize(VecGetCrossProduct(up, Z));
     Vec3f Y = VecGetNormalize(VecGetCrossProduct(Z, X));
+    /*     Mat4x4f res(
+            X.x, X.y, X.z, -VecGetDotProduct(X, eye),
+            Y.x, Y.y, Y.z, -VecGetDotProduct(Y, eye),
+            Z.x, Z.y, Z.z, -VecGetDotProduct(Z, eye),
+            0.0f, 0.0f, 0.0f, 1.0f); */
     Mat4x4f res(
-        X.x, X.y, X.z, -VecGetDotProduct(X, eye),
-        Y.x, Y.y, Y.z, -VecGetDotProduct(Y, eye),
-        Z.x, Z.y, Z.z, -VecGetDotProduct(Z, eye),
+        X.x, X.y, X.z, -target.x,
+        Y.x, Y.y, Y.z, -target.y,
+        Z.x, Z.y, Z.z, -target.z,
         0.0f, 0.0f, 0.0f, 1.0f);
-
     /* Mat4x4f res = Mat4x4f::GetIdentity();
     res.mat[0][0] = X.x;
     res.mat[0][1] = X.y;
@@ -891,6 +895,16 @@ inline static Mat4x4f Mat4x4GetProjectionNaive(float cameraZ)
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, -1.0f / cameraZ, 1.0f);
+    return res;
+}
+
+inline static Mat4x4f Mat4x4GetProjectionNaive(const Vec3f &eye, const Vec3f &center)
+{
+    Mat4x4f res(
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, -1.0f / VecGetLength(eye - center), 1.0f);
     return res;
 }
 

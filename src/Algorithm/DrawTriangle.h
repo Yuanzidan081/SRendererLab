@@ -16,5 +16,6 @@ void DrawTriangleFillModeWithDepthInfo(Vec3i &v1, Vec3i &v2, Vec3i &v3, Vec4f &c
 void DrawTriangleFillModeWithDepthInfo(Vec3f &v1, Vec3f &v2, Vec3f &v3, Vec4f &color, const void *buffer); // 考虑了深度信息绘制三角形
 
 void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float intensity, Vec2f *texCoords, const Texture2D &texture, const void *buffer);
+void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float* intensity, Vec2f *texCoords, const Texture2D &texture, const void *buffer);
 
 #endif // DRAWTRIANGLE_H

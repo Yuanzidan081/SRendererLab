@@ -37,6 +37,8 @@ public:
     void CheckResize();
 
     void SetCameraPosZ(float z);
+    void SetCameraPos(const Vec3f &eye);
+    void SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up);
 
 private:
     int m_Width;
@@ -46,6 +48,7 @@ private:
     Camera *m_camera;
     Mat4x4f m_viewPortMat;
     Mat4x4f m_projectionMat;
+    Mat4x4f m_viewMat;
 };
 
 #endif // PIPELINE_H

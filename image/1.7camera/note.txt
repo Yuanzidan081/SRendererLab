@@ -1,0 +1,6 @@
+使用了顶点自身的法线来实现高洛德着色，要注意的是法线和光线的点乘的结果要clamp到0-1之间，否则会出现wrontRGBA有白边的结果
+更改：只对r,g,b三个通道乘系数intensity即可：
+Vec4f color = texture.SampleTexture(texel);
+color.r *= intensity;
+color.g *= intensity;
+color.b *= intensity;

@@ -27,6 +27,8 @@ void Application::Run()
     Vec3f eye(1.0f, 1.0f, 3.0f);
     Vec3f center(0.0f, 0.0f, 0.0f);
     Vec3f up(0.0f, 1.0f, 0.0f);
+    // Vec3f lightDir(0.0f, 0.0f, 1.0f);
+    // Vec3f lightDir(1.0f, 1.0f, 1.0f);
     m_fps = 0;
     while (!m_stopped)
     {
@@ -35,10 +37,12 @@ void Application::Run()
         m_pipeline->SetCameraPos(eye);
         m_pipeline->SetCameraLookAt(eye, center, up);
         m_pipeline->ClearBuffers(Vec4f(1.0f, 1.0f, 1.0f, 1.0f));
-        // m_pipeline->DrawModelPureColor(model, Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
+        // m_pipeline->DrawModelPureColor(model, Vec4f(0.0f, 0.8f, 0.1f, 1.0f), SRendererType::SFill);
+        // m_pipeline->DrawModelPureColor(model, Vec4f(0.1f, 0.1f, 0.1f, 1.0f), SRendererType::SLine);
         //  m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f), SRendererType::SFill);
-        // m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
-        m_pipeline->DrawModelWithTexture(model, Vec3f(1.0f, 1.0f, 1.0f), texture1);
+        //   m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
+        //    m_pipeline->DrawModelWithTextureWithoutViewMat(model, Vec3f(0.0f, 0.0f, 1.0f), texture1);
+        m_pipeline->DrawModelWithTextureWithViewMat(model, Vec3f(1.0f, 1.0f, 1.0f), texture1);
         ++m_fps;
         m_pipeline->SwapBuffer();
         emit frameReady(m_pipeline->Output());

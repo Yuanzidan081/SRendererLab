@@ -1,3 +1,4 @@
+project(SRendererLab)
 #  ---------------------------- QT配置 ------------------------------- 
 # set(CMAKE_PREFIX_PATH "E:/Qt/5.12.12/msvc2017_64/")
 # set(QT5_DIR "E:/Qt/5.12.12/msvc2017_64/lib/cmake/Qt5/")
@@ -40,6 +41,13 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets stb_lib)
 target_include_directories(${PROJECT_NAME} PRIVATE 
 ${SRC_PATH} ${DEP_PATH})
+
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /fp:fast)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -ffast-math)
+endif()
+
 
 add_library(${MATH_LIB} STATIC ${MATH_FILES})
 target_include_directories(${MATH_LIB} PUBLIC ${MATH_DIR})

@@ -24,7 +24,9 @@ public:
     */
     void DrawModelNormalWithoutDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const SRendererType &type = SRendererType::SFill);
     void DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const SRendererType &type = SRendererType::SFill);
-    void DrawModelWithTexture(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type = SRendererType::SFill);
+
+    void DrawModelWithTextureWithViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type = SRendererType::SFill);
+    void DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type = SRendererType::SFill);
 
     Vec3i CoordWorldFloatToScreenInt(Vec3f &v);
     Vec3f CoordWorldFloatToScreenFloat(Vec3f &v);

@@ -25,6 +25,8 @@ Texture2D::~Texture2D()
 }
 bool Texture2D::LoadTexture(const char *filename)
 {
+    if (m_flipped)
+        stbi_set_flip_vertically_on_load(true);
     m_texelData = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
     if (!m_texelData)
     {
@@ -33,7 +35,6 @@ bool Texture2D::LoadTexture(const char *filename)
         m_Channels = -1;
         std::cout << "Failed to load texture " << filename << std::endl;
     }
-
     return m_texelData != nullptr;
 }
 
@@ -47,10 +48,8 @@ const Vec4f Texture2D::SampleTexture(const Vec2f &texCoords) const
     if (x < 0 || y < 0 || x >= m_Width || y >= m_Height)
         return res;
     int ind;
-    if (m_flipped)
-        ind = ((m_Height - 1 - y) * m_Width + x) * m_Channels;
-    else
-        ind = (y * m_Width + x) * m_Channels;
+
+    ind = (y * m_Width + x) * m_Channels;
     if (m_Channels == 3)
     {
         res.r = m_texelData[ind + 0] * INV_SCALE;

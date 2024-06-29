@@ -53,3 +53,22 @@ TEST(ModelTest, STBIMAGE)
     Texture2D texture8("res/container2_specular.png");
     std::cout << texture8;
 }
+TEST(ModelTest, VertexTest)
+{
+    Vertex vert;
+    vert.set("color", Vec4f(0.0f, 0.0f, 1.0f, 1.0f));
+    vert.set("uv", Vec2f(0.0f, 0.0f));
+    vert.set("normal", Vec3f(0.0f, 0.0f, 1.0f));
+    std::cout << vert.get<Vec4f>("color") << std::endl;
+    vert.get<Vec4f>("color").x = 2.0f;
+
+    std::cout << vert.get<Vec4f>("color") << std::endl;
+    vert.get<Vec2f>("uv").x = 3.0f;
+    std::cout << vert.get<Vec2f>("uv") << std::endl;
+    std::cout << vert.get<Vec3f>("normal") << std::endl;
+    std::cout << "vertex size:" << sizeof(vert) << std::endl;
+    std::cout << "varyingV1f size: " << sizeof(vert.varingV1f) << std::endl;
+    std::cout << "varyingV2f size: " << sizeof(vert.varingV2f) << std::endl;
+    std::cout << "varyingV3f size: " << sizeof(vert.varingV3f) << std::endl;
+    std::cout << "varyingV4f size: " << sizeof(vert.varingV4f) << std::endl;
+}

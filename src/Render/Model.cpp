@@ -4,42 +4,6 @@
 #include <iostream>
 Model::Model(const char *filename)
 {
-    loadModel(filename);
-}
-
-Model::Model(const Model &model) : m_Vertices(model.GetFullVetices()), m_VIndices(model.GetFullVIndcies()),
-                                   m_UVCoords(model.GetFullUVCoords()), m_UVIndices(model.GetFullUVIndices()),
-                                   m_Normals(model.GetFullNormals()), m_NormalIndices(model.GetFullNormalIndices()),
-                                   m_VerticesSize(model.GetVerticesSize()), m_VIndicesSize(model.GetVIndicesSize()),
-                                   m_UVCoordsSize(model.GetUVCoordsSize()), m_UVIndicesSize(model.GetUVIndicesSize()),
-                                   m_NormalsSize(model.GetNormalsSize()), m_NormalsIndicesSize(model.GetNormalsIndicesSize())
-
-{
-}
-
-Model &Model::operator=(const Model &model)
-{
-    if (&model == this)
-        return *this;
-    m_Vertices = model.GetFullVetices();
-    m_VIndices = model.GetFullVIndcies();
-    m_UVCoords = model.GetFullUVCoords();
-    m_UVIndices = model.GetFullUVIndices();
-    m_Normals = model.GetFullNormals();
-    m_NormalIndices = model.GetFullNormalIndices();
-
-    m_VerticesSize = model.GetVerticesSize();
-    m_VIndicesSize = model.GetVIndicesSize();
-    m_UVCoordsSize = model.GetUVCoordsSize();
-    m_UVIndicesSize = model.GetUVIndicesSize();
-    m_NormalsSize = model.GetNormalsSize();
-    m_NormalsIndicesSize = model.GetNormalsIndicesSize();
-
-    return *this;
-}
-
-void Model::loadModel(const char *filename)
-{
     std::string fileStr = filename;
     size_t dotLastPos = fileStr.find_last_of('.');
     if (dotLastPos == std::string::npos)
@@ -56,7 +20,31 @@ void Model::loadModel(const char *filename)
     {
         std::cout << "invalid file type" << std::endl;
     }
+    std::cout << "file_name : " << filename << std::endl;
+    std::cout << "vertex_number = " << m_Vertices.size() << std::endl;
+    std::cout << "vertex_normal_number = " << m_Normals.size() << std::endl;
+    std::cout << "vertex_tex_coord_number = " << m_UVCoords.size() << std::endl;
+    std::cout << "faces_number = " << m_Faces.size() << std::endl;
 }
+
+Model::Model(const Model &model) : m_Vertices(model.m_Vertices), m_UVCoords(model.m_UVCoords),
+                                   m_Normals(model.m_Normals), m_Faces(model.m_Faces)
+
+{
+}
+
+Model &Model::operator=(const Model &model)
+{
+    if (&model == this)
+        return *this;
+    this->m_Vertices = model.m_Vertices;
+    this->m_UVCoords = model.m_UVCoords;
+    this->m_Normals = model.m_Normals;
+
+    this->m_Faces = model.m_Faces;
+    return *this;
+}
+
 void Model::loadObjModel(const char *filename)
 {
     std::ifstream file;
@@ -66,10 +54,9 @@ void Model::loadObjModel(const char *filename)
     if (file.fail())
     {
         std::cout << "Could not open file:" << filename << std::endl;
-        assert(!file.fail());
+        assert(0 == 1);
         return;
     }
-    // int i = 5;
     std::string line = "";
     while (!file.eof())
     {
@@ -100,29 +87,26 @@ void Model::loadObjModel(const char *filename)
         else if (!line.compare(0, 2, "f "))
         {
             buf >> trash; // trash: filter "f"
-            std::vector<int> vIdxVec;
-            std::vector<int> uvIndVec;
-            std::vector<int> nIdxVec;
-            int vIdx, uvIdx, nIdx; // itrash: filter "f"
+            int count = 0;
+            Vec3i face;
+            std::vector<Vec3i> f;
 
-            while (buf >> vIdx >> trash >> uvIdx >> trash >> nIdx)
+            while (buf >> face.x >> trash >> face.y >> trash >> face.z)
             {
-
-                vIdxVec.push_back(vIdx - 1);
-                uvIndVec.push_back(uvIdx - 1);
-                nIdxVec.push_back(nIdx - 1);
+                face.x--;
+                face.y--;
+                face.z--;
+                f.push_back(face);
+                count++;
             }
-            m_VIndices.push_back(vIdxVec);
-            m_UVIndices.push_back(uvIndVec);
-            m_NormalIndices.push_back(nIdxVec);
+            m_Faces.push_back(f);
+            if (count != 3)
+            {
+                std::cerr << "Error: the obj file is supposed to be triangulated" << std::endl;
+                return;
+            }
         }
     }
-    m_VerticesSize = m_Vertices.size();
-    m_VIndicesSize = m_VIndices.size();
-    m_UVCoordsSize = m_UVCoords.size();
-    m_UVIndicesSize = m_UVIndices.size();
-    m_NormalsSize = m_Normals.size();
-    m_NormalsIndicesSize = m_NormalIndices.size();
     file.close();
     return;
 }

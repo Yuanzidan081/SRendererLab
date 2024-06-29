@@ -842,10 +842,15 @@ inline static Mat4x4f Mat4x4GetLookAt(const Vec3f &eye, const Vec3f &target, con
             Y.x, Y.y, Y.z, -VecGetDotProduct(Y, eye),
             Z.x, Z.y, Z.z, -VecGetDotProduct(Z, eye),
             0.0f, 0.0f, 0.0f, 1.0f); */
-    Mat4x4f res(
+    /* Mat4x4f res(
         X.x, X.y, X.z, -target.x,
         Y.x, Y.y, Y.z, -target.y,
         Z.x, Z.y, Z.z, -target.z,
+        0.0f, 0.0f, 0.0f, 1.0f); */
+    Mat4x4f res(
+        X.x, X.y, X.z, -VecGetDotProduct(X, target),
+        Y.x, Y.y, Y.z, -VecGetDotProduct(Y, target),
+        Z.x, Z.y, Z.z, -VecGetDotProduct(Z, target),
         0.0f, 0.0f, 0.0f, 1.0f);
     /* Mat4x4f res = Mat4x4f::GetIdentity();
     res.mat[0][0] = X.x;

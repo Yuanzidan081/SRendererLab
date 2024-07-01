@@ -33,10 +33,9 @@ public:
     void ClearBuffers(const Vec4f &color);
     unsigned char *Output();
     void SwapBuffer();
-    void Init();
+
     int GetWidth() { return m_Width; }
     int GetHeight() { return m_Height; }
-    void CheckResize();
 
     void SetCameraPosZ(float z);
     void SetCameraPos(const Vec3f &eye);

@@ -2,6 +2,8 @@
 #define APPLICATION_H
 
 #include <QObject>
+#include <QTimer>
+#include <QThread>
 #include "Render/FrameBuffer.h"
 #include "Render/Pipeline.h"
 class Application : public QObject
@@ -10,8 +12,9 @@ class Application : public QObject
 public:
     Application(int width, int height);
     ~Application();
-    void Run();
+
     void Stop();
+
     int GetHeight() { return m_pipeline->GetWidth(); }
     int GetWidth() { return m_pipeline->GetHeight(); }
     int GetFps() { return m_fps; }
@@ -20,11 +23,16 @@ public:
 
 signals:
     void frameReady(unsigned char *image);
+    void fpsReady(int fps);
+public slots:
+    void Run();
+    void onTimeout();
 
 private:
     bool m_stopped;
     Pipeline *m_pipeline;
     int m_fps;
+    /* QTimer *m_timer; */
 };
 
 #endif // APPLICATION_H

@@ -1,7 +1,8 @@
 #include "DrawTriangle.h"
 #include "Render/FrameBuffer.h"
-#include "UI/window.h"
+// #include "UI/window.h"
 #include "DrawLine.h"
+#include "UI/imagelabel.h"
 
 void DrawTriangleWithoutDepthInfo(Vec3f *v, const Vec4f &color, const void *buffer, const SRendererType &type)
 {
@@ -121,7 +122,7 @@ void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float intensity, Vec2f *texC
     {
         for (int y = boxMin.y; y <= boxMax.y; ++y)
         {
-            if (x >= Window::window_Width || y >= Window::window_Height || x < 0 || y < 0)
+            if (x >= screenWidth || y >= screenHeight || x < 0 || y < 0)
                 continue;
             Vec3f bcScreen = VecGetBaryCentric(v[0], v[1], v[2], Vec3f(x + 0.5f, y + 0.5f, 0.0f));
             if (bcScreen.x < 0 || bcScreen.y < 0 || bcScreen.z < 0)
@@ -159,7 +160,7 @@ void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float *intensity, Vec2f *tex
     {
         for (int y = boxMin.y; y <= boxMax.y; ++y)
         {
-            if (x >= Window::window_Width || y >= Window::window_Height || x < 0 || y < 0)
+            if (x >= screenWidth || y >= screenHeight || x < 0 || y < 0)
                 continue;
             Vec3f bcScreen = VecGetBaryCentric(v[0], v[1], v[2], Vec3f(x + 0.5f, y + 0.5f, 0.0f));
             if (bcScreen.x < 0 || bcScreen.y < 0 || bcScreen.z < 0)

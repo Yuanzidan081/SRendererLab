@@ -2,7 +2,8 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
-#include "window.h"
+// #include "window.h"
+#include "imagelabel.h"
 #include "Core/Application.h"
 namespace Ui
 {
@@ -20,6 +21,10 @@ public:
 
 private:
     Ui::MainWidget *ui;
+
+    Application *m_app;
+    QThread *m_appThread;
+    QTimer *m_timer;
 };
 
 #endif // MAINWIDGET_H

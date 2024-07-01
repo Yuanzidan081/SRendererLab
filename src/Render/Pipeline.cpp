@@ -1,14 +1,16 @@
 #include "Pipeline.h"
-#include "UI/window.h"
+// #include "UI/window.h"
 #include <cmath>
 #include <iostream>
-Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height),
-                                            m_backBuffer(nullptr), m_frontBuffer(nullptr)
+#include "imagelabel.h"
+Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height)                                            
 {
     m_camera = new Camera(Vec3f({2.0f, 1.0f, 3.0f}));
     m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_Width, (float)m_Height, 255.0f);
     m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetCameraPos().z);
     m_viewMat = m_camera->GetCameraLookAt();
+    m_backBuffer = new FrameBuffer(width, height);
+    m_frontBuffer = new FrameBuffer(width, height);
 }
 
 Pipeline::~Pipeline()
@@ -163,27 +165,6 @@ void Pipeline::SwapBuffer()
     m_backBuffer = temp;
 }
 
-void Pipeline::Init()
-{
-    if (m_backBuffer)
-        delete m_backBuffer;
-    if (m_frontBuffer)
-        delete m_frontBuffer;
-
-    m_backBuffer = new FrameBuffer(m_Width, m_Height);
-    m_frontBuffer = new FrameBuffer(m_Width, m_Height);
-}
-
-void Pipeline::CheckResize()
-{
-    if (Window::m_window->width() != m_Width || Window::m_window->height() != m_Height)
-    {
-        m_Width = Window::m_window->width();
-        m_Height = Window::m_window->height();
-        m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_Width, (float)m_Height, 255.0f);
-        Init();
-    }
-}
 
 void Pipeline::SetCameraPosZ(float z)
 {

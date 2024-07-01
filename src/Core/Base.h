@@ -48,4 +48,6 @@ enum class SRendererType
     SLine = 0,
     SFill
 };
+const int screenWidth = 500;
+const int screenHeight = 500;
 #endif // BASE_H

@@ -23,6 +23,7 @@ int &FrameBuffer::GetChannels()
 
 unsigned char *FrameBuffer::GetColorBuffer()
 {
+    // std::cout << "image: " << m_Width << " " << m_Height;
     return m_ColorBuffer.data();
 }
 

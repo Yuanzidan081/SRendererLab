@@ -913,14 +913,4 @@ inline static Mat4x4f Mat4x4GetProjectionNaive(const Vec3f &eye, const Vec3f &ce
     return res;
 }
 
-inline static Vec4f Vec3fToVec4f(Vec3f &v)
-{
-    return Vec4f(v.x, v.y, v.z, 1.0f);
-}
-
-// Vec4f最后转换的是做了齐次除法的Vec3f
-inline static Vec3f Vec4fToVec3f(Vec4f &v)
-{
-    return Vec3f(v.x / v.w, v.y / v.w, v.z / v.w);
-}
 #endif

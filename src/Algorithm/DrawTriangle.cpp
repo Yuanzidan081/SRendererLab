@@ -172,10 +172,52 @@ void DrawTriangleFillModeWithDepthTexture(Vec3f *v, float *intensity, Vec2f *tex
             if (((FrameBuffer *)buffer)->GetPixelDepth(x, y) < zt)
             {
                 Vec4f color = texture.SampleTexture(texel);
-                color.r *= intensityP;
-                color.g *= intensityP;
-                color.b *= intensityP;
+                /*  color.r *= intensityP;
+                 color.g *= intensityP;
+                 color.b *= intensityP; */
+                color.r = intensityP;
+                color.g = intensityP;
+                color.b = intensityP;
                 // std::cout << P << std::endl;
+                ((FrameBuffer *)buffer)->SetPixelDepth(x, y, zt);
+                ((FrameBuffer *)buffer)->SetPixelColor(x, y, color);
+            }
+        }
+    }
+}
+
+void DrawTriangleWithShader(Vec3f *v, Shader *shader, const void *buffer)
+{
+    // version 2
+    Vec2i boxMax;
+    Vec2i boxMin;
+    // find the box that the triangle is inside
+    boxMax.x = Max(v[0].x, v[1].x, v[2].x);
+    boxMax.y = Max(v[0].y, v[1].y, v[2].y);
+    boxMin.x = Min(v[0].x, v[1].x, v[2].x);
+    boxMin.y = Min(v[0].y, v[1].y, v[2].y);
+    Vec4f color;
+    for (int x = boxMin.x; x <= boxMax.x; ++x)
+    {
+        for (int y = boxMin.y; y <= boxMax.y; ++y)
+        {
+            if (x >= screenWidth || y >= screenHeight || x < 0 || y < 0)
+                continue;
+            Vec3f bcScreen = VecGetBaryCentric(v[0], v[1], v[2], Vec3f(x + 0.5f, y + 0.5f, 0.0f));
+            float zt = 1.0f / (bcScreen.u / v[0].z + bcScreen.v / v[1].z + bcScreen.w / v[2].z);
+
+            if (bcScreen.x < 0 || bcScreen.y < 0 || bcScreen.z < 0 || ((FrameBuffer *)buffer)->GetPixelDepth(x, y) >= zt)
+                continue;
+            v2f fsData;
+            fsData.oneDivideZ = {1.0f / v[0].z, 1.0f / v[1].z, 1.0f / v[2].z};
+            fsData.triangleCoeff = bcScreen;
+            fsData.oneDividepixelZ = 1.0f / zt;
+            bool discard = shader->FragmentShader(&fsData, color);
+
+            // float intensityP = (bcScreen.u * intensity[0] / v[0].z + bcScreen.v * intensity[1] / v[1].z + bcScreen.w * intensity[2] / v[2].z) * zt;
+            // intensityP = (intensityP > 1.f ? 1.f : (intensityP < 0.f ? 0.f : intensityP));
+            if (!discard)
+            {
                 ((FrameBuffer *)buffer)->SetPixelDepth(x, y, zt);
                 ((FrameBuffer *)buffer)->SetPixelColor(x, y, color);
             }

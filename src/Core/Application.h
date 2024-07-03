@@ -21,12 +21,9 @@ public:
     void ResetFps() { m_fps = 0; }
     static float s_cameraZ;
 
+    void Run();
 signals:
     void frameReady(unsigned char *image);
-    void fpsReady(int fps);
-public slots:
-    void Run();
-    void onTimeout();
 
 private:
     bool m_stopped;

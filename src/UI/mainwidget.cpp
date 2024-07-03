@@ -23,7 +23,6 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
     m_app->ResetFps();
     DisplayFps(fps); });
     connect(m_app, &Application::frameReady, ui->image, &ImageLabel::reveiveFrame);
-    connect(m_app, &Application::fpsReady, this, &MainWidget::DisplayFps);
     connect(m_appThread, &QThread::finished, m_app, &QObject::deleteLater);
 
     m_app->moveToThread(m_appThread);
@@ -43,10 +42,10 @@ MainWidget::~MainWidget()
         delete m_appThread;
     m_app = nullptr;
     m_appThread = nullptr;
+    // ui->groupBoxWindow->setTitle(QString("fps: %1").arg(fps));
 }
 
 void MainWidget::DisplayFps(int fps)
 {
-    // std::cout << fps << std::endl;
-    ui->groupBoxWindow->setTitle(QString("fps: %1").arg(fps));
+    ui->lineEdit_fps->setText(QString::number(fps));
 }

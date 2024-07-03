@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include "imagelabel.h"
-Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height)                                            
+Pipeline::Pipeline(int width, int height) : m_Width(width), m_Height(height)
 {
     m_camera = new Camera(Vec3f({2.0f, 1.0f, 3.0f}));
     m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_Width, (float)m_Height, 255.0f);
@@ -35,7 +35,7 @@ void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const SRendererTyp
         Vec3f v[3];
         for (int j = 0; j < 3; ++j)
         {
-            v[j] = CoordWorldFloatToScreenFloat(model.m_Vertices[face[j][0]]);
+            v[j] = Vec4fToVec3f(m_viewPortMat * Vec3fToVec4f(model.m_Vertices[face[j][0]]));
         }
         DrawTriangleWithoutDepthInfo(v, color, (void *)m_backBuffer, type);
     }
@@ -130,16 +130,26 @@ void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir,
         }
     }
 }
-// TODO: representation by ViewPortMatrix
-Vec3i Pipeline::CoordWorldFloatToScreenInt(Vec3f &v)
+void Pipeline::DrawModelWithShader(DrawData &drawData, const SRendererType &type)
 {
-    Vec3i res;
-    res.x = (v.x + 1.0f) * m_Width / 2.0f;
-    res.y = (v.y + 1.0f) * m_Height / 2.0f;
-    res.z = (v.z + 1.0f) * 255.0f / 2.0f;
+    Model *m = drawData.model;
+    Shader *s = drawData.shader;
+    shaderData.cameraViewMat = this->m_viewMat;
+    shaderData.cameraProjectionMat = this->m_projectionMat;
+    shaderData.screenViewportMat = this->m_viewPortMat;
+    for (int i = 0; i < m->m_Faces.size(); ++i)
+    {
+        Vec3f screenCoord[3];
+        for (int j = 0; j < 3; ++j)
+        {
+            screenCoord[j] = s->VertexShader(m, i, j);
+        }
 
-    return res;
+        DrawTriangleWithShader(screenCoord, s, (void *)m_backBuffer);
+    }
 }
+// TODO: representation by ViewPortMatrix
+
 Vec3f Pipeline::CoordWorldFloatToScreenFloat(Vec3f &v)
 {
     Vec3f res;
@@ -164,7 +174,6 @@ void Pipeline::SwapBuffer()
     m_frontBuffer = m_backBuffer;
     m_backBuffer = temp;
 }
-
 
 void Pipeline::SetCameraPosZ(float z)
 {

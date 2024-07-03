@@ -10,6 +10,9 @@
 #include "Math/Mat.h"
 #include "Algorithm/DrawLine.h"
 #include "Algorithm/DrawTriangle.h"
+#include "Shader/Shader.h"
+#include "Shader/GouraudShader.h"
+
 class Pipeline
 {
 
@@ -27,8 +30,8 @@ public:
 
     void DrawModelWithTextureWithViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type = SRendererType::SFill);
     void DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type = SRendererType::SFill);
+    void DrawModelWithShader(DrawData &drawData, const SRendererType &type = SRendererType::SFill);
 
-    Vec3i CoordWorldFloatToScreenInt(Vec3f &v);
     Vec3f CoordWorldFloatToScreenFloat(Vec3f &v);
     void ClearBuffers(const Vec4f &color);
     unsigned char *Output();
@@ -51,5 +54,7 @@ private:
     Mat4x4f m_projectionMat;
     Mat4x4f m_viewMat;
 };
+
+
 
 #endif // PIPELINE_H

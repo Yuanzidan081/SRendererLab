@@ -5,6 +5,7 @@
 #include "Render/Texture2D.h"
 #include "Base.h"
 #include "Shader/GouraudShader.h"
+#include "Shader/CartoonShader.h"
 #include "Render/ShaderData.h"
 float Application::s_cameraZ = 3.0f;
 Application::Application(int width, int height) : m_stopped(false), m_fps(0)
@@ -30,7 +31,10 @@ void Application::Run()
     Texture2D texture1("obj/head/african_head_diffuse.tga");
     DrawData drawData;
     drawData.model = new Model(model);
-    drawData.shader = new GouraudShader();
+
+    // drawData.shader = new GouraudShader();
+    drawData.shader = new CartoonShader();
+    drawData.shader->SetModel(drawData.model);
     // Vec3f lightDir(0.0f, 0.0f, 1.0f);
     // Vec3f lightDir(1.0f, 1.0f, 1.0f);
 
@@ -46,8 +50,8 @@ void Application::Run()
         //   m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f), SRendererType::SFill);
         //    m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
         // m_pipeline->DrawModelWithTextureWithoutViewMat(model, Vec3f(0.0f, 0.0f, 1.0f), texture1);
-        //m_pipeline->DrawModelWithTextureWithViewMat(model, Vec3f(1.0f, 1.0f, 1.0f), texture1);
-         m_pipeline->DrawModelWithShader(drawData);
+        // m_pipeline->DrawModelWithTextureWithViewMat(model, Vec3f(1.0f, 1.0f, 1.0f), texture1);
+        m_pipeline->DrawModelWithShader(drawData);
         ++m_fps;
         m_pipeline->SwapBuffer();
         emit frameReady(m_pipeline->Output());

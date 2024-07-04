@@ -142,7 +142,7 @@ void Pipeline::DrawModelWithShader(DrawData &drawData, const SRendererType &type
         Vec3f screenCoord[3];
         for (int j = 0; j < 3; ++j)
         {
-            screenCoord[j] = s->VertexShader(m, i, j);
+            screenCoord[j] = s->VertexShader(i, j);
         }
 
         DrawTriangleWithShader(screenCoord, s, (void *)m_backBuffer);

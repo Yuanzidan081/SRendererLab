@@ -34,4 +34,19 @@ struct v2f
     Vec3f triangleCoeff;
 };
 
+struct Varying
+{
+    float varying_intensity[3];
+    Vec2f varying_uv[3];
+};
+
+template <typename T>
+T interpolateCorrection(v2f *v2fData, T *varying)
+{
+    return ((v2fData->triangleCoeff.u * varying[0] * v2fData->oneDivideZ[0] +
+             v2fData->triangleCoeff.v * varying[1] * v2fData->oneDivideZ[1] +
+             v2fData->triangleCoeff.w * varying[2] * v2fData->oneDivideZ[2]) /
+            v2fData->oneDividepixelZ);
+}
+
 #endif // SHADERDATA_H

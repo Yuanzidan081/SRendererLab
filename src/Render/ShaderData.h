@@ -15,8 +15,8 @@ struct ShaderData
 };
 struct DrawData
 {
-    Model *model;
-    Shader *shader;
+    Model *model = nullptr;
+    Shader *shader = nullptr;
     ~DrawData()
     {
         if (model)

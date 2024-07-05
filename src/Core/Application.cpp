@@ -7,6 +7,7 @@
 #include "Shader/GouraudShader.h"
 #include "Shader/CartoonShader.h"
 #include "Render/ShaderData.h"
+#include "Shader/TextureShader.h"
 float Application::s_cameraZ = 3.0f;
 Application::Application(int width, int height) : m_stopped(false), m_fps(0)
 {
@@ -27,14 +28,24 @@ void Application::Run()
     m_stopped = false;
 
     Model model("obj/head/african_head.obj");
+    model.SetDiffuse("obj/head/african_head_diffuse.tga");
     // Model model("obj/cube/cube.obj");
     Texture2D texture1("obj/head/african_head_diffuse.tga");
     DrawData drawData;
     drawData.model = new Model(model);
 
+    /* TEST Shader CASE1: GouraudShader*/
     // drawData.shader = new GouraudShader();
-    drawData.shader = new CartoonShader();
+    // drawData.shader->SetModel(drawData.model);
+
+    /* TEST Shader CASE2: CartoonShader*/
+    // drawData.shader = new CartoonShader();
+    // drawData.shader->SetModel(drawData.model);
+
+    /* TEST Shader CASE3: TextureShader*/
+    drawData.shader = new TextureShader();
     drawData.shader->SetModel(drawData.model);
+
     // Vec3f lightDir(0.0f, 0.0f, 1.0f);
     // Vec3f lightDir(1.0f, 1.0f, 1.0f);
 

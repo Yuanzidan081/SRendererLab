@@ -17,6 +17,8 @@ bool TextureShader::FragmentShader(v2f *v2fData, Vec4f &color)
     float intensity = interpolateCorrection(v2fData, varying.varying_intensity);
     Vec2f uv = interpolateCorrection(v2fData, varying.varying_uv);
     // color = model->diffuse(uv) * intensity;
-    color = {1.0f, 0.3f, 0.3f, 1.0f};
+    color = model->GetDiffuseColor(uv) * intensity;
+    color.w = 1.0f;
+
     return false;
 }

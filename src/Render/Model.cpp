@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-Model::Model(const char *filename)
+Model::Model(const char *filename) : m_diffuseTexture(nullptr)
 {
     std::string fileStr = filename;
     size_t dotLastPos = fileStr.find_last_of('.');
@@ -28,15 +28,22 @@ Model::Model(const char *filename)
 }
 
 Model::Model(const Model &model) : m_Vertices(model.m_Vertices), m_UVCoords(model.m_UVCoords),
-                                   m_Normals(model.m_Normals), m_Faces(model.m_Faces)
+                                   m_Normals(model.m_Normals), m_Faces(model.m_Faces), m_diffuseTexture(model.m_diffuseTexture)
 
 {
 }
 
+Model::~Model()
+{
+    if (m_diffuseTexture)
+        delete m_diffuseTexture;
+    m_diffuseTexture = nullptr;
+}
 Model &Model::operator=(const Model &model)
 {
     if (&model == this)
         return *this;
+    this->m_diffuseTexture = model.m_diffuseTexture;
     this->m_Vertices = model.m_Vertices;
     this->m_UVCoords = model.m_UVCoords;
     this->m_Normals = model.m_Normals;
@@ -109,4 +116,19 @@ void Model::loadObjModel(const char *filename)
     }
     file.close();
     return;
+}
+
+void Model::SetDiffuse(const char *diffuseFileName)
+{
+    m_diffuseTexture = new Texture2D(diffuseFileName);
+}
+
+Vec4f Model::GetDiffuseColor(Vec2f &uv)
+{
+    if (!m_diffuseTexture)
+    {
+        std::cerr << "Error: the diffuse texture doesn't exist" << std::endl;
+        return Vec4f();
+    }
+    return m_diffuseTexture->SampleTexture(uv);
 }

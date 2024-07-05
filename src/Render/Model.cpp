@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-Model::Model(const char *filename) : m_diffuseTexture(nullptr)
+Model::Model(const char *filename) : m_diffuseTexture(nullptr), m_normalTexture(nullptr)
 {
     std::string fileStr = filename;
     size_t dotLastPos = fileStr.find_last_of('.');
@@ -28,7 +28,8 @@ Model::Model(const char *filename) : m_diffuseTexture(nullptr)
 }
 
 Model::Model(const Model &model) : m_Vertices(model.m_Vertices), m_UVCoords(model.m_UVCoords),
-                                   m_Normals(model.m_Normals), m_Faces(model.m_Faces), m_diffuseTexture(model.m_diffuseTexture)
+                                   m_Normals(model.m_Normals), m_Faces(model.m_Faces),
+                                   m_diffuseTexture(model.m_diffuseTexture), m_normalTexture(model.m_normalTexture)
 
 {
 }
@@ -37,7 +38,10 @@ Model::~Model()
 {
     if (m_diffuseTexture)
         delete m_diffuseTexture;
+    if (m_normalTexture)
+        delete m_normalTexture;
     m_diffuseTexture = nullptr;
+    m_normalTexture = nullptr;
 }
 Model &Model::operator=(const Model &model)
 {
@@ -123,6 +127,11 @@ void Model::SetDiffuse(const char *diffuseFileName)
     m_diffuseTexture = new Texture2D(diffuseFileName);
 }
 
+void Model::SetNormal(const char *normalFileName)
+{
+    m_normalTexture = new Texture2D(normalFileName);
+}
+
 Vec4f Model::GetDiffuseColor(Vec2f &uv)
 {
     if (!m_diffuseTexture)
@@ -131,4 +140,14 @@ Vec4f Model::GetDiffuseColor(Vec2f &uv)
         return Vec4f();
     }
     return m_diffuseTexture->SampleTexture(uv);
+}
+
+Vec4f Model::GetNormalColor(Vec2f &uv)
+{
+    if (!m_normalTexture)
+    {
+        std::cerr << "Error: the normal texture doesn't exist" << std::endl;
+        return Vec4f();
+    }
+    return m_normalTexture->SampleTexture(uv);
 }

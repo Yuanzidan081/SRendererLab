@@ -34,12 +34,6 @@ struct v2f
     Vec3f triangleCoeff;
 };
 
-struct Varying
-{
-    float varying_intensity[3];
-    Vec2f varying_uv[3];
-};
-
 template <typename T>
 T interpolateCorrection(v2f *v2fData, T *varying)
 {

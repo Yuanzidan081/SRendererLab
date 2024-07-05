@@ -6,8 +6,9 @@
 #include "Base.h"
 #include "Shader/GouraudShader.h"
 #include "Shader/CartoonShader.h"
-#include "Render/ShaderData.h"
 #include "Shader/TextureShader.h"
+#include "Shader/NormalShader.h"
+#include "Render/ShaderData.h"
 float Application::s_cameraZ = 3.0f;
 Application::Application(int width, int height) : m_stopped(false), m_fps(0)
 {
@@ -28,23 +29,36 @@ void Application::Run()
     m_stopped = false;
 
     Model model("obj/head/african_head.obj");
-    model.SetDiffuse("obj/head/african_head_diffuse.tga");
+
     // Model model("obj/cube/cube.obj");
-    Texture2D texture1("obj/head/african_head_diffuse.tga");
-    DrawData drawData;
-    drawData.model = new Model(model);
+    // Texture2D texture1("obj/head/african_head_diffuse.tga");
 
     /* TEST Shader CASE1: GouraudShader*/
+    // DrawData drawData;
+    // drawData.model = new Model(model);
     // drawData.shader = new GouraudShader();
     // drawData.shader->SetModel(drawData.model);
 
     /* TEST Shader CASE2: CartoonShader*/
+    // DrawData drawData;
+    // drawData.model = new Model(model);
     // drawData.shader = new CartoonShader();
     // drawData.shader->SetModel(drawData.model);
 
     /* TEST Shader CASE3: TextureShader*/
-    drawData.shader = new TextureShader();
-    drawData.shader->SetModel(drawData.model);
+    // model.SetDiffuse("obj/head/african_head_diffuse.tga");
+    //  DrawData drawData;
+    //  drawData.model = new Model(model);
+    //  drawData.shader = new TextureShader();
+    //  drawData.shader->SetModel(drawData.model);
+
+    /* TEST Shader CASE4: NormalShader*/
+    // model.SetDiffuse("obj/head/african_head_diffuse.tga");
+    // model.SetNormal("obj/head/african_head_nm_tangent.png");
+    // DrawData drawData;
+    // drawData.model = new Model(model);
+    // drawData.shader = new NormalShader();
+    // drawData.shader->SetModel(drawData.model);
 
     // Vec3f lightDir(0.0f, 0.0f, 1.0f);
     // Vec3f lightDir(1.0f, 1.0f, 1.0f);

@@ -22,7 +22,9 @@ public:
     Model &operator=(const Model &model);
     void loadObjModel(const char *filename);
     void SetDiffuse(const char *diffuseFileName);
+    void SetNormal(const char *normalFileName);
     Vec4f GetDiffuseColor(Vec2f &uv);
+    Vec4f GetNormalColor(Vec2f &uv);
 
 public:
     vector<Vec3f> m_Vertices;
@@ -31,6 +33,7 @@ public:
 
     vector<vector<Vec3i>> m_Faces;
     Texture2D *m_diffuseTexture;
+    Texture2D *m_normalTexture;
 };
 
 #endif // MODEL_H

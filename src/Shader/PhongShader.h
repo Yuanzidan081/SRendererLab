@@ -1,14 +1,15 @@
-#ifndef TEXTURESHADER_H
-#define TEXTURESHADER_H
+#ifndef PHONGSHADER_H
+#define PHONGSHADER_H
 #include "Shader.h"
 
-class TextureShader : public Shader
+class PhongShader : public Shader
 {
 public:
     struct Varying
     {
-        float varying_intensity[3];
         Vec2f varying_uv[3];
+        Mat4x4f varying_M;
+        Mat4x4f varying_MIT;
     };
     Varying varying;
 
@@ -16,5 +17,4 @@ public:
     virtual bool FragmentShader(v2f *v2fData, Vec4f &color) override;
 };
 
-
-#endif // TEXTURESHADER_H
+#endif // PHONGSHADER_H

@@ -2,7 +2,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-Model::Model(const char *filename) : m_diffuseTexture(nullptr), m_normalTexture(nullptr)
+Model::Model(const char *filename) : m_diffuseTexture(nullptr),
+                                     m_normalTexture(nullptr),
+                                     m_specularTexture(nullptr)
 {
     std::string fileStr = filename;
     size_t dotLastPos = fileStr.find_last_of('.');
@@ -29,8 +31,8 @@ Model::Model(const char *filename) : m_diffuseTexture(nullptr), m_normalTexture(
 
 Model::Model(const Model &model) : m_Vertices(model.m_Vertices), m_UVCoords(model.m_UVCoords),
                                    m_Normals(model.m_Normals), m_Faces(model.m_Faces),
-                                   m_diffuseTexture(model.m_diffuseTexture), m_normalTexture(model.m_normalTexture)
-
+                                   m_diffuseTexture(model.m_diffuseTexture), m_normalTexture(model.m_normalTexture),
+                                   m_specularTexture(model.m_specularTexture)
 {
 }
 
@@ -40,8 +42,12 @@ Model::~Model()
         delete m_diffuseTexture;
     if (m_normalTexture)
         delete m_normalTexture;
+    if (m_specularTexture)
+        delete m_specularTexture;
+
     m_diffuseTexture = nullptr;
     m_normalTexture = nullptr;
+    m_specularTexture = nullptr;
 }
 Model &Model::operator=(const Model &model)
 {
@@ -53,6 +59,10 @@ Model &Model::operator=(const Model &model)
     this->m_Normals = model.m_Normals;
 
     this->m_Faces = model.m_Faces;
+
+    this->m_diffuseTexture = model.m_diffuseTexture;
+    this->m_normalTexture = model.m_normalTexture;
+    this->m_specularTexture = model.m_specularTexture;
     return *this;
 }
 
@@ -132,6 +142,11 @@ void Model::SetNormal(const char *normalFileName)
     m_normalTexture = new Texture2D(normalFileName);
 }
 
+void Model::SetSpecular(const char *specularFileName)
+{
+    m_specularTexture = new Texture2D(specularFileName);
+}
+
 Vec4f Model::GetDiffuseColor(Vec2f &uv)
 {
     if (!m_diffuseTexture)
@@ -149,5 +164,20 @@ Vec4f Model::GetNormalColor(Vec2f &uv)
         std::cerr << "Error: the normal texture doesn't exist" << std::endl;
         return Vec4f();
     }
-    return m_normalTexture->SampleTexture(uv);
+    Vec4f c = m_normalTexture->SampleTexture(uv);
+    Vec4f res;
+    for (int i = 0; i < 3; i++)
+        res[i] = (float)c[i] * 2.f - 1.f;
+    return res;
+}
+
+float Model::GetSpecularColor(Vec2f &uv)
+{
+    if (!m_specularTexture)
+    {
+        std::cerr << "Error: the specular texture doesn't exist" << std::endl;
+        return 1.0f;
+    }
+
+    return m_specularTexture->SampleTexture(uv)[0];
 }

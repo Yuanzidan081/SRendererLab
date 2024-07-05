@@ -212,6 +212,7 @@ void DrawTriangleWithShader(Vec3f *v, Shader *shader, const void *buffer)
             fsData.oneDivideZ = {1.0f / v[0].z, 1.0f / v[1].z, 1.0f / v[2].z};
             fsData.triangleCoeff = bcScreen;
             fsData.oneDividepixelZ = 1.0f / zt;
+
             bool discard = shader->FragmentShader(&fsData, color);
 
             // float intensityP = (bcScreen.u * intensity[0] / v[0].z + bcScreen.v * intensity[1] / v[1].z + bcScreen.w * intensity[2] / v[2].z) * zt;

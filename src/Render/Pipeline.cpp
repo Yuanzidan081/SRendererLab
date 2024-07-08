@@ -137,6 +137,8 @@ void Pipeline::DrawModelWithShader(DrawData &drawData, const SRendererType &type
     shaderData.cameraViewMat = this->m_viewMat;
     shaderData.cameraProjectionMat = this->m_projectionMat;
     shaderData.screenViewportMat = this->m_viewPortMat;
+    shaderData.modelTransViewMat = shaderData.cameraProjectionMat * shaderData.cameraViewMat * shaderData.modelTransMat;
+    shaderData.modelTransViewMatInv = MatGetInverse(shaderData.modelTransViewMat);
     for (int i = 0; i < m->m_Faces.size(); ++i)
     {
         Vec3f screenCoord[3];

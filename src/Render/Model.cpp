@@ -134,16 +134,22 @@ void Model::loadObjModel(const char *filename)
 
 void Model::SetDiffuse(const char *diffuseFileName)
 {
+    if (m_diffuseTexture)
+        delete m_diffuseTexture;
     m_diffuseTexture = new Texture2D(diffuseFileName);
 }
 
 void Model::SetNormal(const char *normalFileName)
 {
+    if (m_normalTexture)
+        delete m_normalTexture;
     m_normalTexture = new Texture2D(normalFileName);
 }
 
 void Model::SetSpecular(const char *specularFileName)
 {
+    if (m_specularTexture)
+        delete m_specularTexture;
     m_specularTexture = new Texture2D(specularFileName);
 }
 

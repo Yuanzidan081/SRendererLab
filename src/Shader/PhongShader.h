@@ -8,8 +8,7 @@ public:
     struct Varying
     {
         Vec2f varying_uv[3];
-        Mat4x4f varying_M;
-        Mat4x4f varying_MIT;
+        Vec3f varying_normal[3];
     };
     Varying varying;
 

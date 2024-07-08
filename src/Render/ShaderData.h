@@ -11,6 +11,8 @@ struct ShaderData
     Mat4x4f cameraViewMat;
     Mat4x4f cameraProjectionMat;
     Mat4x4f modelTransMat;
+    Mat4x4f modelTransViewMat;
+    Mat4x4f modelTransViewMatInv;
     Vec3f lightDir;
 };
 struct DrawData

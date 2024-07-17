@@ -55,13 +55,13 @@ void Application::Run()
     // drawData.shader->SetModel(drawData.model);
 
     /* TEST Shader CASE4: NormalShader*/
-    // model.SetDiffuse("obj/head/african_head_diffuse.tga");
-    // // model.SetNormal("obj/head/african_head_nm_tangent.png"); // normal in tangent space
-    // model.SetNormal("obj/head/african_head_nm.png"); // normal in world space
-    // DrawData drawData;
-    // drawData.model = new Model(model);
-    // drawData.shader = new NormalShader();
-    // drawData.shader->SetModel(drawData.model);
+    /* model.SetDiffuse("obj/head/african_head_diffuse.tga");
+    model.SetNormal("obj/head/african_head_nm_tangent.png"); // normal in tangent space
+    // model.SetNormal("obj/head/african_head_nm.png");           // normal in world space
+    DrawData drawData;
+    drawData.model = new Model(model);
+    drawData.shader = new NormalShader();
+    drawData.shader->SetModel(drawData.model); */
 
     /* TEST Shader CASE5: PhongShader*/
     model.SetDiffuse("obj/head/african_head_diffuse.tga");

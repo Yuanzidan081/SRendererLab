@@ -289,6 +289,11 @@ inline Vec<N, T1> operator*(T2 x, const Vec<N, T1> &a)
 template <size_t N, typename T>
 inline Vec<N, T> operator/(const Vec<N, T> &a, T x)
 {
+    if (x == 0)
+    {
+        // std::cerr << "Error: Division by zero" << std::endl;
+        return Vec<N, T>();
+    }
     assert(x != 0);
     Vec<N, T> b;
     for (size_t i = 0; i < N; ++i)

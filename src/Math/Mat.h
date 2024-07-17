@@ -717,6 +717,9 @@ inline Mat<N, N, T> MatGetInverse(const Mat<N, N, T> &m)
 {
     Mat<N, N, T> ret = MatGetAdjoint(m);
     T det = VecGetDotProduct(m.GetRow(0), ret.GetCol(0));
+    if (det == 0)
+        std::cout << "det " << det << std::endl;
+
     return ret / det;
 }
 

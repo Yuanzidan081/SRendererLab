@@ -2,7 +2,6 @@
 
 Vec3f PhongShader::VertexShader(int faceInd, int VertInd)
 {
-
     varying.varying_uv[VertInd] = model->m_UVCoords[model->m_Faces[faceInd][VertInd][1]];
     varying.varying_normal[VertInd] = Vec3f(shaderData.modelTransViewMatInv * Vec4f(model->m_Normals[model->m_Faces[faceInd][VertInd][2]], 1.0f));
     Vec4f position(model->m_Vertices[model->m_Faces[faceInd][VertInd][0]], 1.0f);

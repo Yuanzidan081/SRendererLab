@@ -1,5 +1,9 @@
 #include "GouraudShader.h"
 
+GouraudShader::GouraudShader()
+{
+}
+
 Vec3f GouraudShader::VertexShader(int faceInd, int VertInd)
 {
     m_intensity[VertInd] = std::max(0.0f, VecGetDotProduct(model->m_Normals[model->m_Faces[faceInd][VertInd][2]], VecGetNormalize(shaderData.lightDir)));

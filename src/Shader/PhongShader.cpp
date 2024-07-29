@@ -1,5 +1,9 @@
 #include "PhongShader.h"
 
+PhongShader::PhongShader()
+{
+}
+
 Vec3f PhongShader::VertexShader(int faceInd, int VertInd)
 {
 

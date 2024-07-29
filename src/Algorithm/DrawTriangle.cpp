@@ -8,7 +8,7 @@ void DrawTriangleWithoutDepthInfo(Vec3f *v, const Vec4f &color, const void *buff
 {
     switch (type)
     {
-    case SRendererType::SLine:
+    case SRendererType::SWire:
         DrawTriangleLineModeWithoutDepthInfo(v, color, buffer);
         break;
     case SRendererType::SFill:

@@ -21,11 +21,8 @@ struct DrawData
     Shader *shader = nullptr;
     ~DrawData()
     {
-        if (model)
-            delete model;
         if (shader)
             delete shader;
-        model = nullptr;
         shader = nullptr;
     }
 };

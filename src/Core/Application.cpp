@@ -18,7 +18,6 @@ Application::Application(int width, int height) : m_stopped(false), m_fps(0)
 
 Application::~Application()
 {
-    m_stopped = true;
     if (m_pipeline)
         delete m_pipeline;
 
@@ -27,6 +26,8 @@ Application::~Application()
 
 void Application::Run()
 {
+    m_pipeline->initialize();
+    m_pipeline->SetShadingMode(ShadingMode::Phong);
     m_stopped = false;
 
     Model model("obj/head/african_head.obj");
@@ -55,22 +56,22 @@ void Application::Run()
     // drawData.shader->SetModel(drawData.model);
 
     /* TEST Shader CASE4: NormalShader*/
-    // model.SetDiffuse("obj/head/african_head_diffuse.tga");
-    // // model.SetNormal("obj/head/african_head_nm_tangent.png"); // normal in tangent space
-    // model.SetNormal("obj/head/african_head_nm.png"); // normal in world space
-    // DrawData drawData;
-    // drawData.model = new Model(model);
-    // drawData.shader = new NormalShader();
-    // drawData.shader->SetModel(drawData.model);
+    model.SetDiffuse("obj/head/african_head_diffuse.tga");
+    // model.SetNormal("obj/head/african_head_nm_tangent.png"); // normal in tangent space
+    model.SetNormal("obj/head/african_head_nm.png"); // normal in world space
+    DrawData drawData;
+    drawData.model = &model;
+    drawData.shader = new NormalShader();
+    drawData.shader->SetModel(drawData.model);
 
     /* TEST Shader CASE5: PhongShader*/
-    model.SetDiffuse("obj/head/african_head_diffuse.tga");
-    model.SetNormal("obj/head/african_head_nm_tangent.png");
-    model.SetSpecular("obj/head/african_head_spec.tga");
-    DrawData drawData;
-    drawData.model = new Model(model);
-    drawData.shader = new PhongShader();
-    drawData.shader->SetModel(drawData.model);
+    // model.SetDiffuse("obj/head/african_head_diffuse.tga");
+    // model.SetNormal("obj/head/african_head_nm_tangent.png");
+    // model.SetSpecular("obj/head/african_head_spec.tga");
+    // DrawData drawData;
+    // drawData.model = new Model(model);
+    // drawData.shader = new PhongShader();
+    // drawData.shader->SetModel(drawData.model);
 
     // Vec3f lightDir(0.0f, 0.0f, 1.0f);
     // Vec3f lightDir(1.0f, 1.0f, 1.0f);

@@ -73,6 +73,8 @@ public:
     void SetViewMatrix(Vec3f eye, const Mat4x4f &viewMat);
     void SetViewMatrix(Vec3f eye, Vec3f target, Vec3f up);
     void SetProjectMatrix(float fovy, float aspect, float near, float far);
+
+    void SetProjectMatrix(float z);
     void SetViewPort(int left, int top, int width, int height)
     {
         m_config.m_viewPortMat = Mat4x4GetViewport(left, top, width, height);
@@ -82,11 +84,11 @@ public:
     void SetShadingMode(ShadingMode &&mode);
     void SetPolygonMode(PolygonMode mode) { m_config.m_polygonMode = mode; }
 
-    void SetCameraPosZ(float z);
-    void SetCameraPos(const Vec3f &eye);
+    /*     void SetCameraPosZ(float z);
+        void SetCameraPos(const Vec3f &eye);
 
-    void SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up);
-
+        void SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up);
+     */
 private:
     void SetDefaultConfig();
 

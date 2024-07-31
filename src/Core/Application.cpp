@@ -10,26 +10,30 @@
 #include "Shader/NormalShader.h"
 #include "Shader/PhongShader.h"
 #include "Render/ShaderData.h"
-float Application::s_cameraZ = 3.0f;
-Application::Application(int width, int height) : m_stopped(false), m_fps(0)
+/* float Application::s_cameraZ = 3.0f; */
+Application::Application(int width, int height) : m_stopped(false), m_fps(0), m_width(width), m_height(height)
 {
     m_pipeline = new Pipeline(width, height);
+    m_naiveCamera = nullptr;
 }
 
 Application::~Application()
 {
     if (m_pipeline)
         delete m_pipeline;
+    if (m_naiveCamera)
+        delete m_naiveCamera;
 
     m_pipeline = nullptr;
+    m_naiveCamera = nullptr;
 }
 
 void Application::Run()
 {
     m_pipeline->initialize();
     m_pipeline->SetShadingMode(ShadingMode::Phong);
-    m_stopped = false;
 
+    m_naiveCamera = new NaiveCamera(Vec3f(1.5f, 1.0f, 10.0f));
     Model model("obj/head/african_head.obj");
 
     // Model model("obj/cube/cube.obj");
@@ -75,13 +79,14 @@ void Application::Run()
 
     // Vec3f lightDir(0.0f, 0.0f, 1.0f);
     // Vec3f lightDir(1.0f, 1.0f, 1.0f);
-
-    m_fps = 0;
+    m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
+    m_pipeline->SetProjectMatrix(m_naiveCamera->GetPosition().z);
+    m_pipeline->SetViewMatrix(m_naiveCamera->GetPosition(), m_naiveCamera->GetViewMatrix());
     while (!m_stopped)
     {
         //    m_pipeline->SetCameraPosZ(s_cameraZ);
-        m_pipeline->SetCameraPos(cameraEye);
-        m_pipeline->SetCameraLookAt(cameraEye, cameraCenter, cameraUp);
+        // m_pipeline->SetProjectMatrix(cameraEye);
+        // m_pipeline->SetCameraLookAt(cameraEye, cameraCenter, cameraUp);
         m_pipeline->CleraFrameBuffer(Vec4f(0.2f, 0.2f, 0.2f, 1.0f));
         // m_pipeline->DrawModelPureColor(model, Vec4f(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
         //  m_pipeline->DrawModelPureColor(model, Vec4f(0.1f, 0.1f, 0.1f, 1.0f), PolygonMode::SLine);

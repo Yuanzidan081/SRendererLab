@@ -10,8 +10,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
     // 设置窗口标志，禁止缩放
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-    connect(ui->horizontalSlider, &QSlider::sliderReleased, this, [&]()
-            { Application::s_cameraZ = ui->horizontalSlider->value(); });
+    /* connect(ui->horizontalSlider, &QSlider::sliderReleased, this, [&]()
+            { Application::s_cameraZ = ui->horizontalSlider->value(); }); */
     m_timer = new QTimer(this);
     m_app = new Application(screenWidth, screenHeight);
     m_appThread = new QThread(this);

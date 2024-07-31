@@ -234,6 +234,7 @@ void Pipeline::SetViewMatrix(Vec3f eye, const Mat4x4f &viewMat)
     m_config.m_eyePos = eye;
     m_config.m_shader->SetEyePos(eye);
     m_config.m_shader->SetViewMatrix(viewMat);
+    m_viewMat = viewMat;
 }
 
 void Pipeline::SetViewMatrix(Vec3f eye, Vec3f target, Vec3f up)
@@ -248,6 +249,11 @@ void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
 {
     Mat4x4f projectMat = Mat4x4GetPerspective(fovy, aspect, near, far);
     m_config.m_shader->SetProjectMatrix(projectMat);
+}
+
+void Pipeline::SetProjectMatrix(float z)
+{
+    m_projectionMat = Mat4x4GetProjectionNaive(z);
 }
 
 void Pipeline::SetModelMatrix(Mat4x4f modelMatrix)
@@ -288,20 +294,20 @@ void Pipeline::SetDefaultConfig()
     // SetPolygonMode(PolygonMode::Fill);
 }
 
-void Pipeline::SetCameraPosZ(float z)
+/* void Pipeline::SetCameraPosZ(float z)
 {
     m_camera->SetCameraPosZ(z);
     m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
-}
+} */
 
-void Pipeline::SetCameraPos(const Vec3f &eye)
+/* void Pipeline::SetCameraPos(const Vec3f &eye)
 {
     m_camera->SetCameraPos(eye);
-}
+} */
 
-void Pipeline::SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up)
+/* void Pipeline::SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up)
 {
     m_camera->SetCameraLookAt(eye, center, up);
     m_projectionMat = Mat4x4GetProjectionNaive(eye, center);
     m_viewMat = m_camera->GetViewMatrix();
-}
+} */

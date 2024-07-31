@@ -6,6 +6,7 @@
 #include <QThread>
 #include "Render/FrameBuffer.h"
 #include "Render/Pipeline.h"
+
 class Application : public QObject
 {
     Q_OBJECT
@@ -19,7 +20,7 @@ public:
     int GetWidth() { return m_pipeline->GetHeight(); }
     int GetFps() { return m_fps; }
     void ResetFps() { m_fps = 0; }
-    static float s_cameraZ;
+    /* static float s_cameraZ; */
 
     void Run();
 signals:
@@ -29,6 +30,9 @@ private:
     bool m_stopped;
     Pipeline *m_pipeline;
     int m_fps;
+    NaiveCamera *m_naiveCamera;
+    int m_width;
+    int m_height;
     /* QTimer *m_timer; */
 };
 

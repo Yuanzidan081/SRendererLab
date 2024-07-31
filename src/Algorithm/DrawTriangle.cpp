@@ -4,14 +4,14 @@
 #include "DrawLine.h"
 #include "UI/imagelabel.h"
 
-void DrawTriangleWithoutDepthInfo(Vec3f *v, const Vec4f &color, const void *buffer, const SRendererType &type)
+void DrawTriangleWithoutDepthInfo(Vec3f *v, const Vec4f &color, const void *buffer, const PolygonMode &type)
 {
     switch (type)
     {
-    case SRendererType::SWire:
+    case PolygonMode::Wire:
         DrawTriangleLineModeWithoutDepthInfo(v, color, buffer);
         break;
-    case SRendererType::SFill:
+    case PolygonMode::Fill:
         DrawTriangleFillModeWithoutDepthInfo(v, color, buffer);
         break;
     default:
@@ -62,14 +62,14 @@ void DrawTriangleFillModeWithoutDepthInfo(Vec3f *v, const Vec4f &color, const vo
     }
 }
 
-void DrawTriangleWithDepthInfo(Vec3f *v, Vec4f &color, const void *buffer, const SRendererType &type)
+void DrawTriangleWithDepthInfo(Vec3f *v, Vec4f &color, const void *buffer, const PolygonMode &type)
 {
     switch (type)
     {
-        /*     case SRendererType::SLine:
+        /*     case PolygonMode::SLine:
                 DrawTriangleLineModeWithoutDepthInfo(v1, v2, v3, color, buffer);
                 break; */
-    case SRendererType::SFill:
+    case PolygonMode::Fill:
         DrawTriangleFillModeWithDepthInfo(v, color, buffer);
         break;
     default:

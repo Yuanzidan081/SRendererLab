@@ -14,9 +14,9 @@ Pipeline::Pipeline(int width, int height)
     m_config.m_shader = nullptr;
     m_config.m_eyePos = Vec3f(0.0f, 0.0f, 0.0f);
 
-    m_camera = new Camera(Vec3f({2.0f, 1.0f, 3.0f}));
-    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetCameraPos().z);
-    m_viewMat = m_camera->GetCameraLookAt();
+    m_camera = new NaiveCamera(Vec3f({2.0f, 1.0f, 3.0f}));
+    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
+    m_viewMat = m_camera->GetViewMatrix();
 }
 
 Pipeline::~Pipeline()
@@ -27,7 +27,11 @@ Pipeline::~Pipeline()
         delete m_config.m_frontBuffer;
     if (m_config.m_shader)
         delete m_config.m_shader;
-
+    for (size_t i = 0; i < m_config.m_textureUnits.size(); ++i)
+    {
+        delete m_config.m_textureUnits[i];
+        m_config.m_textureUnits[i] = nullptr;
+    }
     if (m_camera)
         delete m_camera;
 
@@ -50,9 +54,10 @@ void Pipeline::initialize()
     m_config.m_backBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
     m_config.m_frontBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
     m_config.m_shader = new SimpleShader();
+    SetDefaultConfig();
 }
 
-void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const SRendererType &type)
+void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const PolygonMode &type)
 {
     for (int i = 0; i < model.m_Faces.size(); ++i)
     {
@@ -66,7 +71,7 @@ void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const SRendererTyp
     }
 }
 
-void Pipeline::DrawModelNormalWithoutDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const SRendererType &type)
+void Pipeline::DrawModelNormalWithoutDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const PolygonMode &type)
 {
     for (int i = 0; i < model.m_Faces.size(); ++i)
     {
@@ -87,7 +92,7 @@ void Pipeline::DrawModelNormalWithoutDepthInfo(Model &model, Vec3f &lightDir, Ve
         }
     }
 }
-void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const SRendererType &type)
+void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const PolygonMode &type)
 {
     for (int i = 0; i < model.m_Faces.size(); ++i)
     {
@@ -109,7 +114,7 @@ void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f
     }
 }
 
-void Pipeline::DrawModelWithTextureWithViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type)
+void Pipeline::DrawModelWithTextureWithViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const PolygonMode &type)
 {
     for (int i = 0; i < model.m_Faces.size(); ++i)
     {
@@ -129,7 +134,7 @@ void Pipeline::DrawModelWithTextureWithViewMat(Model &model, Vec3f &lightDir, co
         DrawTriangleFillModeWithDepthTexture(screenCoord, intensity, texCoords, texture, (void *)m_config.m_backBuffer);
     }
 }
-void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const SRendererType &type)
+void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const PolygonMode &type)
 {
 
     for (int i = 0; i < model.m_Faces.size(); ++i)
@@ -155,7 +160,7 @@ void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir,
         }
     }
 }
-void Pipeline::DrawModelWithShader(DrawData &drawData, const SRendererType &type)
+void Pipeline::DrawModelWithShader(DrawData &drawData, const PolygonMode &type)
 {
     Model *m = drawData.model;
     Shader *s = drawData.shader;
@@ -185,17 +190,39 @@ Vec3f Pipeline::CoordWorldFloatToScreenFloat(Vec3f &v)
     res.z = (v.z + 1.0f) * 255.0f / 2.0f;
     return res;
 }
-void Pipeline::ClearBuffers(const Vec4f &color)
+unsigned int Pipeline::LoadTexture(const std::string &path)
 {
-    m_config.m_backBuffer->ClearBuffers(color);
+    Texture2D *tex = new Texture2D();
+    if (!tex->LoadTexture(path))
+        return 0;
+    m_config.m_textureUnits.push_back(tex);
+    return static_cast<unsigned int>(m_config.m_textureUnits.size() - 1);
+}
+bool Pipeline::BindTexture(const unsigned int &unit)
+{
+    if (unit >= m_config.m_textureUnits.size())
+        return false;
+    m_config.m_shader->BindShaderTexture(m_config.m_textureUnits[unit]);
+    return true;
+}
+bool Pipeline::UnBindTexture(const unsigned int &unit)
+{
+    if (unit >= m_config.m_textureUnits.size())
+        return false;
+    m_config.m_shader->BindShaderTexture(nullptr);
+    return true;
+}
+void Pipeline::CleraFrameBuffer(const Vec4f &color)
+{
+    m_config.m_backBuffer->clearColorAndDepthBuffer(color);
 }
 
-unsigned char *Pipeline::Output()
+unsigned char *Pipeline::GetFrameResult()
 {
     return m_config.m_frontBuffer->GetColorBuffer();
 }
 
-void Pipeline::SwapBuffer()
+void Pipeline::SwapFrameBuffer()
 {
     FrameBuffer *temp = m_config.m_frontBuffer;
     m_config.m_frontBuffer = m_config.m_backBuffer;
@@ -205,7 +232,27 @@ void Pipeline::SwapBuffer()
 void Pipeline::SetViewMatrix(Vec3f eye, const Mat4x4f &viewMat)
 {
     m_config.m_eyePos = eye;
-    // m_config.m_shader
+    m_config.m_shader->SetEyePos(eye);
+    m_config.m_shader->SetViewMatrix(viewMat);
+}
+
+void Pipeline::SetViewMatrix(Vec3f eye, Vec3f target, Vec3f up)
+{
+    m_config.m_eyePos = eye;
+    Mat4x4f viewMat = Mat4x4GetLookAt(eye, target, up);
+    m_config.m_shader->SetEyePos(eye);
+    m_config.m_shader->SetViewMatrix(viewMat);
+}
+
+void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
+{
+    Mat4x4f projectMat = Mat4x4GetPerspective(fovy, aspect, near, far);
+    m_config.m_shader->SetProjectMatrix(projectMat);
+}
+
+void Pipeline::SetModelMatrix(Mat4x4f modelMatrix)
+{
+    m_config.m_shader->SetModelMatrix(modelMatrix);
 }
 
 void Pipeline::SetShadingMode(ShadingMode &&mode)
@@ -233,10 +280,18 @@ void Pipeline::SetShadingMode(ShadingMode &&mode)
     }
 }
 
+void Pipeline::SetDefaultConfig()
+{
+    SetDepthTesting(true);
+    SetBackFaceCulling(true);
+    SetGeometryClipping(true);
+    // SetPolygonMode(PolygonMode::Fill);
+}
+
 void Pipeline::SetCameraPosZ(float z)
 {
     m_camera->SetCameraPosZ(z);
-    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetCameraPos().z);
+    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
 }
 
 void Pipeline::SetCameraPos(const Vec3f &eye)
@@ -248,5 +303,5 @@ void Pipeline::SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3
 {
     m_camera->SetCameraLookAt(eye, center, up);
     m_projectionMat = Mat4x4GetProjectionNaive(eye, center);
-    m_viewMat = m_camera->GetCameraLookAt();
+    m_viewMat = m_camera->GetViewMatrix();
 }

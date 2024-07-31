@@ -8,12 +8,12 @@ Texture2D::Texture2D() : m_Width(0), m_Height(0), m_Channels(0), m_texelData(nul
 {
 }
 
-Texture2D::Texture2D(const char *filename) : m_flipped(true)
+Texture2D::Texture2D(const char *filename) : m_Width(0), m_Height(0), m_Channels(0), m_texelData(nullptr), m_flipped(true)
 {
     LoadTexture(filename);
 }
 
-Texture2D::Texture2D(const std::string &filename) : m_flipped(true)
+Texture2D::Texture2D(const std::string &filename) : m_Width(0), m_Height(0), m_Channels(0), m_texelData(nullptr), m_flipped(true)
 {
     LoadTexture(filename.c_str());
 }
@@ -25,6 +25,9 @@ Texture2D::~Texture2D()
 }
 bool Texture2D::LoadTexture(const char *filename)
 {
+    if (m_texelData)
+        delete m_texelData;
+    m_texelData = nullptr;
     if (m_flipped)
         stbi_set_flip_vertically_on_load(true);
     m_texelData = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
@@ -38,6 +41,10 @@ bool Texture2D::LoadTexture(const char *filename)
     return m_texelData != nullptr;
 }
 
+bool Texture2D::LoadTexture(const std::string &filename)
+{
+    return LoadTexture(filename.c_str());
+}
 // 如果是3位的channel，返回的最后一位为1就可以了
 const Vec4f Texture2D::SampleTexture(const Vec2f &texCoords) const
 {

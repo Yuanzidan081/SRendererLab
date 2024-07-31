@@ -82,17 +82,17 @@ void Application::Run()
         //    m_pipeline->SetCameraPosZ(s_cameraZ);
         m_pipeline->SetCameraPos(cameraEye);
         m_pipeline->SetCameraLookAt(cameraEye, cameraCenter, cameraUp);
-        m_pipeline->ClearBuffers(Vec4f(0.2f, 0.2f, 0.2f, 1.0f));
-        // m_pipeline->DrawModelPureColor(model, Vec4f(0.0f, 0.8f, 0.1f, 1.0f), SRendererType::SFill);
-        //  m_pipeline->DrawModelPureColor(model, Vec4f(0.1f, 0.1f, 0.1f, 1.0f), SRendererType::SLine);
-        //   m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f), SRendererType::SFill);
+        m_pipeline->CleraFrameBuffer(Vec4f(0.2f, 0.2f, 0.2f, 1.0f));
+        // m_pipeline->DrawModelPureColor(model, Vec4f(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
+        //  m_pipeline->DrawModelPureColor(model, Vec4f(0.1f, 0.1f, 0.1f, 1.0f), PolygonMode::SLine);
+        //   m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
         //    m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
         // m_pipeline->DrawModelWithTextureWithoutViewMat(model, Vec3f(0.0f, 0.0f, 1.0f), texture1);
         // m_pipeline->DrawModelWithTextureWithViewMat(model, Vec3f(1.0f, 1.0f, 1.0f), texture1);
         m_pipeline->DrawModelWithShader(drawData);
         ++m_fps;
-        m_pipeline->SwapBuffer();
-        emit frameReady(m_pipeline->Output());
+        m_pipeline->SwapFrameBuffer();
+        emit frameReady(m_pipeline->GetFrameResult());
     }
 }
 

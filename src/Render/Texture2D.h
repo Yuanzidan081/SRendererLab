@@ -19,7 +19,9 @@ public:
     int GetChannels() { return m_Channels; }
 
     bool LoadTexture(const char *filename);
-    const Vec4f SampleTexture(const Vec2f &texCoords) const;
+    bool LoadTexture(const std::string &filename);
+
+        const Vec4f SampleTexture(const Vec2f &texCoords) const;
     friend std::ostream &operator<<(std::ostream &out, const Texture2D &texture);
 
 private:

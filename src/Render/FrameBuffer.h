@@ -16,7 +16,7 @@ public:
     unsigned char *GetColorBuffer();
     float *GetDepthBuffer();
 
-    void ClearBuffers(const Vec4f &color);
+    void clearColorAndDepthBuffer(const Vec4f &color);
     void SetPixelColor(const unsigned int x, const unsigned int y, const Vec4f &color);
 
     void SetPixelDepth(const unsigned int x, const unsigned int y, float depth);

@@ -44,10 +44,10 @@ T Min(T first, Args... args)
 {
     return Min(first, Min(args...));
 }
-enum class SRendererType
+enum PolygonMode
 {
-    SWire = 0,
-    SFill
+    Wire = 0,
+    Fill
 };
 enum ShadingMode
 {

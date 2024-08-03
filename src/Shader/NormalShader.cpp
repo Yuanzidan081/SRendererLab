@@ -8,16 +8,29 @@ Vec3f NormalShader::VertexShader(int faceInd, int VertInd)
     return Vec3f(shaderData.screenViewportMat *
                  shaderData.cameraProjectionMat *
                  shaderData.cameraViewMat *
-                 shaderData.modelTransMat * position);
+                 shaderData.modelTransMat *
+                 position);
 }
 
 bool NormalShader::FragmentShader(v2f *v2fData, Vec4f &color)
 {
     Vec2f uv = interpolateCorrection(v2fData, varying.varying_uv);
-    Vec3f n = VecGetNormalize(Vec3f(varying.varying_MIT * Vec4f(model->GetNormalColor(uv))));
-    Vec3f l = VecGetNormalize(Vec3f(varying.varying_M * Vec4f(shaderData.lightDir, 1.0f)));
+    Vec3f n = VecGetNormalize(VecProject<3>(varying.varying_MIT * Vec4f(model->GetNormalColor(uv))));
+
+    Vec3f l = VecGetNormalize(VecProject<3>(varying.varying_M * Vec4f(shaderData.lightDir, 1.0f)));
     float intensity = std::max(0.0f, VecGetDotProduct(n, l));
+
     color = model->GetDiffuseColor(uv) * intensity;
     color.a = 1.0f;
     return false;
+}
+
+VertexOut NormalShader::vertexShader(const Vertex &in)
+{
+    return VertexOut();
+}
+
+Vec4f NormalShader::fragmentShader(const VertexOut &in)
+{
+    return Vec4f();
 }

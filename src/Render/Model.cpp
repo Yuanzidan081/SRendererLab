@@ -174,6 +174,7 @@ Vec4f Model::GetNormalColor(Vec2f &uv)
     Vec4f res;
     for (int i = 0; i < 3; i++)
         res[i] = (float)c[i] * 2.f - 1.f;
+    res[3] = 0.0f;
     return res;
 }
 

@@ -8,6 +8,8 @@ public:
     virtual ~SimpleShader() = default;
     virtual Vec3f VertexShader(int faceInd, int VertInd);
     virtual bool FragmentShader(v2f *v2fData, Vec4f &color);
+    virtual VertexOut vertexShader(const Vertex &in);
+    virtual Vec4f fragmentShader(const VertexOut &in);
     void SetModel(Model *model) { this->model = model; }
     virtual void BindShaderTexture(Texture2D *tex) { m_tex = tex; }
     virtual void SetEyePos(const Vec3f &eye) {}
@@ -25,6 +27,7 @@ public:
     {
         m_projectMatrix = project;
     }
+
 private:
     Texture2D *m_tex;
     Mat4x4f m_modelMatrix;

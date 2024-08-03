@@ -12,11 +12,11 @@ void RendererInit()
     shaderData.screenViewportMat = Mat4x4f::GetIdentity();
     shaderData.cameraProjectionMat = Mat4x4f::GetIdentity();
     shaderData.cameraViewMat = Mat4x4f::GetIdentity();
-    shaderData.modelTransMat = Mat4x4f::GetIdentity();
-    // shaderData.modelTransMat = Mat4x4GetScale(Vec3f(0.6f, 0.6f, 0.6f));
+    // shaderData.modelTransMat = Mat4x4f::GetIdentity();
+    shaderData.modelTransMat = Mat4x4GetScale(Vec3f(0.6f, 0.6f, 0.6f));
     shaderData.modelTransViewMat = shaderData.cameraViewMat * shaderData.modelTransMat;
     shaderData.modelTransViewMatInv = MatGetInverse(shaderData.modelTransViewMat);
-    shaderData.lightDir = {1.0f, 1.0f, 1.0f};
+    shaderData.lightDir = VecGetNormalize(Vec3f(1, -1, 1));
 }
 
 #endif // MAIN_H

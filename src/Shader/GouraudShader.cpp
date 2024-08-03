@@ -26,3 +26,13 @@ bool GouraudShader::FragmentShader(v2f *v2fData, Vec4f &color)
     color = Vec4f(intensity, intensity, intensity, 1.0f);
     return false;
 }
+
+VertexOut GouraudShader::vertexShader(const Vertex &in)
+{
+    return VertexOut();
+}
+
+Vec4f GouraudShader::fragmentShader(const VertexOut &in)
+{
+    return Vec4f();
+}

@@ -3,6 +3,7 @@
 #include <initializer_list>
 #include "Vec.h"
 #include <iostream>
+#include "MathUtils.h"
 template <size_t ROW, size_t COL, typename T>
 struct Mat
 {
@@ -798,9 +799,11 @@ inline static Mat4x4f Mat4x4GetRotation(const Vec3f &a, const float angle)
 // fovy传入的应该是一个弧度
 inline static Mat4x4f Mat4x4GetPerspective(const float fovy, const float aspect, const float zNear, const float zFar)
 {
+    float rFovy = fovy * M_PI / 180;
+    const float tanHalfFovy = tanf(static_cast<float>(rFovy * 0.5f));
     Mat4x4f res(
-        1.0f / (aspect * tan(fovy * 0.5f)), 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f / tan(fovy * 0.5f), 0.0f, 0.0f,
+        1.0f / (aspect * tanHalfFovy), 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f / tanHalfFovy, 0.0f, 0.0f,
         0.0f, 0.0f, -(zFar + zNear) / (zFar - zNear), -(2.0f * zFar * zNear) / (zFar - zNear),
         0.0f, 0.0f, -1.0f, 0.0f);
 
@@ -837,16 +840,16 @@ inline static Mat4x4f Mat4x4GetLookAt(const Vec3f &eye, const Vec3f &target, con
     Vec3f Z = VecGetNormalize(eye - target);
     Vec3f X = VecGetNormalize(VecGetCrossProduct(up, Z));
     Vec3f Y = VecGetNormalize(VecGetCrossProduct(Z, X));
-    /*     Mat4x4f res(
-            X.x, X.y, X.z, -VecGetDotProduct(X, eye),
-            Y.x, Y.y, Y.z, -VecGetDotProduct(Y, eye),
-            Z.x, Z.y, Z.z, -VecGetDotProduct(Z, eye),
-            0.0f, 0.0f, 0.0f, 1.0f); */
     Mat4x4f res(
+        X.x, X.y, X.z, -VecGetDotProduct(X, eye),
+        Y.x, Y.y, Y.z, -VecGetDotProduct(Y, eye),
+        Z.x, Z.y, Z.z, -VecGetDotProduct(Z, eye),
+        0.0f, 0.0f, 0.0f, 1.0f);
+    /* Mat4x4f res(
         X.x, X.y, X.z, -target.x,
         Y.x, Y.y, Y.z, -target.y,
         Z.x, Z.y, Z.z, -target.z,
-        0.0f, 0.0f, 0.0f, 1.0f);
+        0.0f, 0.0f, 0.0f, 1.0f); */
     /* Mat4x4f res(
         X.x, X.y, X.z, -VecGetDotProduct(X, target),
         Y.x, Y.y, Y.z, -VecGetDotProduct(Y, target),
@@ -872,7 +875,7 @@ inline static Mat4x4f Mat4x4GetViewport(float left, float bottom, float width, f
 {
     Mat4x4f res(
         width * 0.5f, 0.0f, 0.0f, left + width * 0.5f,
-        0.0f, height * 0.5f, 0.0f, bottom + height * 0.5f,
+        0.0f, -height * 0.5f, 0.0f, bottom + height * 0.5f,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f);
     /* Mat4x4f res = Mat4x4f::GetIdentity();

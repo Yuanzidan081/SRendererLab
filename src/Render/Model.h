@@ -6,11 +6,13 @@
 #include <unordered_map>
 #include <map>
 #include "Texture2D.h"
+#include "Mesh.h"
 using std::map;
 using std::string;
 using std::unordered_map;
 using std::vector;
 // 单个顶点的属性
+
 
 class Model
 {

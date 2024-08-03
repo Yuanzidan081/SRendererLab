@@ -103,7 +103,7 @@ struct Vec<3, T>
     inline Vec() : x(T()), y(T()), z(T()) {}
     inline Vec(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
     inline Vec(const Vec<3, T> &rhs) : x(rhs.x), y(rhs.y), z(rhs.z) {}
-    inline Vec(const Vec<4, T> &rhs) : x(rhs.x), y(rhs.y), z(rhs.z) {}
+    inline Vec(const Vec<4, T> &rhs) : x(rhs.x / rhs.w), y(rhs.y / rhs.w), z(rhs.z / rhs.w) {}
     inline Vec(const T *ptr) : x(ptr[0]), y(ptr[1]), z(ptr[2]) {}
     inline const T &operator[](size_t i) const
     {
@@ -137,6 +137,7 @@ struct Vec<4, T>
     inline Vec(T X, T Y, T Z, T W) : x(X), y(Y), z(Z), w(W) {}
     inline Vec(const Vec<4, T> &rhs) : x(rhs.x), y(rhs.y), z(rhs.z), w(rhs.w) {}
     inline Vec(const Vec<3, T> &rhs, T w_) : x(rhs.x), y(rhs.y), z(rhs.z), w(w_) {}
+    inline Vec(const Vec<3, T> &rhs) : x(rhs.x), y(rhs.y), z(rhs.z), w(1.0f) {}
     inline Vec(const T *ptr) : x(ptr[0]), y(ptr[1]), z(ptr[2]), w(ptr[3]) {}
     inline const T &operator[](size_t i) const
     {
@@ -428,7 +429,7 @@ inline Vec<4, T> VecGetCrossProduct(const Vec<4, T> &a, const Vec<4, T> &b)
 template <size_t N, typename T>
 inline Vec<N, T> VecGetLinearLerp(const Vec<N, T> &a, const Vec<N, T> &b, float t)
 {
-    return a * t + b * (1 - t);
+    return a * (1 - t) + b * t;
 }
 
 // a / |a|
@@ -529,16 +530,7 @@ inline Vec<N, T> VecGetClamp(const Vec<N, T> &v, T minx = 0, T maxx = 1)
     return res;
 }
 
-inline static Vec4f Vec3fToVec4f(Vec3f &v)
-{
-    return Vec4f(v.x, v.y, v.z, 1.0f);
-}
 
-// Vec4f最后转换的是做了齐次除法的Vec3f
-inline static Vec3f Vec4fToVec3f(Vec4f &v)
-{
-    return Vec3f(v.x / v.w, v.y / v.w, v.z / v.w);
-}
 
 template <size_t LEN, size_t DIM, typename T>
 Vec<LEN, T> VecExtend(const Vec<DIM, T> &v, T fill = 1)

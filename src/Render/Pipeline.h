@@ -32,6 +32,9 @@ public:
         Vec3f m_eyePos;
         Shader *m_shader;
         std::vector<Texture2D *> m_textureUnits;
+
+        const std::vector<unsigned int> *m_indices;
+        const std::vector<Vertex> *m_vertices;
     };
     Pipeline(int width, int height);
     ~Pipeline();
@@ -61,11 +64,15 @@ public:
     unsigned int LoadTexture(const std::string &path);
 
     // buffer settings
-    void CleraFrameBuffer(const Vec4f &color);
+    void ClearFrameBuffer(const Vec4f &color);
     unsigned char *GetFrameResult();
     void SwapFrameBuffer();
-
-    int GetWidth() { return m_config.m_width; }
+    void SetVertexBuffer(const std::vector<Vertex> *vertices) { m_config.m_vertices = vertices; }
+    void SetIndexBuffer(const std::vector<unsigned int> *indices) { m_config.m_indices = indices; }
+    int GetWidth()
+    {
+        return m_config.m_width;
+    }
     int GetHeight() { return m_config.m_height; }
 
     // matrix settings
@@ -75,29 +82,38 @@ public:
     void SetProjectMatrix(float fovy, float aspect, float near, float far);
 
     void SetProjectMatrix(float z);
+    void SetProjectMatrix(Vec3f eye, Vec3f center);
     void SetViewPort(int left, int top, int width, int height)
     {
         m_config.m_viewPortMat = Mat4x4GetViewport(left, top, width, height);
     }
 
     // Illumination setting
-    void SetShadingMode(ShadingMode &&mode);
+    void SetShadingMode(ShadingMode mode);
     void SetPolygonMode(PolygonMode mode) { m_config.m_polygonMode = mode; }
 
-    /*     void SetCameraPosZ(float z);
-        void SetCameraPos(const Vec3f &eye);
+    // start the rendering pipeline
+    bool DrawMesh();
 
-        void SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up);
-     */
-private:
+    // default config
     void SetDefaultConfig();
+    // perspectiveDivision
+    void perspectiveDivision(VertexOut &target);
 
+    // linear interpolation
+    VertexOut lerp(const VertexOut &n1, const VertexOut &n2, double weight);
+    // rasterization
+    void bresenhamLineRasterization(const VertexOut &from, const VertexOut &to);
+    void scanLinePerRow(const VertexOut &left, const VertexOut &right);
+    void rasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
+    void rasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
+    void edgeWalkingFillRasterization(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
     Config m_config;
     // int m_Width;
     // int m_Height;
     // FrameBuffer *m_backBuffer;
     // FrameBuffer *m_frontBuffer;
-    NaiveCamera *m_camera;
+    // NaiveCamera *m_camera;
     // Mat4x4f m_viewPortMat;
     Mat4x4f m_projectionMat;
     Mat4x4f m_viewMat;

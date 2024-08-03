@@ -3,7 +3,7 @@
 FrameBuffer::FrameBuffer(int width, int height) : m_Width(width), m_Height(height), m_Channels(4)
 {
     m_ColorBuffer.resize(m_Width * m_Height * m_Channels, 255);
-    m_DepthBuffer.resize(m_Width * m_Height, FLT_MIN);
+    m_DepthBuffer.resize(m_Width * m_Height, 1.0f);
 }
 
 int &FrameBuffer::GetHeight()
@@ -45,7 +45,7 @@ void FrameBuffer::clearColorAndDepthBuffer(const Vec4f &color)
             m_ColorBuffer[ind * m_Channels + 2] = static_cast<unsigned char>(255.0f * color.b);
             m_ColorBuffer[ind * m_Channels + 3] = static_cast<unsigned char>(255.0f * color.a);
             /* depth buffer*/
-            m_DepthBuffer[ind] = FLT_MIN;
+            m_DepthBuffer[ind] = 1.0f;
         }
     }
 }
@@ -54,7 +54,9 @@ void FrameBuffer::SetPixelColor(const unsigned int x, const unsigned int y, cons
 {
     if (x < 0 || x >= m_Width || y < 0 || y >= m_Height)
         return;
-    int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
+    // int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
+    int ind = y * m_Width + x; // 把坐标的原点规定在左下角
+
     m_ColorBuffer[ind * m_Channels + 0] = static_cast<unsigned char>(255.0f * color.r);
     m_ColorBuffer[ind * m_Channels + 1] = static_cast<unsigned char>(255.0f * color.g);
     m_ColorBuffer[ind * m_Channels + 2] = static_cast<unsigned char>(255.0f * color.b);
@@ -65,7 +67,9 @@ void FrameBuffer::SetPixelDepth(const unsigned int x, const unsigned int y, floa
 {
     if (x < 0 || x >= m_Width || y < 0 || y >= m_Height)
         return;
-    int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
+    // int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
+    int ind = y * m_Width + x; // 把坐标的原点规定在左下角
+
     m_DepthBuffer[ind] = depth;
 }
 
@@ -79,14 +83,16 @@ void FrameBuffer::SetPixelDepth(int ind, float depth)
 float FrameBuffer::GetPixelDepth(const unsigned int x, const unsigned int y)
 {
     if (x < 0 || x >= m_Width || y < 0 || y >= m_Height)
-        return FLT_MIN;                         // 返回一个FLT_MAX，初始化的数
-    int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
+        return 0.0f; // 返回一个FLT_MAX，初始化的数
+    //    int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
+    int ind = y * m_Width + x; // 把坐标的原点规定在左下角
+
     return m_DepthBuffer[ind];
 }
 
 float FrameBuffer::GetPixelDepth(int ind)
 {
     if (ind < 0 || ind >= m_DepthBuffer.size())
-        return FLT_MIN; // 返回一个FLT_MAX，初始化的数
+        return 0.0f; // 返回一个FLT_MAX，初始化的数
     return m_DepthBuffer[ind];
 }

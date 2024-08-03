@@ -58,8 +58,8 @@ enum ShadingMode
 const int screenWidth = 500;
 const int screenHeight = 500;
 
-//extern Vec3f cameraEye;
-extern Vec3f cameraCenter;
-extern Vec3f cameraUp;
+// extern Vec3f cameraEye;
+/* extern Vec3f cameraCenter;
+extern Vec3f cameraUp; */
 extern ShaderData shaderData;
 #endif // BASE_H

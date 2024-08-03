@@ -13,6 +13,8 @@ public:
     Varying varying;
     PhongShader();
     virtual ~PhongShader() = default;
+    virtual VertexOut vertexShader(const Vertex &in);
+    virtual Vec4f fragmentShader(const VertexOut &in);
     virtual Vec3f VertexShader(int faceInd, int VertInd) override;
     virtual bool FragmentShader(v2f *v2fData, Vec4f &color) override;
     virtual void SetEyePos(const Vec3f &eye) { m_eyePos = eye; }

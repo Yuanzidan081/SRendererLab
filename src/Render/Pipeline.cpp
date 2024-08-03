@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include "imagelabel.h"
+#include "MathUtils.h"
 
 Pipeline::Pipeline(int width, int height)
 {
@@ -14,9 +15,9 @@ Pipeline::Pipeline(int width, int height)
     m_config.m_shader = nullptr;
     m_config.m_eyePos = Vec3f(0.0f, 0.0f, 0.0f);
 
-    m_camera = new NaiveCamera(Vec3f({2.0f, 1.0f, 3.0f}));
+    /* m_camera = new NaiveCamera(Vec3f({2.0f, 1.0f, 3.0f}));
     m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
-    m_viewMat = m_camera->GetViewMatrix();
+    m_viewMat = m_camera->GetViewMatrix(); */
 }
 
 Pipeline::~Pipeline()
@@ -32,13 +33,13 @@ Pipeline::~Pipeline()
         delete m_config.m_textureUnits[i];
         m_config.m_textureUnits[i] = nullptr;
     }
-    if (m_camera)
-        delete m_camera;
+    /*  if (m_camera)
+         delete m_camera; */
 
     m_config.m_backBuffer = nullptr;
     m_config.m_frontBuffer = nullptr;
     m_config.m_shader = nullptr;
-    m_camera = nullptr;
+    /* m_camera = nullptr; */
 }
 
 void Pipeline::initialize()
@@ -49,8 +50,8 @@ void Pipeline::initialize()
         delete m_config.m_frontBuffer;
     if (m_config.m_shader)
         delete m_config.m_shader;
-    m_config.m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height, 255.0f);
-    // m_config.m_viewPortMat = Mat4x4GetViewport(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height);
+    // m_config.m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height, 255.0f);
+    m_config.m_viewPortMat = Mat4x4GetViewport(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height);
     m_config.m_backBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
     m_config.m_frontBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
     m_config.m_shader = new SimpleShader();
@@ -59,13 +60,22 @@ void Pipeline::initialize()
 
 void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const PolygonMode &type)
 {
+    bool flag = true;
     for (int i = 0; i < model.m_Faces.size(); ++i)
     {
         std::vector<Vec3i> face = model.m_Faces[i];
         Vec3f v[3];
         for (int j = 0; j < 3; ++j)
         {
-            v[j] = Vec4fToVec3f(m_config.m_viewPortMat * Vec3fToVec4f(model.m_Vertices[face[j][0]]));
+            v[j] = Vec3f(m_config.m_viewPortMat * Vec4f(model.m_Vertices[face[j][0]]));
+            /* if (flag)
+            {
+                std::cout << "DrawModelPureColor" << std::endl;
+                std::cout << "vertices:" << Vec3fToVec4f(model.m_Vertices[face[j][0]]) << std::endl;
+                std::cout << "viewPortMat: " << m_config.m_viewPortMat << std::endl;
+                std::cout << "final vertices:" << v[0] << std::endl;
+                flag = false;
+            } */
         }
         DrawTriangleWithoutDepthInfo(v, color, (void *)m_config.m_backBuffer, type);
     }
@@ -102,7 +112,7 @@ void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f
         for (int j = 0; j < 3; ++j)
         {
             worldCoord[j] = model.m_Vertices[face[j][0]];
-            screenCoord[j] = Vec4fToVec3f(m_config.m_viewPortMat * m_projectionMat * Vec3fToVec4f(worldCoord[j]));
+            screenCoord[j] = Vec3f(m_config.m_viewPortMat * m_projectionMat * Vec4f(worldCoord[j]));
         }
         Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
         // intensity
@@ -127,7 +137,7 @@ void Pipeline::DrawModelWithTextureWithViewMat(Model &model, Vec3f &lightDir, co
         for (int j = 0; j < 3; ++j)
         {
             worldCoord[j] = model.m_Vertices[face[j][0]];
-            screenCoord[j] = Vec4fToVec3f(m_config.m_viewPortMat * m_projectionMat * m_viewMat * Vec3fToVec4f(worldCoord[j]));
+            screenCoord[j] = Vec3f(m_config.m_viewPortMat * m_projectionMat * m_viewMat * Vec4f(worldCoord[j]));
             texCoords[j] = model.m_UVCoords[face[j][1]];
             intensity[j] = VecGetDotProduct(model.m_Normals[face[j][2]], lightDir);
         }
@@ -146,7 +156,7 @@ void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir,
         for (int j = 0; j < 3; ++j)
         {
             worldCoord[j] = model.m_Vertices[face[j][0]];
-            screenCoord[j] = Vec4fToVec3f(m_config.m_viewPortMat * m_projectionMat * Vec3fToVec4f(worldCoord[j]));
+            screenCoord[j] = Vec3f(m_config.m_viewPortMat * m_projectionMat * Vec4f(worldCoord[j]));
             texCoords[j] = model.m_UVCoords[face[j][1]];
         }
 
@@ -212,7 +222,7 @@ bool Pipeline::UnBindTexture(const unsigned int &unit)
     m_config.m_shader->BindShaderTexture(nullptr);
     return true;
 }
-void Pipeline::CleraFrameBuffer(const Vec4f &color)
+void Pipeline::ClearFrameBuffer(const Vec4f &color)
 {
     m_config.m_backBuffer->clearColorAndDepthBuffer(color);
 }
@@ -243,6 +253,7 @@ void Pipeline::SetViewMatrix(Vec3f eye, Vec3f target, Vec3f up)
     Mat4x4f viewMat = Mat4x4GetLookAt(eye, target, up);
     m_config.m_shader->SetEyePos(eye);
     m_config.m_shader->SetViewMatrix(viewMat);
+    m_viewMat = viewMat;
 }
 
 void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
@@ -254,6 +265,13 @@ void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
 void Pipeline::SetProjectMatrix(float z)
 {
     m_projectionMat = Mat4x4GetProjectionNaive(z);
+    m_config.m_shader->SetProjectMatrix(m_projectionMat);
+}
+
+void Pipeline::SetProjectMatrix(Vec3f eye, Vec3f center)
+{
+    m_projectionMat = Mat4x4GetProjectionNaive(eye, center);
+    m_config.m_shader->SetProjectMatrix(m_projectionMat);
 }
 
 void Pipeline::SetModelMatrix(Mat4x4f modelMatrix)
@@ -261,7 +279,7 @@ void Pipeline::SetModelMatrix(Mat4x4f modelMatrix)
     m_config.m_shader->SetModelMatrix(modelMatrix);
 }
 
-void Pipeline::SetShadingMode(ShadingMode &&mode)
+void Pipeline::SetShadingMode(ShadingMode mode)
 {
     if (m_config.m_shader)
         delete m_config.m_shader;
@@ -286,6 +304,294 @@ void Pipeline::SetShadingMode(ShadingMode &&mode)
     }
 }
 
+bool Pipeline::DrawMesh()
+{
+    if (m_config.m_indices->empty())
+        return false;
+
+    // line clipping
+    bool line1 = false, line2 = false, line3 = false, line4 = false;
+    for (unsigned int i = 0; i < m_config.m_indices->size(); i += 3)
+    {
+        // assemble to a triangle primitive
+        Vertex p1, p2, p3;
+        {
+            p1 = (*m_config.m_vertices)[(*m_config.m_indices)[i + 0]];
+            p2 = (*m_config.m_vertices)[(*m_config.m_indices)[i + 1]];
+            p3 = (*m_config.m_vertices)[(*m_config.m_indices)[i + 2]];
+        }
+
+        // vertex shader stage
+        VertexOut v1, v2, v3;
+        {
+            v1 = m_config.m_shader->vertexShader(p1);
+            v2 = m_config.m_shader->vertexShader(p2);
+            v3 = m_config.m_shader->vertexShader(p3);
+        }
+
+        // todo: back face culling
+        // todo: geometry clipping
+
+        // perspective division
+        {
+            perspectiveDivision(v1);
+            perspectiveDivision(v2);
+            perspectiveDivision(v3);
+        }
+
+        // view port transformation
+        {
+            // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
+            v1.posProj = m_config.m_viewPortMat * v1.posProj;
+            v2.posProj = m_config.m_viewPortMat * v2.posProj;
+            v3.posProj = m_config.m_viewPortMat * v3.posProj;
+        }
+
+        // rasterization and fragment shader stage
+        {
+            if (m_config.m_polygonMode == PolygonMode::Wire)
+            {
+                if (!line1)
+                    bresenhamLineRasterization(v1, v2);
+                if (!line2)
+                    bresenhamLineRasterization(v2, v3);
+                if (!line3)
+                    bresenhamLineRasterization(v3, v1);
+            }
+            else if (m_config.m_polygonMode == PolygonMode::Fill)
+            {
+                edgeWalkingFillRasterization(v1, v2, v3);
+            }
+        }
+    }
+}
+
+void Pipeline::perspectiveDivision(VertexOut &target)
+{
+    target.posProj.x /= target.posProj.w;
+    target.posProj.y /= target.posProj.w;
+    target.posProj.z /= target.posProj.w;
+    target.posProj.w = 1.0f;
+    // map from [-1, 1] to [0, 1]
+    target.posProj.z = (target.posProj.z + 1.0f) * 0.5f;
+}
+
+VertexOut Pipeline::lerp(const VertexOut &n1, const VertexOut &n2, double weight)
+{
+    VertexOut result;
+    result.posProj = VecGetLinearLerp(n1.posProj, n2.posProj, weight);
+    result.posWorld = VecGetLinearLerp(n1.posWorld, n2.posWorld, weight);
+    result.color = VecGetLinearLerp(n1.color, n2.color, weight);
+    result.normal = VecGetLinearLerp(n1.normal, n2.normal, weight);
+    result.texcoord = VecGetLinearLerp(n1.texcoord, n2.texcoord, weight);
+    result.oneDivZ = (1.0 - weight) * n1.oneDivZ + weight * n2.oneDivZ;
+    return result;
+}
+
+// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+// https://liolok.com/zhs/bresenham-line-algorithm-and-decision-parameter/
+void Pipeline::bresenhamLineRasterization(const VertexOut &from, const VertexOut &to)
+{
+    int dx = to.posProj.x - from.posProj.x;
+    int dy = to.posProj.y - from.posProj.y;
+    int stepX = 1, stepY = 1;
+    // 保证dx和dy都是正的，用来判断斜率，不用除法
+    if (dx < 0)
+    {
+        stepX = -1;
+        dx = -dx;
+    }
+    if (dy < 0)
+    {
+        stepY = -1;
+        dy = -dy;
+    }
+    int d2x = 2 * dx, d2y = 2 * dy;
+    int d2y_minus_d2x = d2y - d2x;
+    int sx = from.posProj.x;
+    int sy = from.posProj.y;
+
+    VertexOut tmp;
+    // slop < 1
+
+    if (dy < dx)
+    {
+        int flag = d2y - dx;
+        for (int i = 0; i < dx; ++i)
+        {
+            // linear interpolation
+            tmp = lerp(from, to, static_cast<float>(i) / dx);
+            float depth = m_config.m_backBuffer->GetPixelDepth(sx, sy);
+            if (tmp.posProj.z > depth)
+                continue; // fail to pass the depth testing
+            m_config.m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
+            // fragment shader
+            m_config.m_backBuffer->SetPixelColor(sx, sy, m_config.m_shader->fragmentShader(tmp));
+            sx += stepX;
+            if (flag <= 0)
+                flag += d2y;
+            else
+            {
+                sy += stepY;
+                flag += d2y_minus_d2x;
+            }
+        }
+    }
+    else
+    {
+        int flag = d2x - dy;
+        for (int i = 0; i < dy; ++i)
+        {
+            tmp = lerp(from, to, static_cast<float>(i) / dy);
+            float depth = m_config.m_backBuffer->GetPixelDepth(sx, sy);
+            if (tmp.posProj.z > depth)
+                continue; // fail to pass the depth testing
+            m_config.m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
+
+            // fragment shader
+            m_config.m_backBuffer->SetPixelColor(sx, sy, m_config.m_shader->fragmentShader(tmp));
+            sy += stepY;
+            if (flag <= 0)
+                flag += d2x;
+            else
+            {
+                sx += stepX;
+                flag -= d2y_minus_d2x;
+            }
+        }
+    }
+}
+void Pipeline::scanLinePerRow(const VertexOut &left, const VertexOut &right)
+{
+    // scan the line from left to right
+    VertexOut current;
+    int length = right.posProj.x - left.posProj.x + 1;
+    for (int i = 0; i <= length; ++i)
+    {
+        float weight = static_cast<float>(i) / length;
+        current = lerp(left, right, weight);
+        current.posProj.x = left.posProj.x + i;
+        current.posProj.y = left.posProj.y;
+
+        // depth testing
+        if (m_config.m_depthTesting)
+        {
+            float depth = m_config.m_backBuffer->GetPixelDepth(current.posProj.x, current.posProj.y);
+            if (current.posProj.z > depth)
+                continue; // fail to pass the depth testing
+            m_config.m_backBuffer->SetPixelDepth(current.posProj.x, current.posProj.y, current.posProj.z);
+        }
+        if (current.posProj.x < 0 || current.posProj.y < 0)
+            continue;
+        if (current.posProj.x >= m_config.m_width || current.posProj.y >= m_config.m_height)
+            break;
+        float w = 1.0f / current.oneDivZ;
+        current.posWorld *= w;
+        current.color *= w;
+        current.texcoord *= w;
+        // fragment shader
+        m_config.m_backBuffer->SetPixelColor(current.posProj.x, current.posProj.y, m_config.m_shader->fragmentShader(current));
+    }
+}
+void Pipeline::rasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
+{
+    VertexOut left = v2;
+    VertexOut right = v3;
+    VertexOut dest = v1;
+    VertexOut tmp, newleft, newright;
+    if (left.posProj.x > right.posProj.x)
+    {
+        tmp = left;
+        left = right;
+        right = tmp;
+    }
+    int dy = left.posProj.y - dest.posProj.y + 1;
+
+    for (int i = 0; i < dy; ++i)
+    {
+        float weight = 0;
+        if (dy != 0)
+            weight = static_cast<float>(i) / dy;
+        newleft = lerp(left, dest, weight);
+        newright = lerp(right, dest, weight);
+        newleft.posProj.y = newright.posProj.y = left.posProj.y - i;
+        scanLinePerRow(newleft, newright);
+    }
+}
+void Pipeline::rasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
+{
+    VertexOut left = v1;
+    VertexOut right = v2;
+    VertexOut dest = v3;
+    VertexOut tmp, newleft, newright;
+    if (left.posProj.x > right.posProj.x)
+    {
+        tmp = left;
+        left = right;
+        right = tmp;
+    }
+    int dy = dest.posProj.y - left.posProj.y + 1;
+
+    for (int i = 0; i < dy; ++i)
+    {
+        float weight = 0;
+        if (dy != 0)
+            weight = static_cast<float>(i) / dy;
+        newleft = lerp(left, dest, weight);
+        newright = lerp(right, dest, weight);
+        newleft.posProj.y = newright.posProj.y = left.posProj.y + i;
+        scanLinePerRow(newleft, newright);
+    }
+}
+void Pipeline::edgeWalkingFillRasterization(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3)
+{
+    // split the triangle into two parts
+    VertexOut tmp;
+    VertexOut target[3] = {v1, v2, v3};
+    // vertexOut[0].y < vertexOut[1].y < vertexOut[2].y
+    //*
+    // ** vertexOut[0]
+    //  * *
+    //   *  *
+    //    *  *  vertexOut[1]
+    //     *  vertexOut[2]
+
+    if (target[0].posProj.y > target[1].posProj.y)
+    {
+        tmp = target[0];
+        target[0] = target[1];
+        target[1] = tmp;
+    }
+    if (target[0].posProj.y > target[2].posProj.y)
+    {
+        tmp = target[0];
+        target[0] = target[2];
+        target[2] = tmp;
+    }
+    if (target[1].posProj.y > target[2].posProj.y)
+    {
+        tmp = target[1];
+        target[1] = target[2];
+        target[2] = tmp;
+    }
+    // bottom triangle
+    if (equal(target[0].posProj.y, target[1].posProj.y))
+    {
+        rasterBottomTriangle(target[0], target[1], target[2]);
+    }
+    else if (equal(target[1].posProj.y, target[2].posProj.y))
+    {
+        rasterTopTriangle(target[0], target[1], target[2]);
+    }
+    else
+    {
+        float weight = static_cast<float>(target[1].posProj.y - target[0].posProj.y) / (target[2].posProj.y - target[0].posProj.y);
+        VertexOut newPoint = lerp(target[0], target[2], weight);
+
+        rasterTopTriangle(target[0], newPoint, target[1]);
+        rasterBottomTriangle(newPoint, target[1], target[2]);
+    }
+}
 void Pipeline::SetDefaultConfig()
 {
     SetDepthTesting(true);
@@ -293,21 +599,3 @@ void Pipeline::SetDefaultConfig()
     SetGeometryClipping(true);
     // SetPolygonMode(PolygonMode::Fill);
 }
-
-/* void Pipeline::SetCameraPosZ(float z)
-{
-    m_camera->SetCameraPosZ(z);
-    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
-} */
-
-/* void Pipeline::SetCameraPos(const Vec3f &eye)
-{
-    m_camera->SetCameraPos(eye);
-} */
-
-/* void Pipeline::SetCameraLookAt(const Vec3f &eye, const Vec3f &center, const Vec3f &up)
-{
-    m_camera->SetCameraLookAt(eye, center, up);
-    m_projectionMat = Mat4x4GetProjectionNaive(eye, center);
-    m_viewMat = m_camera->GetViewMatrix();
-} */

@@ -22,3 +22,13 @@ bool TextureShader::FragmentShader(v2f *v2fData, Vec4f &color)
 
     return false;
 }
+
+VertexOut TextureShader::vertexShader(const Vertex &in)
+{
+    return VertexOut();
+}
+
+Vec4f TextureShader::fragmentShader(const VertexOut &in)
+{
+    return Vec4f();
+}

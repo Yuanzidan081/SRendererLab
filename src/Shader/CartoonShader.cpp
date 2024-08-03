@@ -33,3 +33,13 @@ bool CartoonShader::FragmentShader(v2f *v2fData, Vec4f &color)
     color = Vec4f(intensity, intensity, intensity, 1.0f) * Vec4f(1.0f, 0.6f, 0.0f, 1.0f);
     return false;
 }
+
+VertexOut CartoonShader::vertexShader(const Vertex &in)
+{
+    return VertexOut();
+}
+
+Vec4f CartoonShader::fragmentShader(const VertexOut &in)
+{
+    return Vec4f();
+}

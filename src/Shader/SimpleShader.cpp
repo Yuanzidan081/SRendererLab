@@ -5,16 +5,6 @@ SimpleShader::SimpleShader()
     m_tex = nullptr;
 }
 
-Vec3f SimpleShader::VertexShader(int faceInd, int VertInd)
-{
-    return Vec3f();
-}
-
-bool SimpleShader::FragmentShader(v2f *v2fData, Vec4f &color)
-{
-    return false;
-}
-
 VertexOut SimpleShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
@@ -32,9 +22,9 @@ VertexOut SimpleShader::vertexShader(const Vertex &in)
     return result;
 }
 
-Vec4f SimpleShader::fragmentShader(const VertexOut &in)
+Vec4 SimpleShader::fragmentShader(const VertexOut &in)
 {
-    Vec4f litColor = in.color;
+    Vec4 litColor = in.color;
     if (m_tex)
     {
         litColor = m_tex->SampleTexture(in.texcoord);

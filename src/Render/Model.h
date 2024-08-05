@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
-#include "Math/Vec.h"
+#include "Math/MathGroup.h"
+
 #include <vector>
 #include <string>
 #include <unordered_map>
@@ -12,7 +13,6 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 // 单个顶点的属性
-
 
 class Model
 {
@@ -26,17 +26,17 @@ public:
     void SetDiffuse(const char *diffuseFileName);
     void SetNormal(const char *normalFileName);
     void SetSpecular(const char *specularFileName);
-    Vec4f GetDiffuseColor(Vec2f &uv);
-    Vec4f GetNormalColor(Vec2f &uv);
+    Vec4 GetDiffuseColor(Vec2 &uv);
+    Vec4 GetNormalColor(Vec2 &uv);
 
-    float GetSpecularColor(Vec2f &uv);
+    float GetSpecularColor(Vec2 &uv);
 
 public:
-    vector<Vec3f> m_Vertices;
-    vector<Vec2f> m_UVCoords;
-    vector<Vec3f> m_Normals;
+    vector<Vec3> m_Vertices;
+    vector<Vec2> m_UVCoords;
+    vector<Vec3> m_Normals;
 
-    vector<vector<Vec3i>> m_Faces;
+    vector<vector<Vec3>> m_Faces;
     Texture2D *m_diffuseTexture;
     Texture2D *m_normalTexture;
     Texture2D *m_specularTexture;

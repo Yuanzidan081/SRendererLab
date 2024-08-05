@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <string>
-#include "Math/Vec.h"
+#include "Math/Vec2.h"
+#include "Math/Vec4.h"
 class Texture2D
 {
 public:
@@ -21,7 +22,7 @@ public:
     bool LoadTexture(const char *filename);
     bool LoadTexture(const std::string &filename);
 
-        const Vec4f SampleTexture(const Vec2f &texCoords) const;
+    const Vec4 SampleTexture(const Vec2 &texCoords) const;
     friend std::ostream &operator<<(std::ostream &out, const Texture2D &texture);
 
 private:

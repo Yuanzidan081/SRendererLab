@@ -1,8 +1,8 @@
 #ifndef BASE_H
 #define BASE_H
 #include <memory>
-#include "Math/Vec.h"
-#include "Render/ShaderData.h"
+
+// #include "Render/ShaderData.h"
 template <typename T>
 using Ref = std::shared_ptr<T>;
 
@@ -58,8 +58,5 @@ enum ShadingMode
 const int screenWidth = 500;
 const int screenHeight = 500;
 
-// extern Vec3f cameraEye;
-/* extern Vec3f cameraCenter;
-extern Vec3f cameraUp; */
-extern ShaderData shaderData;
+// extern ShaderData shaderData;
 #endif // BASE_H

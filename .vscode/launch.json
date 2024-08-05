@@ -5,15 +5,14 @@
             "name": "launch SRendererLab",
             "type": "cppvsdbg",
             "request": "launch",
-            //"program": "${workspaceFolder}/bin/Debug/mathTest.exe", //程序可执行文件的完整路径。
-            //"program": "${workspaceFolder}/bin/Debug/modelTest.exe", //程序可执行文件的完整路径。
-            "program": "${workspaceFolder}/bin/Debug/SRendererLab.exe", //程序可执行文件的完整路径。
+            "program": "${workspaceFolder}/bin/Debug/SRendererLab.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "preparation" //与tasks.json文件里的label名对应
+            "preLaunchTask": "preparation",
+            "visualizerFile": "c:\\Users\\Lin Siyuan\\AppData\\Roaming\\Code\\User\\workspaceStorage\\df8a847ea97a4167b1f41940cbe43d86\\tonka3000.qtvsctools\\qt.natvis.xml"
         }
     ]
 }

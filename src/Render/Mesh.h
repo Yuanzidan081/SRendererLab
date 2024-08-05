@@ -1,18 +1,17 @@
 #ifndef MESH_H
 #define MESH_H
 #include <vector>
-#include "Math/Vec.h"
-#include "Math/Mat.h"
+#include "Math/MathGroup.h"
 
 class Vertex
 {
 public:
-    Vec4f position; // position
-    Vec4f color;    // vertex color
-    Vec2f texcoord; // texture coordinate
-    Vec3f normal;   // vertex normal
+    Vec4 position; // position
+    Vec4 color;    // vertex color
+    Vec2 texcoord; // texture coordinate
+    Vec3 normal;   // vertex normal
     Vertex() = default;
-    Vertex(Vec4f pos_, Vec4f color_, Vec2f texcoord_, Vec3f normal_)
+    Vertex(Vec4 pos_, Vec4 color_, Vec2 texcoord_, Vec3 normal_)
         : position(pos_), color(color_), texcoord(texcoord_), normal(normal_) {}
     Vertex(const Vertex &rhs)
         : position(rhs.position), color(rhs.color), texcoord(rhs.texcoord), normal(rhs.normal) {}
@@ -20,16 +19,16 @@ public:
 class VertexOut
 {
 public:
-    Vec4f posWorld; // position in world space
-    Vec4f posProj;  // projected position
-    Vec2f texcoord; // texture coordinates
-    Vec3f normal;   // vertex normal
-    Vec4f color;    // vertex color
+    Vec4 posWorld; // position in world space
+    Vec4 posProj;  // projected position
+    Vec2 texcoord; // texture coordinates
+    Vec3 normal;   // vertex normal
+    Vec4 color;    // vertex color
     float oneDivZ;
     VertexOut() = default;
-    VertexOut(Vec4f posWorld_, Vec4f posProj_, Vec2f tex_,
-              Vec3f normal_, Vec4f color_, float oneDivZ_) : posWorld(posWorld_), posProj(posProj_), texcoord(tex_),
-                                                             normal(normal_), color(color_), oneDivZ(oneDivZ_) {}
+    VertexOut(Vec4 posWorld_, Vec4 posProj_, Vec2 tex_,
+              Vec3 normal_, Vec4 color_, float oneDivZ_) : posWorld(posWorld_), posProj(posProj_), texcoord(tex_),
+                                                           normal(normal_), color(color_), oneDivZ(oneDivZ_) {}
     VertexOut(const VertexOut &rhs) : posWorld(rhs.posWorld),
                                       posProj(rhs.posProj), texcoord(rhs.texcoord),
                                       normal(rhs.normal), color(rhs.color), oneDivZ(rhs.oneDivZ) {}
@@ -55,6 +54,6 @@ public:
 
     void asBox(double width, double height, double depth);
     void asFloor(double length, double height);
-    void asTriangle(const Vec3f p1, const Vec3f p2, const Vec3f p3);
+    void asTriangle(const Vec3 p1, const Vec3 p2, const Vec3 p3);
 };
 #endif // MESH_H

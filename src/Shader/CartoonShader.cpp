@@ -1,10 +1,10 @@
 #include "CartoonShader.h"
 
 
-Vec3f CartoonShader::VertexShader(int faceInd, int VertInd)
+/* Vec3f CartoonShader::VertexShader(int faceInd, int VertInd)
 {
     m_intensity[VertInd] = std::max(0.0f, VecGetDotProduct(model->m_Normals[model->m_Faces[faceInd][VertInd][2]], VecGetNormalize(shaderData.lightDir)));
-    Vec4f position(model->m_Vertices[model->m_Faces[faceInd][VertInd][0]], 1.0f);
+    Vec4 position(model->m_Vertices[model->m_Faces[faceInd][VertInd][0]], 1.0f);
 
     return Vec3f(shaderData.screenViewportMat *
                  shaderData.cameraProjectionMat *
@@ -12,7 +12,7 @@ Vec3f CartoonShader::VertexShader(int faceInd, int VertInd)
                  shaderData.modelTransMat * position);
 }
 
-bool CartoonShader::FragmentShader(v2f *v2fData, Vec4f &color)
+bool CartoonShader::FragmentShader(v2f *v2fData, Vec4 &color)
 {
     float intensity = (v2fData->triangleCoeff.u * m_intensity[0] * v2fData->oneDivideZ[0] +
                        v2fData->triangleCoeff.v * m_intensity[1] * v2fData->oneDivideZ[1] +
@@ -30,16 +30,16 @@ bool CartoonShader::FragmentShader(v2f *v2fData, Vec4f &color)
         intensity = 0.30f;
     else
         intensity = 0.0f;
-    color = Vec4f(intensity, intensity, intensity, 1.0f) * Vec4f(1.0f, 0.6f, 0.0f, 1.0f);
+    color = Vec4(intensity, intensity, intensity, 1.0f) * Vec4(1.0f, 0.6f, 0.0f, 1.0f);
     return false;
-}
+} */
 
 VertexOut CartoonShader::vertexShader(const Vertex &in)
 {
     return VertexOut();
 }
 
-Vec4f CartoonShader::fragmentShader(const VertexOut &in)
+Vec4 CartoonShader::fragmentShader(const VertexOut &in)
 {
-    return Vec4f();
+    return Vec4();
 }

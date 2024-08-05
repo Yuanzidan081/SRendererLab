@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cassert>
 Model::Model(const char *filename) : m_diffuseTexture(nullptr),
                                      m_normalTexture(nullptr),
                                      m_specularTexture(nullptr)
@@ -87,21 +88,21 @@ void Model::loadObjModel(const char *filename)
         if (!line.compare(0, 2, "v "))
         {
             buf >> trash; // trash: filter "v"
-            Vec3f v;
+            Vec3 v;
             buf >> v.x >> v.y >> v.z;
             m_Vertices.push_back(v);
         }
         else if (!line.compare(0, 3, "vt "))
         {
             buf >> trash >> trash; // trash: filter "vt"
-            Vec2f vt;
+            Vec2 vt;
             buf >> vt.x >> vt.y; // the vt is the representation of 0.588, 0.975, 0.000
             m_UVCoords.push_back(vt);
         }
         else if (!line.compare(0, 3, "vn "))
         {
             buf >> trash >> trash; // trash: filter "vn"
-            Vec3f vn;
+            Vec3 vn;
             buf >> vn.x >> vn.y >> vn.z;
             m_Normals.push_back(vn);
         }
@@ -109,8 +110,8 @@ void Model::loadObjModel(const char *filename)
         {
             buf >> trash; // trash: filter "f"
             int count = 0;
-            Vec3i face;
-            std::vector<Vec3i> f;
+            Vec3 face;
+            std::vector<Vec3> f;
 
             while (buf >> face.x >> trash >> face.y >> trash >> face.z)
             {
@@ -153,32 +154,32 @@ void Model::SetSpecular(const char *specularFileName)
     m_specularTexture = new Texture2D(specularFileName);
 }
 
-Vec4f Model::GetDiffuseColor(Vec2f &uv)
+Vec4 Model::GetDiffuseColor(Vec2 &uv)
 {
     if (!m_diffuseTexture)
     {
         std::cerr << "Error: the diffuse texture doesn't exist" << std::endl;
-        return Vec4f();
+        return Vec4();
     }
     return m_diffuseTexture->SampleTexture(uv);
 }
 
-Vec4f Model::GetNormalColor(Vec2f &uv)
+Vec4 Model::GetNormalColor(Vec2 &uv)
 {
     if (!m_normalTexture)
     {
         std::cerr << "Error: the normal texture doesn't exist" << std::endl;
-        return Vec4f();
+        return Vec4();
     }
-    Vec4f c = m_normalTexture->SampleTexture(uv);
-    Vec4f res;
+    Vec4 c = m_normalTexture->SampleTexture(uv);
+    Vec4 res;
     for (int i = 0; i < 3; i++)
         res[i] = (float)c[i] * 2.f - 1.f;
     res[3] = 0.0f;
     return res;
 }
 
-float Model::GetSpecularColor(Vec2f &uv)
+float Model::GetSpecularColor(Vec2 &uv)
 {
     if (!m_specularTexture)
     {

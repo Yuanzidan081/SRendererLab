@@ -1,7 +1,7 @@
 project(mathTest)
 add_executable(
   ${PROJECT_NAME}
-  mathTest.cpp
+  mathTestNew.cpp
 )
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_PATH})
 target_link_directories(${PROJECT_NAME} PRIVATE ${LIB_PATH})

@@ -13,9 +13,9 @@ Pipeline::Pipeline(int width, int height)
     m_config.m_backBuffer = nullptr;
     m_config.m_frontBuffer = nullptr;
     m_config.m_shader = nullptr;
-    m_config.m_eyePos = Vec3f(0.0f, 0.0f, 0.0f);
+    m_config.m_eyePos = Vec3(0.0f, 0.0f, 0.0f);
 
-    /* m_camera = new NaiveCamera(Vec3f({2.0f, 1.0f, 3.0f}));
+    /* m_camera = new NaiveCamera(Vec3({2.0f, 1.0f, 3.0f}));
     m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
     m_viewMat = m_camera->GetViewMatrix(); */
 }
@@ -51,155 +51,155 @@ void Pipeline::initialize()
     if (m_config.m_shader)
         delete m_config.m_shader;
     // m_config.m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height, 255.0f);
-    m_config.m_viewPortMat = Mat4x4GetViewport(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height);
+    m_config.m_viewPortMat.SetViewPort(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height);
     m_config.m_backBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
     m_config.m_frontBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
     m_config.m_shader = new SimpleShader();
     SetDefaultConfig();
 }
 
-void Pipeline::DrawModelPureColor(Model &model, Vec4f &color, const PolygonMode &type)
-{
-    bool flag = true;
-    for (int i = 0; i < model.m_Faces.size(); ++i)
-    {
-        std::vector<Vec3i> face = model.m_Faces[i];
-        Vec3f v[3];
-        for (int j = 0; j < 3; ++j)
-        {
-            v[j] = Vec3f(m_config.m_viewPortMat * Vec4f(model.m_Vertices[face[j][0]]));
-            /* if (flag)
-            {
-                std::cout << "DrawModelPureColor" << std::endl;
-                std::cout << "vertices:" << Vec3fToVec4f(model.m_Vertices[face[j][0]]) << std::endl;
-                std::cout << "viewPortMat: " << m_config.m_viewPortMat << std::endl;
-                std::cout << "final vertices:" << v[0] << std::endl;
-                flag = false;
-            } */
-        }
-        DrawTriangleWithoutDepthInfo(v, color, (void *)m_config.m_backBuffer, type);
-    }
-}
+// void Pipeline::DrawModelPureColor(Model &model, Vec4 &color, const PolygonMode &type)
+// {
+//     bool flag = true;
+//     for (int i = 0; i < model.m_Faces.size(); ++i)
+//     {
+//         std::vector<Vec3i> face = model.m_Faces[i];
+//         Vec3 v[3];
+//         for (int j = 0; j < 3; ++j)
+//         {
+//             v[j] = Vec3(m_config.m_viewPortMat * Vec4(model.m_Vertices[face[j][0]]));
+//             /* if (flag)
+//             {
+//                 std::cout << "DrawModelPureColor" << std::endl;
+//                 std::cout << "vertices:" << Vec3ToVec4(model.m_Vertices[face[j][0]]) << std::endl;
+//                 std::cout << "viewPortMat: " << m_config.m_viewPortMat << std::endl;
+//                 std::cout << "final vertices:" << v[0] << std::endl;
+//                 flag = false;
+//             } */
+//         }
+//         DrawTriangleWithoutDepthInfo(v, color, (void *)m_config.m_backBuffer, type);
+//     }
+// }
 
-void Pipeline::DrawModelNormalWithoutDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const PolygonMode &type)
-{
-    for (int i = 0; i < model.m_Faces.size(); ++i)
-    {
-        Vec3f screenCoord[3];
-        Vec3f worldCoord[3];
-        std::vector<Vec3i> face = model.m_Faces[i];
-        for (int j = 0; j < 3; ++j)
-        {
-            worldCoord[j] = model.m_Vertices[face[j][0]];
-            screenCoord[j] = CoordWorldFloatToScreenFloat(worldCoord[j]);
-        }
-        Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
-        // intensity
-        float intensity = VecGetDotProduct(normal, lightDir);
-        if (intensity > 0)
-        {
-            DrawTriangleWithoutDepthInfo(screenCoord, Vec4f(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_config.m_backBuffer, type);
-        }
-    }
-}
-void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3f &lightDir, Vec4f &color, const PolygonMode &type)
-{
-    for (int i = 0; i < model.m_Faces.size(); ++i)
-    {
-        Vec3f screenCoord[3];
-        Vec3f worldCoord[3];
-        std::vector<Vec3i> face = model.m_Faces[i];
-        for (int j = 0; j < 3; ++j)
-        {
-            worldCoord[j] = model.m_Vertices[face[j][0]];
-            screenCoord[j] = Vec3f(m_config.m_viewPortMat * m_projectionMat * Vec4f(worldCoord[j]));
-        }
-        Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
-        // intensity
-        float intensity = VecGetDotProduct(normal, lightDir);
-        if (intensity > 0)
-        {
-            DrawTriangleWithDepthInfo(screenCoord, Vec4f(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_config.m_backBuffer, type);
-        }
-    }
-}
+// void Pipeline::DrawModelNormalWithoutDepthInfo(Model &model, Vec3 &lightDir, Vec4 &color, const PolygonMode &type)
+// {
+//     for (int i = 0; i < model.m_Faces.size(); ++i)
+//     {
+//         Vec3 screenCoord[3];
+//         Vec3 worldCoord[3];
+//         std::vector<Vec3i> face = model.m_Faces[i];
+//         for (int j = 0; j < 3; ++j)
+//         {
+//             worldCoord[j] = model.m_Vertices[face[j][0]];
+//             screenCoord[j] = CoordWorldFloatToScreenFloat(worldCoord[j]);
+//         }
+//         Vec3 normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
+//         // intensity
+//         float intensity = VecGetDotProduct(normal, lightDir);
+//         if (intensity > 0)
+//         {
+//             DrawTriangleWithoutDepthInfo(screenCoord, Vec4(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_config.m_backBuffer, type);
+//         }
+//     }
+// }
+// void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3 &lightDir, Vec4 &color, const PolygonMode &type)
+// {
+//     for (int i = 0; i < model.m_Faces.size(); ++i)
+//     {
+//         Vec3 screenCoord[3];
+//         Vec3 worldCoord[3];
+//         std::vector<Vec3i> face = model.m_Faces[i];
+//         for (int j = 0; j < 3; ++j)
+//         {
+//             worldCoord[j] = model.m_Vertices[face[j][0]];
+//             screenCoord[j] = Vec3(m_config.m_viewPortMat * m_projectionMat * Vec4(worldCoord[j]));
+//         }
+//         Vec3 normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
+//         // intensity
+//         float intensity = VecGetDotProduct(normal, lightDir);
+//         if (intensity > 0)
+//         {
+//             DrawTriangleWithDepthInfo(screenCoord, Vec4(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_config.m_backBuffer, type);
+//         }
+//     }
+// }
 
-void Pipeline::DrawModelWithTextureWithViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const PolygonMode &type)
-{
-    for (int i = 0; i < model.m_Faces.size(); ++i)
-    {
-        Vec3f screenCoord[3];
-        Vec3f worldCoord[3];
-        Vec2f texCoords[3];
-        float intensity[3];
-        std::vector<Vec3i> face = model.m_Faces[i];
+// void Pipeline::DrawModelWithTextureWithViewMat(Model &model, Vec3 &lightDir, const Texture2D &texture, const PolygonMode &type)
+// {
+//     for (int i = 0; i < model.m_Faces.size(); ++i)
+//     {
+//         Vec3 screenCoord[3];
+//         Vec3 worldCoord[3];
+//         Vec2f texCoords[3];
+//         float intensity[3];
+//         std::vector<Vec3i> face = model.m_Faces[i];
 
-        for (int j = 0; j < 3; ++j)
-        {
-            worldCoord[j] = model.m_Vertices[face[j][0]];
-            screenCoord[j] = Vec3f(m_config.m_viewPortMat * m_projectionMat * m_viewMat * Vec4f(worldCoord[j]));
-            texCoords[j] = model.m_UVCoords[face[j][1]];
-            intensity[j] = VecGetDotProduct(model.m_Normals[face[j][2]], lightDir);
-        }
-        DrawTriangleFillModeWithDepthTexture(screenCoord, intensity, texCoords, texture, (void *)m_config.m_backBuffer);
-    }
-}
-void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3f &lightDir, const Texture2D &texture, const PolygonMode &type)
-{
+//         for (int j = 0; j < 3; ++j)
+//         {
+//             worldCoord[j] = model.m_Vertices[face[j][0]];
+//             screenCoord[j] = Vec3(m_config.m_viewPortMat * m_projectionMat * m_viewMat * Vec4(worldCoord[j]));
+//             texCoords[j] = model.m_UVCoords[face[j][1]];
+//             intensity[j] = VecGetDotProduct(model.m_Normals[face[j][2]], lightDir);
+//         }
+//         DrawTriangleFillModeWithDepthTexture(screenCoord, intensity, texCoords, texture, (void *)m_config.m_backBuffer);
+//     }
+// }
+// void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3 &lightDir, const Texture2D &texture, const PolygonMode &type)
+// {
 
-    for (int i = 0; i < model.m_Faces.size(); ++i)
-    {
-        Vec3f screenCoord[3];
-        Vec3f worldCoord[3];
-        Vec2f texCoords[3];
-        std::vector<Vec3i> face = model.m_Faces[i];
-        for (int j = 0; j < 3; ++j)
-        {
-            worldCoord[j] = model.m_Vertices[face[j][0]];
-            screenCoord[j] = Vec3f(m_config.m_viewPortMat * m_projectionMat * Vec4f(worldCoord[j]));
-            texCoords[j] = model.m_UVCoords[face[j][1]];
-        }
+//     for (int i = 0; i < model.m_Faces.size(); ++i)
+//     {
+//         Vec3 screenCoord[3];
+//         Vec3 worldCoord[3];
+//         Vec2f texCoords[3];
+//         std::vector<Vec3i> face = model.m_Faces[i];
+//         for (int j = 0; j < 3; ++j)
+//         {
+//             worldCoord[j] = model.m_Vertices[face[j][0]];
+//             screenCoord[j] = Vec3(m_config.m_viewPortMat * m_projectionMat * Vec4(worldCoord[j]));
+//             texCoords[j] = model.m_UVCoords[face[j][1]];
+//         }
 
-        // normal vector，这里obj定义的顶点顺序是逆时针 v1->v2->v3
-        Vec3f normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
-        // intensity
-        float intensity = VecGetDotProduct(normal, lightDir);
-        if (intensity > 0)
-        {
-            DrawTriangleFillModeWithDepthTexture(screenCoord, intensity, texCoords, texture, (void *)m_config.m_backBuffer);
-        }
-    }
-}
-void Pipeline::DrawModelWithShader(DrawData &drawData, const PolygonMode &type)
-{
-    Model *m = drawData.model;
-    Shader *s = drawData.shader;
-    shaderData.cameraViewMat = this->m_viewMat;
-    shaderData.cameraProjectionMat = this->m_projectionMat;
-    shaderData.screenViewportMat = this->m_config.m_viewPortMat;
-    shaderData.modelTransViewMat = shaderData.cameraProjectionMat * shaderData.cameraViewMat * shaderData.modelTransMat;
-    shaderData.modelTransViewMatInv = MatGetInverse(shaderData.modelTransViewMat);
-    for (int i = 0; i < m->m_Faces.size(); ++i)
-    {
-        Vec3f screenCoord[3];
-        for (int j = 0; j < 3; ++j)
-        {
-            screenCoord[j] = s->VertexShader(i, j);
-        }
+//         // normal vector，这里obj定义的顶点顺序是逆时针 v1->v2->v3
+//         Vec3 normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
+//         // intensity
+//         float intensity = VecGetDotProduct(normal, lightDir);
+//         if (intensity > 0)
+//         {
+//             DrawTriangleFillModeWithDepthTexture(screenCoord, intensity, texCoords, texture, (void *)m_config.m_backBuffer);
+//         }
+//     }
+// }
+// void Pipeline::DrawModelWithShader(DrawData &drawData, const PolygonMode &type)
+// {
+//     Model *m = drawData.model;
+//     Shader *s = drawData.shader;
+//     shaderData.cameraViewMat = this->m_viewMat;
+//     shaderData.cameraProjectionMat = this->m_projectionMat;
+//     shaderData.screenViewportMat = this->m_config.m_viewPortMat;
+//     shaderData.modelTransViewMat = shaderData.cameraProjectionMat * shaderData.cameraViewMat * shaderData.modelTransMat;
+//     shaderData.modelTransViewMatInv = MatGetInverse(shaderData.modelTransViewMat);
+//     for (int i = 0; i < m->m_Faces.size(); ++i)
+//     {
+//         Vec3 screenCoord[3];
+//         for (int j = 0; j < 3; ++j)
+//         {
+//             screenCoord[j] = s->VertexShader(i, j);
+//         }
 
-        DrawTriangleWithShader(screenCoord, s, (void *)m_config.m_backBuffer);
-    }
-}
-// TODO: representation by ViewPortMatrix
+//         DrawTriangleWithShader(screenCoord, s, (void *)m_config.m_backBuffer);
+//     }
+// }
+// // TODO: representation by ViewPortMatrix
 
-Vec3f Pipeline::CoordWorldFloatToScreenFloat(Vec3f &v)
-{
-    Vec3f res;
-    res.x = (v.x + 1.0f) * m_config.m_width / 2.0f;
-    res.y = (v.y + 1.0f) * m_config.m_height / 2.0f;
-    res.z = (v.z + 1.0f) * 255.0f / 2.0f;
-    return res;
-}
+// Vec3 Pipeline::CoordWorldFloatToScreenFloat(Vec3 &v)
+// {
+//     Vec3 res;
+//     res.x = (v.x + 1.0f) * m_config.m_width / 2.0f;
+//     res.y = (v.y + 1.0f) * m_config.m_height / 2.0f;
+//     res.z = (v.z + 1.0f) * 255.0f / 2.0f;
+//     return res;
+// }
 unsigned int Pipeline::LoadTexture(const std::string &path)
 {
     Texture2D *tex = new Texture2D();
@@ -222,7 +222,7 @@ bool Pipeline::UnBindTexture(const unsigned int &unit)
     m_config.m_shader->BindShaderTexture(nullptr);
     return true;
 }
-void Pipeline::ClearFrameBuffer(const Vec4f &color)
+void Pipeline::ClearFrameBuffer(const Vec4 &color)
 {
     m_config.m_backBuffer->clearColorAndDepthBuffer(color);
 }
@@ -239,7 +239,7 @@ void Pipeline::SwapFrameBuffer()
     m_config.m_backBuffer = temp;
 }
 
-void Pipeline::SetViewMatrix(Vec3f eye, const Mat4x4f &viewMat)
+void Pipeline::SetViewMatrix(Vec3 eye, const Mat4x4 &viewMat)
 {
     m_config.m_eyePos = eye;
     m_config.m_shader->SetEyePos(eye);
@@ -247,34 +247,24 @@ void Pipeline::SetViewMatrix(Vec3f eye, const Mat4x4f &viewMat)
     m_viewMat = viewMat;
 }
 
-void Pipeline::SetViewMatrix(Vec3f eye, Vec3f target, Vec3f up)
+void Pipeline::SetViewMatrix(Vec3 eye, Vec3 target, Vec3 up)
 {
     m_config.m_eyePos = eye;
-    Mat4x4f viewMat = Mat4x4GetLookAt(eye, target, up);
+    // Mat4x4 viewMat = Mat4x4GetLookAt(eye, target, up);
     m_config.m_shader->SetEyePos(eye);
-    m_config.m_shader->SetViewMatrix(viewMat);
-    m_viewMat = viewMat;
+    m_viewMat.SetLookAt(eye, target, up);
+    m_config.m_shader->SetViewMatrix(m_viewMat);
+    // m_viewMat = viewMat;
 }
 
 void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
 {
-    Mat4x4f projectMat = Mat4x4GetPerspective(fovy, aspect, near, far);
-    m_config.m_shader->SetProjectMatrix(projectMat);
-}
-
-void Pipeline::SetProjectMatrix(float z)
-{
-    m_projectionMat = Mat4x4GetProjectionNaive(z);
+    // Mat4x4 projectMat = Mat4x4GetPerspective(fovy, aspect, near, far);
+    m_projectionMat.SetPerspective(fovy, aspect, near, far);
     m_config.m_shader->SetProjectMatrix(m_projectionMat);
 }
 
-void Pipeline::SetProjectMatrix(Vec3f eye, Vec3f center)
-{
-    m_projectionMat = Mat4x4GetProjectionNaive(eye, center);
-    m_config.m_shader->SetProjectMatrix(m_projectionMat);
-}
-
-void Pipeline::SetModelMatrix(Mat4x4f modelMatrix)
+void Pipeline::SetModelMatrix(Mat4x4 modelMatrix)
 {
     m_config.m_shader->SetModelMatrix(modelMatrix);
 }
@@ -379,11 +369,16 @@ void Pipeline::perspectiveDivision(VertexOut &target)
 VertexOut Pipeline::lerp(const VertexOut &n1, const VertexOut &n2, double weight)
 {
     VertexOut result;
-    result.posProj = VecGetLinearLerp(n1.posProj, n2.posProj, weight);
-    result.posWorld = VecGetLinearLerp(n1.posWorld, n2.posWorld, weight);
-    result.color = VecGetLinearLerp(n1.color, n2.color, weight);
-    result.normal = VecGetLinearLerp(n1.normal, n2.normal, weight);
-    result.texcoord = VecGetLinearLerp(n1.texcoord, n2.texcoord, weight);
+    // result.posProj = VecGetLinearLerp(n1.posProj, n2.posProj, weight);
+    // result.posWorld = VecGetLinearLerp(n1.posWorld, n2.posWorld, weight);
+    // result.color = VecGetLinearLerp(n1.color, n2.color, weight);
+    // result.normal = VecGetLinearLerp(n1.normal, n2.normal, weight);
+    // result.texcoord = VecGetLinearLerp(n1.texcoord, n2.texcoord, weight);
+    result.posProj = n1.posProj.GetLerp(n2.posProj, weight);
+    result.posWorld = n1.posWorld.GetLerp(n2.posWorld, weight);
+    result.color = n1.color.GetLerp(n2.color, weight);
+    result.normal = n1.normal.GetLerp( n2.normal, weight);
+    result.texcoord = n1.texcoord.GetLerp( n2.texcoord, weight);
     result.oneDivZ = (1.0 - weight) * n1.oneDivZ + weight * n2.oneDivZ;
     return result;
 }
@@ -575,11 +570,11 @@ void Pipeline::edgeWalkingFillRasterization(const VertexOut &v1, const VertexOut
         target[2] = tmp;
     }
     // bottom triangle
-    if (equal(target[0].posProj.y, target[1].posProj.y))
+    if (Equal(target[0].posProj.y, target[1].posProj.y))
     {
         rasterBottomTriangle(target[0], target[1], target[2]);
     }
-    else if (equal(target[1].posProj.y, target[2].posProj.y))
+    else if (Equal(target[1].posProj.y, target[2].posProj.y))
     {
         rasterTopTriangle(target[0], target[1], target[2]);
     }

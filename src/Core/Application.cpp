@@ -32,9 +32,9 @@ void Application::Run()
 {
     m_pipeline->initialize();
 
-    m_naiveCamera = new NaiveCamera(Vec3f(1.5f, 1.0f, 10.0f));
-    // m_naiveCamera = new NaiveCamera(Vec3f(2.0f, 1.0f, 3.0f));
-    // m_naiveCamera = new NaiveCamera(Vec3f(0.0f, 0.0f, 20.0f));
+    m_naiveCamera = new NaiveCamera(Vec3(1.5f, 1.0f, 10.0f));
+    // m_naiveCamera = new NaiveCamera(Vec3(2.0f, 1.0f, 3.0f));
+    // m_naiveCamera = new NaiveCamera(Vec3(0.0f, 0.0f, 20.0f));
     Model model("obj/head/african_head.obj");
 
     // Model model("obj/cube/cube.obj");
@@ -82,8 +82,8 @@ void Application::Run()
     unsigned int headTex = m_pipeline->LoadTexture("obj/head/african_head_diffuse.tga");
     Mesh floor, triangle;
     floor.asFloor(6.0f, -1.5f);
-    triangle.asTriangle(Vec3f(0.0f, 1.0f, 0.0f), Vec3f(-1.0f, 0.5f, 0.0f), Vec3f(1.0f, -0.5f, 0.0f));
-    Vec3f center(0.0f, 0.0f, 0.0f);
+    triangle.asTriangle(Vec3(0.0f, 1.0f, 0.0f), Vec3(-1.0f, 0.5f, 0.0f), Vec3(1.0f, -0.5f, 0.0f));
+    Vec3 center(0.0f, 0.0f, 0.0f);
     m_pipeline->SetShadingMode(ShadingMode::Simple);
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
     m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
@@ -91,17 +91,17 @@ void Application::Run()
     m_pipeline->SetViewMatrix(m_naiveCamera->GetPosition(), m_naiveCamera->GetViewMatrix());
     while (!m_stopped)
     {
-        m_pipeline->ClearFrameBuffer(Vec4f(0.2f, 0.2f, 0.2f, 1.0f));
+        m_pipeline->ClearFrameBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
         m_pipeline->SetViewMatrix(m_naiveCamera->GetPosition(), m_naiveCamera->GetViewMatrix());
-        // m_pipeline->DrawModelPureColor(model, Vec4f(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
-        //     m_pipeline->DrawModelPureColor(model, Vec4f(0.1f, 0.1f, 0.1f, 1.0f), PolygonMode::SLine);
-        //      m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
-        // m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3f(0.0f, 0.0f, 1.0f), Vec4f(0.0f, 0.8f, 0.1f, 1.0f));
-        //    m_pipeline->DrawModelWithTextureWithoutViewMat(model, Vec3f(0.0f, 0.0f, 1.0f), texture1);
-        // m_pipeline->DrawModelWithTextureWithViewMat(model, Vec3f(1.0f, 1.0f, 1.0f), texture1);
+        // m_pipeline->DrawModelPureColor(model, Vec4(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
+        //     m_pipeline->DrawModelPureColor(model, Vec4(0.1f, 0.1f, 0.1f, 1.0f), PolygonMode::SLine);
+        //      m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3(0.0f, 0.0f, 1.0f), Vec4(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
+        // m_pipeline->DrawModelNormalWithDepthInfo(model, Vec3(0.0f, 0.0f, 1.0f), Vec4(0.0f, 0.8f, 0.1f, 1.0f));
+        //    m_pipeline->DrawModelWithTextureWithoutViewMat(model, Vec3(0.0f, 0.0f, 1.0f), texture1);
+        // m_pipeline->DrawModelWithTextureWithViewMat(model, Vec3(1.0f, 1.0f, 1.0f), texture1);
         {
             m_pipeline->BindTexture(floorTex);
-            m_pipeline->SetModelMatrix(Mat4x4f::GetIdentity());
+            // m_pipeline->SetModelMatrix(Mat4x4f::GetIdentity());
             m_pipeline->SetVertexBuffer(&floor.m_vertices);
             m_pipeline->SetIndexBuffer(&floor.m_indices);
             m_pipeline->DrawMesh();
@@ -111,7 +111,7 @@ void Application::Run()
         // head
         {
             m_pipeline->BindTexture(headTex);
-            m_pipeline->SetModelMatrix(Mat4x4GetScale(Vec3f(0.2f, 0.2f, 0.2f)));
+            // m_pipeline->SetModelMatrix(Mat4x4GetScale(Vec3(0.2f, 0.2f, 0.2f)));
             m_pipeline->SetVertexBuffer(&triangle.m_vertices);
             m_pipeline->SetIndexBuffer(&triangle.m_indices);
             m_pipeline->DrawMesh();

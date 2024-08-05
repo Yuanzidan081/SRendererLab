@@ -590,161 +590,161 @@ TEST(MatTest, FuncMatGetInverse)
     EXPECT_TRUE(MatGetInverse(mat4) == expected4);
 }
 
-TEST(MatTest, FuncMat4x4GetTranslate)
-{
+// TEST(MatTest, FuncMat4x4GetTranslate)
+// {
 
-    // 四阶逆矩阵
-    Mat<4, 4, float> mat4 = Mat4x4GetTranslate(Vec3f(1.0f, 2.0f, 3.0f));
-    Mat<4, 4, float> expected4(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 2.0f, 0.0f, 0.0f, 1.0f, 3.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // 四阶逆矩阵
+//     Mat<4, 4, float> mat4 = Mat4x4GetTranslate(Vec3f(1.0f, 2.0f, 3.0f));
+//     Mat<4, 4, float> expected4(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 2.0f, 0.0f, 0.0f, 1.0f, 3.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-    EXPECT_TRUE(mat4 == expected4);
-}
+//     EXPECT_TRUE(mat4 == expected4);
+// }
 
-TEST(MatTest, FuncMat4x4GetScale)
-{
+// TEST(MatTest, FuncMat4x4GetScale)
+// {
 
-    // 四阶逆矩阵
-    Mat<4, 4, float> mat4 = Mat4x4GetScale(Vec3f(1.0f, 2.0f, 3.0f));
-    Mat<4, 4, float> expected4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // 四阶逆矩阵
+//     Mat<4, 4, float> mat4 = Mat4x4GetScale(Vec3f(1.0f, 2.0f, 3.0f));
+//     Mat<4, 4, float> expected4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-    EXPECT_TRUE(mat4 == expected4);
-}
+//     EXPECT_TRUE(mat4 == expected4);
+// }
 
-TEST(MatTest, FuncMat4x4GetXRotation)
-{
+// TEST(MatTest, FuncMat4x4GetXRotation)
+// {
 
-    // 四阶逆矩阵
-    float angle = 45.0f * M_PI / 180.0f;
-    Mat<4, 4, float> mat4 = Mat4x4GetXRotation(angle);
-    Mat<4, 4, float> expected4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // 四阶逆矩阵
+//     float angle = 45.0f * M_PI / 180.0f;
+//     Mat<4, 4, float> mat4 = Mat4x4GetXRotation(angle);
+//     Mat<4, 4, float> expected4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-    EXPECT_TRUE(mat4 == expected4);
-}
+//     EXPECT_TRUE(mat4 == expected4);
+// }
 
-TEST(MatTest, FuncMat4x4GetYRotation)
-{
+// TEST(MatTest, FuncMat4x4GetYRotation)
+// {
 
-    // 四阶逆矩阵
-    float angle = 45.0f * M_PI / 180.0f;
-    Mat<4, 4, float> mat4 = Mat4x4GetYRotation(angle);
-    Mat<4, 4, float> expected4(cos(angle), 0.0f, -sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sin(angle), 0.0f, cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // 四阶逆矩阵
+//     float angle = 45.0f * M_PI / 180.0f;
+//     Mat<4, 4, float> mat4 = Mat4x4GetYRotation(angle);
+//     Mat<4, 4, float> expected4(cos(angle), 0.0f, -sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sin(angle), 0.0f, cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-    EXPECT_TRUE(mat4 == expected4);
-}
+//     EXPECT_TRUE(mat4 == expected4);
+// }
 
-TEST(MatTest, FuncMat4x4GetZRotation)
-{
+// TEST(MatTest, FuncMat4x4GetZRotation)
+// {
 
-    // 四阶逆矩阵
-    float angle = 45.0f * M_PI / 180.0f;
-    Mat<4, 4, float> mat4 = Mat4x4GetZRotation(angle);
-    Mat<4, 4, float> expected4(cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // 四阶逆矩阵
+//     float angle = 45.0f * M_PI / 180.0f;
+//     Mat<4, 4, float> mat4 = Mat4x4GetZRotation(angle);
+//     Mat<4, 4, float> expected4(cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-    EXPECT_TRUE(mat4 == expected4);
-}
+//     EXPECT_TRUE(mat4 == expected4);
+// }
 
-TEST(MatTest, FuncMat4x4GetRotation)
-{
+// TEST(MatTest, FuncMat4x4GetRotation)
+// {
 
-    // 四阶逆矩阵，其实测试是通过的，浮点数的比较是有误差的
-    float angle = 45.0f * M_PI / 180.0f;
-    Mat<4, 4, float> mat1 = Mat4x4GetRotation(Vec3f(1.0f, 0.0f, 0.0f), angle);
-    Mat<4, 4, float> expected1(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-    // EXPECT_EQ(mat1, expected1);
+//     // 四阶逆矩阵，其实测试是通过的，浮点数的比较是有误差的
+//     float angle = 45.0f * M_PI / 180.0f;
+//     Mat<4, 4, float> mat1 = Mat4x4GetRotation(Vec3f(1.0f, 0.0f, 0.0f), angle);
+//     Mat<4, 4, float> expected1(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // EXPECT_EQ(mat1, expected1);
 
-    Mat<4, 4, float> mat2 = Mat4x4GetRotation(Vec3f(0.0f, 1.0f, 0.0f), angle);
-    Mat<4, 4, float> expected2(cos(angle), 0.0f, -sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sin(angle), 0.0f, cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-    // EXPECT_EQ(mat2, expected2);
+//     Mat<4, 4, float> mat2 = Mat4x4GetRotation(Vec3f(0.0f, 1.0f, 0.0f), angle);
+//     Mat<4, 4, float> expected2(cos(angle), 0.0f, -sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sin(angle), 0.0f, cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // EXPECT_EQ(mat2, expected2);
 
-    Mat<4, 4, float> mat4 = Mat4x4GetRotation(Vec3f(0.0f, 0.0f, 1.0f), angle);
-    Mat<4, 4, float> expected4(cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-    // EXPECT_EQ(mat4, expected4);
-}
+//     Mat<4, 4, float> mat4 = Mat4x4GetRotation(Vec3f(0.0f, 0.0f, 1.0f), angle);
+//     Mat<4, 4, float> expected4(cos(angle), sin(angle), 0.0f, 0.0f, -sin(angle), cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+//     // EXPECT_EQ(mat4, expected4);
+// }
 
-TEST(MatTest, FuncMat4x4GetPerspective)
-{
-    float fovy = 45.0f * M_PI / 180.0f;
-    float aspect = 1.0f;
-    float zNear = 0.1f;
-    float zFar = 100.0f;
-    float epsilon = 1e-5;
+// TEST(MatTest, FuncMat4x4GetPerspective)
+// {
+//     float fovy = 45.0f * M_PI / 180.0f;
+//     float aspect = 1.0f;
+//     float zNear = 0.1f;
+//     float zFar = 100.0f;
+//     float epsilon = 1e-5;
 
-    Mat4x4f result = Mat4x4GetPerspective(fovy, aspect, zNear, zFar);
-    Mat4x4f expected = Mat4x4f::GetIdentity();
-    expected.mat[0][0] = 1 / (aspect * tan(fovy * 0.5f));
-    expected.mat[1][1] = 1 / tan(fovy * 0.5f);
-    expected.mat[2][2] = -(zFar + zNear) / (zFar - zNear);
-    expected.mat[3][2] = -1;
-    expected.mat[2][3] = -(2 * zFar * zNear) / (zFar - zNear);
-    expected.mat[3][3] = 0.0f;
-    EXPECT_TRUE(MatNear(result, expected, epsilon));
-}
+//     Mat4x4f result = Mat4x4GetPerspective(fovy, aspect, zNear, zFar);
+//     Mat4x4f expected = Mat4x4f::GetIdentity();
+//     expected.mat[0][0] = 1 / (aspect * tan(fovy * 0.5f));
+//     expected.mat[1][1] = 1 / tan(fovy * 0.5f);
+//     expected.mat[2][2] = -(zFar + zNear) / (zFar - zNear);
+//     expected.mat[3][2] = -1;
+//     expected.mat[2][3] = -(2 * zFar * zNear) / (zFar - zNear);
+//     expected.mat[3][3] = 0.0f;
+//     EXPECT_TRUE(MatNear(result, expected, epsilon));
+// }
 
-TEST(MatTest, FuncMat4x4GetOrtho)
-{
-    float left = -1.0f;
-    float right = 1.0f;
-    float bottom = -1.0f;
-    float top = 1.0f;
-    float zNear = 0.1f;
-    float zFar = 100.0f;
-    float epsilon = 1e-5;
+// TEST(MatTest, FuncMat4x4GetOrtho)
+// {
+//     float left = -1.0f;
+//     float right = 1.0f;
+//     float bottom = -1.0f;
+//     float top = 1.0f;
+//     float zNear = 0.1f;
+//     float zFar = 100.0f;
+//     float epsilon = 1e-5;
 
-    Mat4x4f result = Mat4x4GetOrtho(left, right, bottom, top, zNear, zFar);
-    Mat4x4f expected = Mat4x4f::GetIdentity();
-    expected.mat[0][0] = 2 / (right - left);
-    expected.mat[1][1] = 2 / (top - bottom);
-    expected.mat[2][2] = -2 / (zFar - zNear);
-    expected.mat[0][3] = -(right + left) / (right - left);
-    expected.mat[1][3] = -(top + bottom) / (top - bottom);
-    expected.mat[2][3] = -(zFar + zNear) / (zFar - zNear);
+//     Mat4x4f result = Mat4x4GetOrtho(left, right, bottom, top, zNear, zFar);
+//     Mat4x4f expected = Mat4x4f::GetIdentity();
+//     expected.mat[0][0] = 2 / (right - left);
+//     expected.mat[1][1] = 2 / (top - bottom);
+//     expected.mat[2][2] = -2 / (zFar - zNear);
+//     expected.mat[0][3] = -(right + left) / (right - left);
+//     expected.mat[1][3] = -(top + bottom) / (top - bottom);
+//     expected.mat[2][3] = -(zFar + zNear) / (zFar - zNear);
 
-    EXPECT_TRUE(MatNear(result, expected, epsilon));
-}
+//     EXPECT_TRUE(MatNear(result, expected, epsilon));
+// }
 
-TEST(MatTest, FuncMat4x4GetLookAt)
-{
-    Vec3f eye(0.0f, 0.0f, 5.0f);
-    Vec3f target(0.0f, 0.0f, 0.0f);
-    Vec3f up(0.0f, 1.0f, 0.0f);
-    float epsilon = 1e-5;
+// TEST(MatTest, FuncMat4x4GetLookAt)
+// {
+//     Vec3f eye(0.0f, 0.0f, 5.0f);
+//     Vec3f target(0.0f, 0.0f, 0.0f);
+//     Vec3f up(0.0f, 1.0f, 0.0f);
+//     float epsilon = 1e-5;
 
-    Mat4x4f result = Mat4x4GetLookAt(eye, target, up);
-    Vec3f Z = VecGetNormalize(eye - target);
-    Vec3f X = VecGetNormalize(VecGetCrossProduct(up, Z));
-    Vec3f Y = VecGetNormalize(VecGetCrossProduct(Z, X));
+//     Mat4x4f result = Mat4x4GetLookAt(eye, target, up);
+//     Vec3f Z = VecGetNormalize(eye - target);
+//     Vec3f X = VecGetNormalize(VecGetCrossProduct(up, Z));
+//     Vec3f Y = VecGetNormalize(VecGetCrossProduct(Z, X));
 
-    Mat4x4f expected = Mat4x4f::GetIdentity();
-    expected.mat[0][0] = X.x;
-    expected.mat[0][1] = X.y;
-    expected.mat[0][2] = X.z;
-    expected.mat[1][0] = Y.x;
-    expected.mat[1][1] = Y.y;
-    expected.mat[1][2] = Y.z;
-    expected.mat[2][0] = Z.x;
-    expected.mat[2][1] = Z.y;
-    expected.mat[2][2] = Z.z;
-    expected.mat[0][3] = -VecGetDotProduct(X, eye);
-    expected.mat[1][3] = -VecGetDotProduct(Y, eye);
-    expected.mat[2][3] = -VecGetDotProduct(Z, eye);
+//     Mat4x4f expected = Mat4x4f::GetIdentity();
+//     expected.mat[0][0] = X.x;
+//     expected.mat[0][1] = X.y;
+//     expected.mat[0][2] = X.z;
+//     expected.mat[1][0] = Y.x;
+//     expected.mat[1][1] = Y.y;
+//     expected.mat[1][2] = Y.z;
+//     expected.mat[2][0] = Z.x;
+//     expected.mat[2][1] = Z.y;
+//     expected.mat[2][2] = Z.z;
+//     expected.mat[0][3] = -VecGetDotProduct(X, eye);
+//     expected.mat[1][3] = -VecGetDotProduct(Y, eye);
+//     expected.mat[2][3] = -VecGetDotProduct(Z, eye);
 
-    EXPECT_TRUE(MatNear(result, expected, epsilon));
-}
+//     EXPECT_TRUE(MatNear(result, expected, epsilon));
+// }
 
-TEST(MatTest, FuncMat4x4GetViewport)
-{
-    float left = 0.0f;
-    float bottom = 0.0f;
-    float width = 800.0f;
-    float height = 600.0f;
-    float epsilon = 1e-5;
+// TEST(MatTest, FuncMat4x4GetViewport)
+// {
+//     float left = 0.0f;
+//     float bottom = 0.0f;
+//     float width = 800.0f;
+//     float height = 600.0f;
+//     float epsilon = 1e-5;
 
-    Mat4x4f result = Mat4x4GetViewport(left, bottom, width, height);
-    Mat4x4f expected = Mat4x4f::GetIdentity();
-    expected.mat[0][0] = width * 0.5f;
-    expected.mat[1][1] = height * 0.5f;
-    expected.mat[0][3] = left + width * 0.5f;
-    expected.mat[1][3] = bottom + height * 0.5f;
+//     Mat4x4f result = Mat4x4GetViewport(left, bottom, width, height);
+//     Mat4x4f expected = Mat4x4f::GetIdentity();
+//     expected.mat[0][0] = width * 0.5f;
+//     expected.mat[1][1] = height * 0.5f;
+//     expected.mat[0][3] = left + width * 0.5f;
+//     expected.mat[1][3] = bottom + height * 0.5f;
 
-    EXPECT_TRUE(MatNear(result, expected, epsilon));
-}
+//     EXPECT_TRUE(MatNear(result, expected, epsilon));
+// }

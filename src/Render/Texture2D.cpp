@@ -46,9 +46,9 @@ bool Texture2D::LoadTexture(const std::string &filename)
     return LoadTexture(filename.c_str());
 }
 // 如果是3位的channel，返回的最后一位为1就可以了
-const Vec4f Texture2D::SampleTexture(const Vec2f &texCoords) const
+const Vec4 Texture2D::SampleTexture(const Vec2 &texCoords) const
 {
-    Vec4f res(0.0, 0.0, 0.0, 1.0);
+    Vec4 res(0.0, 0.0, 0.0, 1.0);
     int x = (int)(texCoords.x * (m_Width - 1));
     int y = (int)(texCoords.y * (m_Height - 1));
     // std::cout << x << " " << y << " " << std::endl;

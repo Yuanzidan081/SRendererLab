@@ -32,7 +32,7 @@ float *FrameBuffer::GetDepthBuffer()
     return m_DepthBuffer.data();
 }
 
-void FrameBuffer::clearColorAndDepthBuffer(const Vec4f &color)
+void FrameBuffer::clearColorAndDepthBuffer(const Vec4 &color)
 {
     for (int x = 0; x < m_Width; ++x)
     {
@@ -50,7 +50,7 @@ void FrameBuffer::clearColorAndDepthBuffer(const Vec4f &color)
     }
 }
 
-void FrameBuffer::SetPixelColor(const unsigned int x, const unsigned int y, const Vec4f &color)
+void FrameBuffer::SetPixelColor(const unsigned int x, const unsigned int y, const Vec4 &color)
 {
     if (x < 0 || x >= m_Width || y < 0 || y >= m_Height)
         return;

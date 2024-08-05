@@ -1,6 +1,6 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
-#include "Math/Mat.h"
+#include "Math/MathGroup.h"
 #include <vector>
 #include <initializer_list>
 
@@ -16,8 +16,8 @@ public:
     unsigned char *GetColorBuffer();
     float *GetDepthBuffer();
 
-    void clearColorAndDepthBuffer(const Vec4f &color);
-    void SetPixelColor(const unsigned int x, const unsigned int y, const Vec4f &color);
+    void clearColorAndDepthBuffer(const Vec4 &color);
+    void SetPixelColor(const unsigned int x, const unsigned int y, const Vec4 &color);
 
     void SetPixelDepth(const unsigned int x, const unsigned int y, float depth);
     void SetPixelDepth(int ind, float depth);

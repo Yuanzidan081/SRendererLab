@@ -7,7 +7,12 @@
 class Mat4x4
 {
 public:
-    float entries[4][4];
+    union
+    {
+        float mat[16];
+        float entries[4][4];
+    };
+
     // constructors
     Mat4x4() { LoadIdentity(); }
     Mat4x4(float e00, float e01, float e02, float e03,

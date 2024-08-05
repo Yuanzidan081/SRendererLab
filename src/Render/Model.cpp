@@ -2,10 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <cassert>
-Model::Model(const char *filename) : m_diffuseTexture(nullptr),
-                                     m_normalTexture(nullptr),
-                                     m_specularTexture(nullptr)
+Model::Model(const std::string &filename)
 {
     std::string fileStr = filename;
     size_t dotLastPos = fileStr.find_last_of('.');
@@ -15,71 +12,43 @@ Model::Model(const char *filename) : m_diffuseTexture(nullptr),
         return;
     }
     std::string fileTypeStr = fileStr.substr(dotLastPos + 1, fileStr.length() - dotLastPos);
+
     if (fileTypeStr == "obj")
-    {
         loadObjModel(filename);
-    }
     else
-    {
         std::cout << "invalid file type" << std::endl;
-    }
-    std::cout << "file_name : " << filename << std::endl;
-    std::cout << "vertex_number = " << m_Vertices.size() << std::endl;
-    std::cout << "vertex_normal_number = " << m_Normals.size() << std::endl;
-    std::cout << "vertex_tex_coord_number = " << m_UVCoords.size() << std::endl;
-    std::cout << "faces_number = " << m_Faces.size() << std::endl;
 }
 
-Model::Model(const Model &model) : m_Vertices(model.m_Vertices), m_UVCoords(model.m_UVCoords),
-                                   m_Normals(model.m_Normals), m_Faces(model.m_Faces),
-                                   m_diffuseTexture(model.m_diffuseTexture), m_normalTexture(model.m_normalTexture),
-                                   m_specularTexture(model.m_specularTexture)
+Mat4x4 Model::SetSize(float sx, float sy, float sz) const
 {
+    float length = fabs(maxPoint.x - minPoint.x);
+    float scaleFactor = 1.0f / length;
+    Mat4x4 result;
+    result.SetScale(Vec3(sx * scaleFactor, sy * scaleFactor, sz * scaleFactor));
+    return result;
 }
 
 Model::~Model()
 {
-    if (m_diffuseTexture)
-        delete m_diffuseTexture;
-    if (m_normalTexture)
-        delete m_normalTexture;
-    if (m_specularTexture)
-        delete m_specularTexture;
-
-    m_diffuseTexture = nullptr;
-    m_normalTexture = nullptr;
-    m_specularTexture = nullptr;
-}
-Model &Model::operator=(const Model &model)
-{
-    if (&model == this)
-        return *this;
-    this->m_diffuseTexture = model.m_diffuseTexture;
-    this->m_Vertices = model.m_Vertices;
-    this->m_UVCoords = model.m_UVCoords;
-    this->m_Normals = model.m_Normals;
-
-    this->m_Faces = model.m_Faces;
-
-    this->m_diffuseTexture = model.m_diffuseTexture;
-    this->m_normalTexture = model.m_normalTexture;
-    this->m_specularTexture = model.m_specularTexture;
-    return *this;
 }
 
-void Model::loadObjModel(const char *filename)
+void Model::loadObjModel(const std::string &filename)
 {
     std::ifstream file;
 
     file.open(filename, std::ifstream::in);
-
+    std::cout << "file_name : " << filename << std::endl;
     if (file.fail())
     {
         std::cout << "Could not open file:" << filename << std::endl;
-        assert(0 == 1);
         return;
     }
-    std::string line = "";
+    std::string line;
+    minPoint = Vec3(+10000000000, +10000000000, +10000000000);
+    maxPoint = Vec3(-10000000000, -10000000000, -10000000000);
+    std::vector<Vec3> vertices;
+    std::vector<Vec3> normals;
+    std::vector<Vec2> texcoords;
     while (!file.eof())
     {
         std::getline(file, line);
@@ -88,104 +57,55 @@ void Model::loadObjModel(const char *filename)
         if (!line.compare(0, 2, "v "))
         {
             buf >> trash; // trash: filter "v"
-            Vec3 v;
-            buf >> v.x >> v.y >> v.z;
-            m_Vertices.push_back(v);
+            Vec3 vertex;
+            buf >> vertex.x >> vertex.y >> vertex.z;
+            vertices.push_back(vertex);
+            if (minPoint.x > vertex.x)
+                minPoint.x = vertex.x;
+            if (minPoint.y > vertex.y)
+                minPoint.y = vertex.y;
+            if (minPoint.z > vertex.z)
+                minPoint.z = vertex.z;
+            if (maxPoint.x < vertex.x)
+                maxPoint.x = vertex.x;
+            if (maxPoint.y < vertex.y)
+                maxPoint.y = vertex.y;
+            if (maxPoint.z < vertex.z)
+                maxPoint.z = vertex.z;
+        }
+
+        else if (!line.compare(0, 3, "vn "))
+        {
+            buf >> trash >> trash; // trash: filter "vn"
+            Vec3 normal;
+            buf >> normal.x >> normal.y >> normal.z;
+            normals.push_back(normal);
         }
         else if (!line.compare(0, 3, "vt "))
         {
             buf >> trash >> trash; // trash: filter "vt"
-            Vec2 vt;
-            buf >> vt.x >> vt.y; // the vt is the representation of 0.588, 0.975, 0.000
-            m_UVCoords.push_back(vt);
-        }
-        else if (!line.compare(0, 3, "vn "))
-        {
-            buf >> trash >> trash; // trash: filter "vn"
-            Vec3 vn;
-            buf >> vn.x >> vn.y >> vn.z;
-            m_Normals.push_back(vn);
+            Vec2 texcoord;
+            buf >> texcoord.x >> texcoord.y; // the vt is the representation of 0.588, 0.975, 0.000
+            texcoords.push_back(texcoord);
         }
         else if (!line.compare(0, 2, "f "))
         {
             buf >> trash; // trash: filter "f"
-            int count = 0;
-            Vec3 face;
-            std::vector<Vec3> f;
+            int index[3];
 
-            while (buf >> face.x >> trash >> face.y >> trash >> face.z)
+            while (buf >> index[0] >> trash >> index[1] >> trash >> index[2])
             {
-                face.x--;
-                face.y--;
-                face.z--;
-                f.push_back(face);
-                count++;
-            }
-            m_Faces.push_back(f);
-            if (count != 3)
-            {
-                std::cerr << "Error: the obj file is supposed to be triangulated" << std::endl;
-                return;
+                Vertex data;
+                data.position = vertices[index[0] - 1];
+                data.texcoord = texcoords[index[1] - 1];
+                data.normal = normals[index[2] - 1];
+                data.color = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+                m_indices.push_back(m_vertices.size());
+                m_vertices.push_back(data);
             }
         }
     }
     file.close();
     return;
-}
-
-void Model::SetDiffuse(const char *diffuseFileName)
-{
-    if (m_diffuseTexture)
-        delete m_diffuseTexture;
-    m_diffuseTexture = new Texture2D(diffuseFileName);
-}
-
-void Model::SetNormal(const char *normalFileName)
-{
-    if (m_normalTexture)
-        delete m_normalTexture;
-    m_normalTexture = new Texture2D(normalFileName);
-}
-
-void Model::SetSpecular(const char *specularFileName)
-{
-    if (m_specularTexture)
-        delete m_specularTexture;
-    m_specularTexture = new Texture2D(specularFileName);
-}
-
-Vec4 Model::GetDiffuseColor(Vec2 &uv)
-{
-    if (!m_diffuseTexture)
-    {
-        std::cerr << "Error: the diffuse texture doesn't exist" << std::endl;
-        return Vec4();
-    }
-    return m_diffuseTexture->SampleTexture(uv);
-}
-
-Vec4 Model::GetNormalColor(Vec2 &uv)
-{
-    if (!m_normalTexture)
-    {
-        std::cerr << "Error: the normal texture doesn't exist" << std::endl;
-        return Vec4();
-    }
-    Vec4 c = m_normalTexture->SampleTexture(uv);
-    Vec4 res;
-    for (int i = 0; i < 3; i++)
-        res[i] = (float)c[i] * 2.f - 1.f;
-    res[3] = 0.0f;
-    return res;
-}
-
-float Model::GetSpecularColor(Vec2 &uv)
-{
-    if (!m_specularTexture)
-    {
-        std::cerr << "Error: the specular texture doesn't exist" << std::endl;
-        return 1.0f;
-    }
-
-    return m_specularTexture->SampleTexture(uv)[0];
 }

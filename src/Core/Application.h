@@ -20,7 +20,6 @@ public:
     int GetWidth() { return m_pipeline->GetHeight(); }
     int GetFps() { return m_fps; }
     void ResetFps() { m_fps = 0; }
-    /* static float s_cameraZ; */
 
     void Run();
 signals:

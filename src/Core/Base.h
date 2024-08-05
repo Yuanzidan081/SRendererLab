@@ -2,7 +2,6 @@
 #define BASE_H
 #include <memory>
 
-// #include "Render/ShaderData.h"
 template <typename T>
 using Ref = std::shared_ptr<T>;
 
@@ -58,5 +57,4 @@ enum ShadingMode
 const int screenWidth = 500;
 const int screenHeight = 500;
 
-// extern ShaderData shaderData;
 #endif // BASE_H

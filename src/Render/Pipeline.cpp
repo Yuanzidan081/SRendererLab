@@ -16,14 +16,22 @@ Pipeline::Pipeline(int width, int height)
     m_config.m_eyePos = Vec3(0.0f, 0.0f, 0.0f);
     m_config.m_viewPlaneParameters.resize(6, Vec4());
     m_config.m_viewLineParameters = {
-        Vec3(-1, 0, -1),
-        Vec3(0, 1, -1),
-        Vec3(1, 0, -1),
-        Vec3(0, -1, -1)};
-    /* m_camera = new NaiveCamera(Vec3({2.0f, 1.0f, 3.0f}));
-    m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
-    m_viewMat = m_camera->GetViewMatrix(); */
+        // near
+        Vec4(0, 0, 1, 1),
+        // far
+        Vec4(0, 0, -1, 1),
+        // left
+        Vec4(1, 0, 0, 1),
+        // right
+        Vec4(-1, 0, 0, 1),
+        // top
+        Vec4(0, -1, 0, 1),
+        // bottom
+        Vec4(0, 1, 0, 1)};
 }
+/* m_camera = new FPSCamera(Vec3({2.0f, 1.0f, 3.0f}));
+m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
+m_viewMat = m_camera->GetViewMatrix(); */
 
 Pipeline::~Pipeline()
 {
@@ -323,67 +331,20 @@ bool Pipeline::DrawMesh()
             v3 = m_config.m_shader->vertexShader(p3);
         }
         // view culling
-        if (!ViewCulling(v1.posWorld / v1.oneDivZ, v2.posWorld / v2.oneDivZ, v3.posWorld / v3.oneDivZ))
+        if (!ViewCulling(v1.posProj, v2.posProj, v3.posProj))
         {
             // cnt++;
             continue;
         }
-        // geometry clipping
-        {
-            if (m_config.m_geometryClipping)
-            {
-                if (m_config.m_polygonMode == PolygonMode::Wire)
-                {
-                    line1 = LineClipping(v1, v2);
-                    line2 = LineClipping(v2, v3);
-                    line3 = LineClipping(v3, v1);
-                }
-                else if (m_config.m_polygonMode == PolygonMode::Fill && !TriangleClipping(v1, v2, v3))
-                    continue;
-            }
-        }
-        // perspective division
-        {
-            PerspectiveDivision(v1);
-            PerspectiveDivision(v2);
-            PerspectiveDivision(v3);
-        }
-#if 0
-
-        // back face culling
-        {
-            if (m_config.m_backFaceCulling)
-            {
-                if (!BackFaceClipping(v1.posProj, v2.posProj, v3.posProj))
-                    continue;
-            }
-        }
-        // view port transformation
-        {
-            // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
-            v1.posProj = m_config.m_viewPortMat * v1.posProj;
-            v2.posProj = m_config.m_viewPortMat * v2.posProj;
-            v3.posProj = m_config.m_viewPortMat * v3.posProj;
-        }
-
-        // rasterization and fragment shader stage
-        {
-            if (m_config.m_polygonMode == PolygonMode::Wire)
-            {
-                if (!line1)
-                    BresenhamLineRasterization(v1, v2);
-                if (!line2)
-                    BresenhamLineRasterization(v2, v3);
-                if (!line3)
-                    BresenhamLineRasterization(v3, v1);
-            }
-            else if (m_config.m_polygonMode == PolygonMode::Fill)
-            {
-                EdgeWalkingFillRasterization(v1, v2, v3);
-            }
-        }
-#else
+        // v.x, v.y, v.z \in [-w, w], not be assigned to 1(only in the step PerspectiveDivision doing so)
+        // lerp are done in the projection space
+        // if the point are not transformed to the viewport space, the clip can be linear, shouldn't use the correction
         std::vector<VertexOut> clippingVertexs = SutherlandHodgeman(v1, v2, v3);
+
+        for (int i = 0; i < clippingVertexs.size(); ++i)
+        {
+            PerspectiveDivision(clippingVertexs[i]);
+        }
         int n = clippingVertexs.size() - 3 + 1; // the number of the clipping triangles
         for (int i = 0; i < n; ++i)
         {
@@ -410,12 +371,9 @@ bool Pipeline::DrawMesh()
             {
                 if (m_config.m_polygonMode == PolygonMode::Wire)
                 {
-                    if (!line1)
-                        BresenhamLineRasterization(v1, v2);
-                    if (!line2)
-                        BresenhamLineRasterization(v2, v3);
-                    if (!line3)
-                        BresenhamLineRasterization(v3, v1);
+                    BresenhamLineRasterization(v1, v2);
+                    BresenhamLineRasterization(v2, v3);
+                    BresenhamLineRasterization(v3, v1);
                 }
                 else if (m_config.m_polygonMode == PolygonMode::Fill)
                 {
@@ -423,19 +381,22 @@ bool Pipeline::DrawMesh()
                 }
             }
         }
-
-#endif
     }
 }
 
 void Pipeline::PerspectiveDivision(VertexOut &target)
 {
-    target.posProj.x /= target.posProj.w;
-    target.posProj.y /= target.posProj.w;
-    target.posProj.z /= target.posProj.w;
+    // oneDivzZ to correct lerp
+    target.oneDivZ = 1.0f / target.posProj.w;
+
+    target.posProj /= target.posProj.w;
     target.posProj.w = 1.0f;
     // map from [-1, 1] to [0, 1]
     target.posProj.z = (target.posProj.z + 1.0f) * 0.5f;
+
+    target.posWorld *= target.oneDivZ;
+    target.texcoord *= target.oneDivZ;
+    target.color *= target.oneDivZ;
 }
 
 VertexOut Pipeline::Lerp(const VertexOut &n1, const VertexOut &n2, double weight)
@@ -448,87 +409,6 @@ VertexOut Pipeline::Lerp(const VertexOut &n1, const VertexOut &n2, double weight
     result.texcoord = n1.texcoord.GetLerp(n2.texcoord, weight);
     result.oneDivZ = (1.0 - weight) * n1.oneDivZ + weight * n2.oneDivZ;
     return result;
-}
-
-bool Pipeline::LineClipping(const VertexOut &from, const VertexOut &to)
-{
-    // true:clip;
-    // false: not clip.
-    float vMin = -from.posProj.w, vMax = from.posProj.w;
-    float x1 = from.posProj.x, y1 = from.posProj.y;
-    float x2 = to.posProj.x, y2 = to.posProj.y;
-
-    int tmp = 0;
-    int outcode1 = 0;
-    int outcode2 = 0;
-
-    // outcode1 calculation
-    tmp = (y1 > vMax) ? 1 : 0;
-    tmp <<= 3;
-    outcode1 |= tmp;
-    tmp = (y1 < vMin) ? 1 : 0;
-    tmp <<= 2;
-    outcode1 |= tmp;
-    tmp = (x1 > vMax) ? 1 : 0;
-    tmp <<= 1;
-    outcode1 |= tmp;
-    tmp = (x1 < vMin) ? 1 : 0;
-    tmp <<= 0;
-    outcode1 |= tmp;
-
-    // outcode2 calculation
-    tmp = (y2 > vMax) ? 1 : 0;
-    tmp <<= 3;
-    outcode2 |= tmp;
-    tmp = (y2 < vMin) ? 1 : 0;
-    tmp <<= 2;
-    outcode2 |= tmp;
-    tmp = (x2 > vMax) ? 1 : 0;
-    tmp <<= 1;
-    outcode2 |= tmp;
-    tmp = (x2 < vMin) ? 1 : 0;
-    tmp <<= 0;
-    outcode2 |= tmp;
-
-    if ((outcode1 & outcode2) != 0)
-        return true;
-
-    // bounding box
-    Vec2 minPoint, maxPoint;
-    minPoint.x = std::min(from.posProj.x, to.posProj.x);
-    minPoint.y = std::min(from.posProj.y, to.posProj.y);
-    maxPoint.x = std::max(from.posProj.x, to.posProj.x);
-    maxPoint.y = std::max(from.posProj.y, to.posProj.y);
-    if (minPoint.x > vMax || maxPoint.x < vMin || minPoint.y > vMax || maxPoint.y < vMin)
-        return true;
-    return false;
-}
-
-bool Pipeline::TriangleClipping(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3)
-{
-    // true:not clip;
-    // false: clip.
-    float vMin = -v1.posProj.w;
-    float vMax = +v1.posProj.w;
-
-    // if the triangle is too far to see it, just return false.
-    if (v1.posProj.z > vMax && v2.posProj.z > vMax && v3.posProj.z > vMax)
-        return false;
-
-    // if the triangle is behind the camera, just return false.
-    if (v1.posProj.z < vMin && v2.posProj.z < vMin && v3.posProj.z < vMin)
-        return false;
-
-    // calculate the bounding box and check if clip or not.
-    Vec2 minPoint, maxPoint;
-    minPoint.x = min(v1.posProj.x, min(v2.posProj.x, v3.posProj.x));
-    minPoint.y = min(v1.posProj.y, min(v2.posProj.y, v3.posProj.y));
-    maxPoint.x = max(v1.posProj.x, max(v2.posProj.x, v3.posProj.x));
-    maxPoint.y = max(v1.posProj.y, max(v2.posProj.y, v3.posProj.y));
-    if (minPoint.x > vMax || maxPoint.x < vMin || minPoint.y > vMax || maxPoint.y < vMin)
-        return false;
-
-    return true;
 }
 
 bool Pipeline::BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
@@ -619,9 +499,9 @@ bool Pipeline::IsInsideFrustum(const Vec3 &v, const Vec4 &planePrameter)
     return planePrameter.x * v.x + planePrameter.y * v.y + planePrameter.z * v.z + planePrameter.w >= 0;
 }
 
-bool Pipeline::IsInsideViewPort(const Vec3 &lineParameter, const Vec4 &p)
+bool Pipeline::IsInsideViewPort(const Vec4 &lineParameter, const Vec4 &p)
 {
-    return lineParameter.x * p.x + lineParameter.y * p.y + lineParameter.z * p.z < 0;
+    return lineParameter.x * p.x + lineParameter.y * p.y + lineParameter.z * p.z + lineParameter.w * p.w >= 0;
 }
 
 bool Pipeline::IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
@@ -642,36 +522,20 @@ bool Pipeline::IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const 
     return true;
 }
 
-VertexOut Pipeline::GetViewPortIntersect(const VertexOut &out, const VertexOut &in, const Vec3 &lineParameter)
+VertexOut Pipeline::GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const Vec4 &lineParameter)
 {
-    if (lineParameter.x == -1)
-    {
-        float weight = (-1 - out.posProj.x) / (in.posProj.x - out.posProj.x);
-        return Lerp(out, in, weight);
-    }
-    if (lineParameter.x == 1)
-    {
-        float weight = (1 - out.posProj.x) / (in.posProj.x - out.posProj.x);
-        return Lerp(out, in, weight);
-    }
-    if (lineParameter.y == -1)
-    {
-        float weight = (-1 - out.posProj.y) / (in.posProj.y - out.posProj.y);
-        return Lerp(out, in, weight);
-    }
-    if (lineParameter.y == 1)
-    {
-        float weight = (1 - out.posProj.y) / (in.posProj.y - out.posProj.y);
-        return Lerp(out, in, weight);
-    }
-}
+    float da = v1.posProj.x * lineParameter.x + v1.posProj.y * lineParameter.y + v1.posProj.z * lineParameter.z + v1.posProj.w * lineParameter.w;
+    float db = v2.posProj.x * lineParameter.x + v2.posProj.y * lineParameter.y + v2.posProj.z * lineParameter.z + v2.posProj.w * lineParameter.w;
 
+    float weight = da / (da - db);
+    return Lerp(v1, v2, weight);
+}
 std::vector<VertexOut> Pipeline::SutherlandHodgeman(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3)
 {
     std::vector<VertexOut> output = {v1, v2, v3};
     if (IsAllVertexsInsideViewPort(v1.posProj, v2.posProj, v3.posProj))
         return output;
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < m_config.m_viewLineParameters.size(); ++i)
     {
         std::vector<VertexOut> input(output);
         output.clear();
@@ -690,7 +554,7 @@ std::vector<VertexOut> Pipeline::SutherlandHodgeman(const VertexOut &v1, const V
             }
             else if (IsInsideViewPort(m_config.m_viewLineParameters[i], pre.posProj))
             {
-                VertexOut intersecting = GetViewPortIntersect(cur, pre, m_config.m_viewLineParameters[i]);
+                VertexOut intersecting = GetViewPortIntersect(pre, cur, m_config.m_viewLineParameters[i]);
                 output.push_back(intersecting);
             }
         }
@@ -906,6 +770,5 @@ void Pipeline::SetDefaultConfig()
 {
     SetDepthTesting(true);
     SetBackFaceCulling(true);
-    SetGeometryClipping(true);
     // SetPolygonMode(PolygonMode::Fill);
 }

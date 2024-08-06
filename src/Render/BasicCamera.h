@@ -15,5 +15,9 @@ public:
     // Getter
     virtual Mat4x4 GetViewMatrix() = 0;
     virtual Vec3 GetPosition() = 0;
+
+    virtual void OnKeyPress(char key) = 0;
+    virtual void OnWheelMove(double delta) = 0;
+    virtual void OnMouseMove(double deltaX, double deltaY) = 0;
 };
 #endif // BASIC_CAMERA_H

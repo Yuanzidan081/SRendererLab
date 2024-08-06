@@ -2,7 +2,7 @@
 #define PIPELINE_H
 #include "Render/FrameBuffer.h"
 #include "Render/Model.h"
-#include "Render/NaiveCamera.h"
+#include "Render/FPSCamera.h"
 #include "Render/Texture2D.h"
 
 #include "Core/Base.h"
@@ -17,7 +17,6 @@ public:
         // state settings
         bool m_depthTesting;
         bool m_backFaceCulling;
-        bool m_geometryClipping;
 
         // creted by pipeline
         int m_width;
@@ -33,7 +32,7 @@ public:
         const std::vector<unsigned int> *m_indices;
         const std::vector<Vertex> *m_vertices;
         std::vector<Vec4> m_viewPlaneParameters;
-        std::vector<Vec3> m_viewLineParameters;
+        std::vector<Vec4> m_viewLineParameters;
     };
     Pipeline(int width, int height);
     ~Pipeline();
@@ -55,7 +54,6 @@ public:
     // state settings
     void SetDepthTesting(bool open) { m_config.m_depthTesting = open; }
     void SetBackFaceCulling(bool open) { m_config.m_backFaceCulling = open; }
-    void SetGeometryClipping(bool open) { m_config.m_geometryClipping = open; }
 
     // setting texture
     bool BindTexture(const unsigned int &unit);
@@ -101,18 +99,15 @@ private:
     // linear interpolation
     VertexOut Lerp(const VertexOut &n1, const VertexOut &n2, double weight);
 
-    bool LineClipping(const VertexOut &from, const VertexOut &to);
-
-    bool TriangleClipping(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
-
+ 
     bool BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     bool ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     void UpdateViewPlanes();
     void ViewingFrustumPlanes(std::vector<Vec4> &planeParameter, const Mat4x4 &vp);
     bool IsInsideFrustum(const Vec3 &v, const Vec4 &planeParameter);
-    bool IsInsideViewPort(const Vec3 &lineParameter, const Vec4 &p);
+    bool IsInsideViewPort(const Vec4 &lineParameter, const Vec4 &p);
     bool Pipeline::IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
-    VertexOut GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const Vec3 &lineParameter);
+    VertexOut GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const Vec4 &lineParameter);
     std::vector<VertexOut> SutherlandHodgeman(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
     // rasterization
     void BresenhamLineRasterization(const VertexOut &from, const VertexOut &to);

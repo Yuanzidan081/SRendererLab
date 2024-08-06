@@ -79,14 +79,14 @@ void Application::Run()
     // Mesh
     Mesh cube, floor;
     cube.asBox(1.0, 1.0, 1.0);
-    floor.asFloor(6.0, -1.5);
+    floor.asFloor(10.0, -1.5);
 
     // transformation
     double angle = 0.0;
     Mat4x4 cubeTransformMat[3], floorTransformMat, headTransformMat;
-    cubeTransformMat[0].SetTranslation(Vec3(2.0f, 0.0f, 1.0f));
-    cubeTransformMat[1].SetTranslation(Vec3(3.0f, 0.0f, 1.0f));
-    cubeTransformMat[2].SetTranslation(Vec3(2.5f, 1.0f, 1.0f));
+    cubeTransformMat[0].SetTranslation(Vec3(3.0f, 0.0f, 1.0f));
+    cubeTransformMat[1].SetTranslation(Vec3(4.0f, 0.0f, 1.0f));
+    cubeTransformMat[2].SetTranslation(Vec3(3.5f, 1.0f, 1.0f));
     headTransformMat = head.SetSize(2.0, 2.0, 2.0);
     Mat4x4 rotateMat;
 

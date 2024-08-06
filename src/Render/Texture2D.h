@@ -19,7 +19,6 @@ public:
     const int GetChannels() const { return m_Channels; }
     int GetChannels() { return m_Channels; }
 
-    bool LoadTexture(const char *filename);
     bool LoadTexture(const std::string &filename);
 
     const Vec4 SampleTexture(const Vec2 &texCoords) const;
@@ -27,7 +26,7 @@ public:
 
 private:
     int m_Width, m_Height, m_Channels;
-    unsigned char *m_texelData;
+    unsigned char *m_texelBuffer;
     bool m_flipped;
 };
 

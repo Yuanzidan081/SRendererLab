@@ -47,5 +47,7 @@ MainWidget::~MainWidget()
 
 void MainWidget::DisplayFps(int fps)
 {
-    ui->lineEdit_fps->setText(QString::number(fps));
+    // ui->lineEdit_fps->setText(QString::number(fps));
+    this->setWindowTitle("SRendererLab" + QString(" fps: %1 ")
+                                              .arg(fps));
 }

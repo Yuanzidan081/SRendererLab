@@ -32,6 +32,7 @@ public:
 
         const std::vector<unsigned int> *m_indices;
         const std::vector<Vertex> *m_vertices;
+        std::vector<Vec4> m_viewPlaneParameters;
     };
     Pipeline(int width, int height);
     ~Pipeline();
@@ -90,28 +91,34 @@ public:
     // start the rendering pipeline
     bool DrawMesh();
 
+private:
     // default config
     void SetDefaultConfig();
     // perspectiveDivision
-    void perspectiveDivision(VertexOut &target);
+    void PerspectiveDivision(VertexOut &target);
 
     // linear interpolation
-    VertexOut lerp(const VertexOut &n1, const VertexOut &n2, double weight);
+    VertexOut Lerp(const VertexOut &n1, const VertexOut &n2, double weight);
+
+    bool LineClipping(const VertexOut &from, const VertexOut &to);
+
+    bool TriangleClipping(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
+
+    bool BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
+    bool ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
+    void UpdateViewPlanes();
+    void ViewingFrustumPlanes(std::vector<Vec4> &planeParameter, const Mat4x4 &vp);
+    bool Point2Palne(const Vec3 &v, const Vec4 &planeParameter);
     // rasterization
-    void bresenhamLineRasterization(const VertexOut &from, const VertexOut &to);
-    void scanLinePerRow(const VertexOut &left, const VertexOut &right);
-    void rasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
-    void rasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
-    void edgeWalkingFillRasterization(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
+    void
+    BresenhamLineRasterization(const VertexOut &from, const VertexOut &to);
+    void ScanLinePerRow(const VertexOut &left, const VertexOut &right);
+    void RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
+    void RasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
+    void EdgeWalkingFillRasterization(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
     Config m_config;
-    // int m_Width;
-    // int m_Height;
-    // FrameBuffer *m_backBuffer;
-    // FrameBuffer *m_frontBuffer;
-    // NaiveCamera *m_camera;
-    // Mat4x4 m_viewPortMat;
-    Mat4x4 m_projectionMat;
-    Mat4x4 m_viewMat;
+    Mat4x4 m_projectMatrix;
+    Mat4x4 m_viewMatrix;
 };
 
 #endif // PIPELINE_H

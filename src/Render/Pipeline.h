@@ -33,6 +33,7 @@ public:
         const std::vector<unsigned int> *m_indices;
         const std::vector<Vertex> *m_vertices;
         std::vector<Vec4> m_viewPlaneParameters;
+        std::vector<Vec3> m_viewLineParameters;
     };
     Pipeline(int width, int height);
     ~Pipeline();
@@ -108,10 +109,13 @@ private:
     bool ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     void UpdateViewPlanes();
     void ViewingFrustumPlanes(std::vector<Vec4> &planeParameter, const Mat4x4 &vp);
-    bool Point2Palne(const Vec3 &v, const Vec4 &planeParameter);
+    bool IsInsideFrustum(const Vec3 &v, const Vec4 &planeParameter);
+    bool IsInsideViewPort(const Vec3 &lineParameter, const Vec4 &p);
+    bool Pipeline::IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
+    VertexOut GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const Vec3 &lineParameter);
+    std::vector<VertexOut> SutherlandHodgeman(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
     // rasterization
-    void
-    BresenhamLineRasterization(const VertexOut &from, const VertexOut &to);
+    void BresenhamLineRasterization(const VertexOut &from, const VertexOut &to);
     void ScanLinePerRow(const VertexOut &left, const VertexOut &right);
     void RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
     void RasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);

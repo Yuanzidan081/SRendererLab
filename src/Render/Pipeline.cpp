@@ -15,6 +15,11 @@ Pipeline::Pipeline(int width, int height)
     m_config.m_shader = nullptr;
     m_config.m_eyePos = Vec3(0.0f, 0.0f, 0.0f);
     m_config.m_viewPlaneParameters.resize(6, Vec4());
+    m_config.m_viewLineParameters = {
+        Vec3(-1, 0, -1),
+        Vec3(0, 1, -1),
+        Vec3(1, 0, -1),
+        Vec3(0, -1, -1)};
     /* m_camera = new NaiveCamera(Vec3({2.0f, 1.0f, 3.0f}));
     m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
     m_viewMat = m_camera->GetViewMatrix(); */
@@ -325,14 +330,17 @@ bool Pipeline::DrawMesh()
         }
         // geometry clipping
         {
-            if (m_config.m_polygonMode == PolygonMode::Wire)
+            if (m_config.m_geometryClipping)
             {
-                line1 = LineClipping(v1, v2);
-                line2 = LineClipping(v2, v3);
-                line3 = LineClipping(v3, v1);
+                if (m_config.m_polygonMode == PolygonMode::Wire)
+                {
+                    line1 = LineClipping(v1, v2);
+                    line2 = LineClipping(v2, v3);
+                    line3 = LineClipping(v3, v1);
+                }
+                else if (m_config.m_polygonMode == PolygonMode::Fill && !TriangleClipping(v1, v2, v3))
+                    continue;
             }
-            else if (m_config.m_polygonMode == PolygonMode::Fill && !TriangleClipping(v1, v2, v3))
-                continue;
         }
         // perspective division
         {
@@ -340,13 +348,16 @@ bool Pipeline::DrawMesh()
             PerspectiveDivision(v2);
             PerspectiveDivision(v3);
         }
+#if 0
 
         // back face culling
         {
-            if (!BackFaceClipping(v1.posProj, v2.posProj, v3.posProj))
-                continue;
+            if (m_config.m_backFaceCulling)
+            {
+                if (!BackFaceClipping(v1.posProj, v2.posProj, v3.posProj))
+                    continue;
+            }
         }
-
         // view port transformation
         {
             // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
@@ -371,9 +382,50 @@ bool Pipeline::DrawMesh()
                 EdgeWalkingFillRasterization(v1, v2, v3);
             }
         }
+#else
+        std::vector<VertexOut> clippingVertexs = SutherlandHodgeman(v1, v2, v3);
+        int n = clippingVertexs.size() - 3 + 1; // the number of the clipping triangles
+        for (int i = 0; i < n; ++i)
+        {
+            VertexOut v1 = clippingVertexs[0];
+            VertexOut v2 = clippingVertexs[i + 1];
+            VertexOut v3 = clippingVertexs[i + 2];
+            // back face culling
+            {
+                if (m_config.m_backFaceCulling)
+                {
+                    if (!BackFaceClipping(v1.posProj, v2.posProj, v3.posProj))
+                        continue;
+                }
+            }
+            // view port transformation
+            {
+                // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
+                v1.posProj = m_config.m_viewPortMat * v1.posProj;
+                v2.posProj = m_config.m_viewPortMat * v2.posProj;
+                v3.posProj = m_config.m_viewPortMat * v3.posProj;
+            }
+
+            // rasterization and fragment shader stage
+            {
+                if (m_config.m_polygonMode == PolygonMode::Wire)
+                {
+                    if (!line1)
+                        BresenhamLineRasterization(v1, v2);
+                    if (!line2)
+                        BresenhamLineRasterization(v2, v3);
+                    if (!line3)
+                        BresenhamLineRasterization(v3, v1);
+                }
+                else if (m_config.m_polygonMode == PolygonMode::Fill)
+                {
+                    EdgeWalkingFillRasterization(v1, v2, v3);
+                }
+            }
+        }
+
+#endif
     }
-    // if (cnt > 0)
-    //     std::cout << cnt << std::endl;
 }
 
 void Pipeline::PerspectiveDivision(VertexOut &target)
@@ -500,17 +552,17 @@ bool Pipeline::ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
     maxPoint.y = max(v1.y, max(v2.y, v3.y));
     maxPoint.z = max(v1.z, max(v2.z, v3.z));
     // Near 和 Far culling: save the point inside
-    if (!Point2Palne(minPoint, m_config.m_viewPlaneParameters[4]) && !Point2Palne(maxPoint, m_config.m_viewPlaneParameters[4]))
+    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[4]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[4]))
         return false;
-    if (!Point2Palne(minPoint, m_config.m_viewPlaneParameters[5]) && !Point2Palne(maxPoint, m_config.m_viewPlaneParameters[5]))
+    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[5]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[5]))
         return false;
-    if (!Point2Palne(minPoint, m_config.m_viewPlaneParameters[0]) && !Point2Palne(maxPoint, m_config.m_viewPlaneParameters[0]))
+    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[0]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[0]))
         return false;
-    if (!Point2Palne(minPoint, m_config.m_viewPlaneParameters[1]) && !Point2Palne(maxPoint, m_config.m_viewPlaneParameters[1]))
+    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[1]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[1]))
         return false;
-    if (!Point2Palne(minPoint, m_config.m_viewPlaneParameters[2]) && !Point2Palne(maxPoint, m_config.m_viewPlaneParameters[2]))
+    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[2]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[2]))
         return false;
-    if (!Point2Palne(minPoint, m_config.m_viewPlaneParameters[3]) && !Point2Palne(maxPoint, m_config.m_viewPlaneParameters[3]))
+    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[3]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[3]))
         return false;
     return true;
 }
@@ -562,9 +614,88 @@ void Pipeline::ViewingFrustumPlanes(std::vector<Vec4> &planeParameter, const Mat
 // d > 0 point is inside the frustum
 // d = 0 point is on the planes of the frustum
 // https://www8.cs.umu.se/kurser/5DV180/VT18/lab/plane_extraction.pdf
-bool Pipeline::Point2Palne(const Vec3 &v, const Vec4 &planePrameter)
+bool Pipeline::IsInsideFrustum(const Vec3 &v, const Vec4 &planePrameter)
 {
     return planePrameter.x * v.x + planePrameter.y * v.y + planePrameter.z * v.z + planePrameter.w >= 0;
+}
+
+bool Pipeline::IsInsideViewPort(const Vec3 &lineParameter, const Vec4 &p)
+{
+    return lineParameter.x * p.x + lineParameter.y * p.y + lineParameter.z * p.z < 0;
+}
+
+bool Pipeline::IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
+{
+    // outside the ndc
+    if (v1.x > 1 || v1.x < -1)
+        return false;
+    if (v1.y > 1 || v1.y < -1)
+        return false;
+    if (v2.x > 1 || v2.x < -1)
+        return false;
+    if (v2.y > 1 || v2.y < -1)
+        return false;
+    if (v3.x > 1 || v3.x < -1)
+        return false;
+    if (v3.y > 1 || v3.y < -1)
+        return false;
+    return true;
+}
+
+VertexOut Pipeline::GetViewPortIntersect(const VertexOut &out, const VertexOut &in, const Vec3 &lineParameter)
+{
+    if (lineParameter.x == -1)
+    {
+        float weight = (-1 - out.posProj.x) / (in.posProj.x - out.posProj.x);
+        return Lerp(out, in, weight);
+    }
+    if (lineParameter.x == 1)
+    {
+        float weight = (1 - out.posProj.x) / (in.posProj.x - out.posProj.x);
+        return Lerp(out, in, weight);
+    }
+    if (lineParameter.y == -1)
+    {
+        float weight = (-1 - out.posProj.y) / (in.posProj.y - out.posProj.y);
+        return Lerp(out, in, weight);
+    }
+    if (lineParameter.y == 1)
+    {
+        float weight = (1 - out.posProj.y) / (in.posProj.y - out.posProj.y);
+        return Lerp(out, in, weight);
+    }
+}
+
+std::vector<VertexOut> Pipeline::SutherlandHodgeman(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3)
+{
+    std::vector<VertexOut> output = {v1, v2, v3};
+    if (IsAllVertexsInsideViewPort(v1.posProj, v2.posProj, v3.posProj))
+        return output;
+    for (int i = 0; i < 4; ++i)
+    {
+        std::vector<VertexOut> input(output);
+        output.clear();
+        for (int j = 0; j < input.size(); ++j)
+        {
+            VertexOut cur = input[j];
+            VertexOut pre = input[(j + input.size() - 1) % input.size()];
+            if (IsInsideViewPort(m_config.m_viewLineParameters[i], cur.posProj))
+            {
+                if (!IsInsideViewPort(m_config.m_viewLineParameters[i], pre.posProj))
+                {
+                    VertexOut intersecting = GetViewPortIntersect(pre, cur, m_config.m_viewLineParameters[i]);
+                    output.push_back(intersecting);
+                }
+                output.push_back(cur);
+            }
+            else if (IsInsideViewPort(m_config.m_viewLineParameters[i], pre.posProj))
+            {
+                VertexOut intersecting = GetViewPortIntersect(cur, pre, m_config.m_viewLineParameters[i]);
+                output.push_back(intersecting);
+            }
+        }
+    }
+    return output;
 }
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm

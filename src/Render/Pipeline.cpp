@@ -2,7 +2,6 @@
 // #include "UI/window.h"
 #include <cmath>
 #include <iostream>
-#include "imagelabel.h"
 #include "MathUtils.h"
 
 Pipeline::Pipeline(int width, int height)
@@ -57,6 +56,7 @@ Pipeline::~Pipeline()
 
 void Pipeline::initialize()
 {
+
     if (m_config.m_backBuffer)
         delete m_config.m_backBuffer;
     if (m_config.m_frontBuffer)
@@ -71,148 +71,6 @@ void Pipeline::initialize()
     SetDefaultConfig();
 }
 
-// void Pipeline::DrawModelPureColor(Model &model, Vec4 &color, const PolygonMode &type)
-// {
-//     bool flag = true;
-//     for (int i = 0; i < model.m_Faces.size(); ++i)
-//     {
-//         std::vector<Vec3i> face = model.m_Faces[i];
-//         Vec3 v[3];
-//         for (int j = 0; j < 3; ++j)
-//         {
-//             v[j] = Vec3(m_config.m_viewPortMat * Vec4(model.m_Vertices[face[j][0]]));
-//             /* if (flag)
-//             {
-//                 std::cout << "DrawModelPureColor" << std::endl;
-//                 std::cout << "vertices:" << Vec3ToVec4(model.m_Vertices[face[j][0]]) << std::endl;
-//                 std::cout << "viewPortMat: " << m_config.m_viewPortMat << std::endl;
-//                 std::cout << "final vertices:" << v[0] << std::endl;
-//                 flag = false;
-//             } */
-//         }
-//         DrawTriangleWithoutDepthInfo(v, color, (void *)m_config.m_backBuffer, type);
-//     }
-// }
-
-// void Pipeline::DrawModelNormalWithoutDepthInfo(Model &model, Vec3 &lightDir, Vec4 &color, const PolygonMode &type)
-// {
-//     for (int i = 0; i < model.m_Faces.size(); ++i)
-//     {
-//         Vec3 screenCoord[3];
-//         Vec3 worldCoord[3];
-//         std::vector<Vec3i> face = model.m_Faces[i];
-//         for (int j = 0; j < 3; ++j)
-//         {
-//             worldCoord[j] = model.m_Vertices[face[j][0]];
-//             screenCoord[j] = CoordWorldFloatToScreenFloat(worldCoord[j]);
-//         }
-//         Vec3 normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
-//         // intensity
-//         float intensity = VecGetDotProduct(normal, lightDir);
-//         if (intensity > 0)
-//         {
-//             DrawTriangleWithoutDepthInfo(screenCoord, Vec4(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_config.m_backBuffer, type);
-//         }
-//     }
-// }
-// void Pipeline::DrawModelNormalWithDepthInfo(Model &model, Vec3 &lightDir, Vec4 &color, const PolygonMode &type)
-// {
-//     for (int i = 0; i < model.m_Faces.size(); ++i)
-//     {
-//         Vec3 screenCoord[3];
-//         Vec3 worldCoord[3];
-//         std::vector<Vec3i> face = model.m_Faces[i];
-//         for (int j = 0; j < 3; ++j)
-//         {
-//             worldCoord[j] = model.m_Vertices[face[j][0]];
-//             screenCoord[j] = Vec3(m_config.m_viewPortMat * m_projectionMat * Vec4(worldCoord[j]));
-//         }
-//         Vec3 normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
-//         // intensity
-//         float intensity = VecGetDotProduct(normal, lightDir);
-//         if (intensity > 0)
-//         {
-//             DrawTriangleWithDepthInfo(screenCoord, Vec4(color.r * intensity, color.g * intensity, color.b * intensity, 1.0f), (void *)m_config.m_backBuffer, type);
-//         }
-//     }
-// }
-
-// void Pipeline::DrawModelWithTextureWithViewMat(Model &model, Vec3 &lightDir, const Texture2D &texture, const PolygonMode &type)
-// {
-//     for (int i = 0; i < model.m_Faces.size(); ++i)
-//     {
-//         Vec3 screenCoord[3];
-//         Vec3 worldCoord[3];
-//         Vec2f texCoords[3];
-//         float intensity[3];
-//         std::vector<Vec3i> face = model.m_Faces[i];
-
-//         for (int j = 0; j < 3; ++j)
-//         {
-//             worldCoord[j] = model.m_Vertices[face[j][0]];
-//             screenCoord[j] = Vec3(m_config.m_viewPortMat * m_projectionMat * m_viewMat * Vec4(worldCoord[j]));
-//             texCoords[j] = model.m_UVCoords[face[j][1]];
-//             intensity[j] = VecGetDotProduct(model.m_Normals[face[j][2]], lightDir);
-//         }
-//         DrawTriangleFillModeWithDepthTexture(screenCoord, intensity, texCoords, texture, (void *)m_config.m_backBuffer);
-//     }
-// }
-// void Pipeline::DrawModelWithTextureWithoutViewMat(Model &model, Vec3 &lightDir, const Texture2D &texture, const PolygonMode &type)
-// {
-
-//     for (int i = 0; i < model.m_Faces.size(); ++i)
-//     {
-//         Vec3 screenCoord[3];
-//         Vec3 worldCoord[3];
-//         Vec2f texCoords[3];
-//         std::vector<Vec3i> face = model.m_Faces[i];
-//         for (int j = 0; j < 3; ++j)
-//         {
-//             worldCoord[j] = model.m_Vertices[face[j][0]];
-//             screenCoord[j] = Vec3(m_config.m_viewPortMat * m_projectionMat * Vec4(worldCoord[j]));
-//             texCoords[j] = model.m_UVCoords[face[j][1]];
-//         }
-
-//         // normal vector，这里obj定义的顶点顺序是逆时针 v1->v2->v3
-//         Vec3 normal = VecGetNormalize(VecGetCrossProduct(worldCoord[1] - worldCoord[0], worldCoord[2] - worldCoord[0]));
-//         // intensity
-//         float intensity = VecGetDotProduct(normal, lightDir);
-//         if (intensity > 0)
-//         {
-//             DrawTriangleFillModeWithDepthTexture(screenCoord, intensity, texCoords, texture, (void *)m_config.m_backBuffer);
-//         }
-//     }
-// }
-// void Pipeline::DrawModelWithShader(DrawData &drawData, const PolygonMode &type)
-// {
-//     Model *m = drawData.model;
-//     Shader *s = drawData.shader;
-//     shaderData.cameraViewMat = this->m_viewMat;
-//     shaderData.cameraProjectionMat = this->m_projectionMat;
-//     shaderData.screenViewportMat = this->m_config.m_viewPortMat;
-//     shaderData.modelTransViewMat = shaderData.cameraProjectionMat * shaderData.cameraViewMat * shaderData.modelTransMat;
-//     shaderData.modelTransViewMatInv = MatGetInverse(shaderData.modelTransViewMat);
-//     for (int i = 0; i < m->m_Faces.size(); ++i)
-//     {
-//         Vec3 screenCoord[3];
-//         for (int j = 0; j < 3; ++j)
-//         {
-//             screenCoord[j] = s->VertexShader(i, j);
-//         }
-
-//         DrawTriangleWithShader(screenCoord, s, (void *)m_config.m_backBuffer);
-//     }
-// }
-// // TODO: representation by ViewPortMatrix
-
-// Vec3 Pipeline::CoordWorldFloatToScreenFloat(Vec3 &v)
-// {
-//     Vec3 res;
-//     res.x = (v.x + 1.0f) * m_config.m_width / 2.0f;
-//     res.y = (v.y + 1.0f) * m_config.m_height / 2.0f;
-//     res.z = (v.z + 1.0f) * 255.0f / 2.0f;
-//     return res;
-// }
 unsigned int Pipeline::LoadTexture(const std::string &path)
 {
     Texture2D *tex = new Texture2D();
@@ -274,6 +132,12 @@ void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
     m_config.m_shader->SetProjectMatrix(m_projectMatrix);
 }
 
+void Pipeline::SetProjectMatrix(Mat4x4 mat)
+{
+    m_projectMatrix = mat;
+    m_config.m_shader->SetProjectMatrix(m_projectMatrix);
+}
+
 void Pipeline::SetModelMatrix(Mat4x4 modelMatrix)
 {
     m_config.m_shader->SetModelMatrix(modelMatrix);
@@ -310,7 +174,7 @@ bool Pipeline::DrawMesh()
         return false;
 
     // line clipping
-    bool line1 = false, line2 = false, line3 = false, line4 = false;
+    bool line1 = false, line2 = false, line3 = false;
     // unsigned int cnt = 0;
     UpdateViewPlanes();
     for (unsigned int i = 0; i < m_config.m_indices->size(); i += 3)
@@ -336,9 +200,10 @@ bool Pipeline::DrawMesh()
             // cnt++;
             continue;
         }
-        // v.x, v.y, v.z \in [-w, w], not be assigned to 1(only in the step PerspectiveDivision doing so)
-        // lerp are done in the projection space
-        // if the point are not transformed to the viewport space, the clip can be linear, shouldn't use the correction
+        // https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/
+        //  v.x, v.y, v.z \in [-w, w], not be assigned to 1(only in the step PerspectiveDivision doing so)
+        //  lerp are done in the projection space
+        //  if the point are not transformed to the viewport space, the clip can be linear, shouldn't use the correction
         std::vector<VertexOut> clippingVertexs = SutherlandHodgeman(v1, v2, v3);
 
         for (int i = 0; i < clippingVertexs.size(); ++i)

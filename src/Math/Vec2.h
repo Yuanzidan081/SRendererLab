@@ -79,6 +79,9 @@ public:
 
     Vec2 operator-() const { return Vec2(-x, -y); }
     Vec2 operator+() const { return *this; }
+    Vec2 operator-(float val) const { return Vec2(x - val, y - val); }
+    Vec2 operator+(float val) const { return Vec2(x + val, y + val); }
+
     float &operator[](size_t i) { return vec[i]; }
     const float &operator[](size_t i) const { return vec[i]; }
 

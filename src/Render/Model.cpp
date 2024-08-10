@@ -28,10 +28,6 @@ Mat4x4 Model::SetSize(float sx, float sy, float sz) const
     return result;
 }
 
-Model::~Model()
-{
-}
-
 void Model::loadObjModel(const std::string &filename)
 {
     std::ifstream file;

@@ -14,11 +14,6 @@ VertexOut SimpleShader::vertexShader(const Vertex &in)
     result.normal = in.normal;
     result.texcoord = in.texcoord;
 
-    // oneDivzZ to correct lerp
-    result.oneDivZ = 1.0f / result.posProj.w;
-    result.posWorld *= result.oneDivZ;
-    result.texcoord *= result.oneDivZ;
-    result.color *= result.oneDivZ;
     return result;
 }
 

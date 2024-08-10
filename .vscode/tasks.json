@@ -36,7 +36,9 @@
             "command": "cmake",
             "args": [
                 "--build",
-                "build"
+                "build",
+                "--config",
+                "release"
             ],
         },
         // 运行程序

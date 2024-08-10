@@ -7,31 +7,32 @@
 #include "Shader/ShaderGroup.h"
 #include "time.h"
 #include "Render/Mesh.h"
+
+#include <stdio.h>  
+#include <direct.h> 
 Application::Application(int width, int height) : m_stopped(false), m_fps(0), m_width(width), m_height(height)
 {
     m_pipeline = new Pipeline(width, height);
-    m_naiveCamera = nullptr;
+    m_fpsCamera = nullptr;
 }
 
 Application::~Application()
 {
     if (m_pipeline)
         delete m_pipeline;
-    if (m_naiveCamera)
-        delete m_naiveCamera;
+    if (m_fpsCamera)
+        delete m_fpsCamera;
 
     m_pipeline = nullptr;
-    m_naiveCamera = nullptr;
+    m_fpsCamera = nullptr;
 }
 
 void Application::Run()
 {
     m_pipeline->initialize();
 
-    m_naiveCamera = new NaiveCamera(Vec3(1.5f, 1.0f, 10.0f));
-    // m_naiveCamera = new NaiveCamera(Vec3(2.0f, 1.0f, 3.0f));
-    // m_naiveCamera = new NaiveCamera(Vec3(0.0f, 0.0f, 20.0f));
-    // Model model("obj/head/african_head.obj");
+    //    m_fpsCamera = new QuaternionFPSCamera(Vec3(1.5f, 1.0f, 10.0f));
+    m_fpsCamera = new EulerFPSCamera(Vec3(1.5f, 1.0f, 10.0f));
 
     // Model model("obj/cube/cube.obj");
     // Texture2D texture1("obj/head/african_head_diffuse.tga");
@@ -75,7 +76,8 @@ void Application::Run()
      drawData.shader->SetModel(drawData.model); */
 
     // Model
-    Model head("obj/head/african_head.obj");
+    std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
+    Model head(curPath + "obj/head/african_head.obj");
     // Mesh
     Mesh cube, floor;
     cube.asBox(1.0, 1.0, 1.0);
@@ -93,12 +95,13 @@ void Application::Run()
     // pipeline settings
     m_pipeline->SetShadingMode(ShadingMode::Simple);
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
-    m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
-    m_pipeline->SetViewMatrix(m_naiveCamera->GetPosition(), m_naiveCamera->GetViewMatrix());
+    // m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
+    m_pipeline->SetProjectMatrix(m_fpsCamera->GetPerspectiveMatrix());
+    m_pipeline->SetViewMatrix(m_fpsCamera->GetPosition(), m_fpsCamera->GetViewMatrix());
     // load texture
-    unsigned int cubeTex = m_pipeline->LoadTexture("obj/cube/container.jpg");
-    unsigned int floorTex = m_pipeline->LoadTexture("obj/floor/floor.jpg");
-    unsigned int headTex = m_pipeline->LoadTexture("obj/head/african_head_diffuse.tga");
+    unsigned int cubeTex = m_pipeline->LoadTexture(curPath + "obj/cube/container.jpg");
+    unsigned int floorTex = m_pipeline->LoadTexture(curPath + "obj/floor/floor.jpg");
+    unsigned int headTex = m_pipeline->LoadTexture(curPath + "obj/head/african_head_diffuse.tga");
 
     // calculate time stamp.
     clock_t start, finish;
@@ -107,7 +110,8 @@ void Application::Run()
     {
         start = clock();
         m_pipeline->ClearFrameBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
-        m_pipeline->SetViewMatrix(m_naiveCamera->GetPosition(), m_naiveCamera->GetViewMatrix());
+        m_pipeline->SetProjectMatrix(m_fpsCamera->GetPerspectiveMatrix());
+        m_pipeline->SetViewMatrix(m_fpsCamera->GetPosition(), m_fpsCamera->GetViewMatrix());
         // m_pipeline->DrawModelPureColor(model, Vec4(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
         //     m_pipeline->DrawModelPureColor(model, Vec4(0.1f, 0.1f, 0.1f, 1.0f), PolygonMode::SLine);
         //      m_pipeline->DrawModelNormalWithoutDepthInfo(model, Vec3(0.0f, 0.0f, 1.0f), Vec4(0.0f, 0.8f, 0.1f, 1.0f), PolygonMode::Fill);
@@ -128,7 +132,7 @@ void Application::Run()
             m_pipeline->DrawMesh();
 
             m_pipeline->SetModelMatrix(cubeTransformMat[2]);
-            m_pipeline->DrawMesh();
+            m_pipeline->DrawMesh(); 
 
             m_pipeline->UnBindTexture(floorTex);
         }
@@ -143,7 +147,7 @@ void Application::Run()
             m_pipeline->UnBindTexture(headTex);
         }
         {
-            m_pipeline->BindTexture(floorTex);
+             m_pipeline->BindTexture(floorTex);
             m_pipeline->SetModelMatrix(floorTransformMat);
             m_pipeline->SetVertexBuffer(&floor.m_vertices);
             m_pipeline->SetIndexBuffer(&floor.m_indices);
@@ -162,6 +166,10 @@ void Application::Run()
         emit frameReady(m_pipeline->GetFrameResult());
         ++m_fps;
     }
+}
+void Application::OnReceiveKeyEvent(int key)
+{
+    m_fpsCamera->OnKeyPress(key);
 }
 void Application::Stop()
 {

@@ -89,6 +89,8 @@ public:
 
     Vec4 operator-() const { return Vec4(-x, -y, -z, -w); }
     Vec4 operator+() const { return *this; }
+    Vec4 operator-(float val) const { return Vec4(x - val, y - val, z - val, w - val); }
+    Vec4 operator+(float val) const { return Vec4(x + val, y + val, z + val, w + val); }
 
     // interpolation
     Vec4 GetLerp(const Vec4 &v2, const float factor) const { return (*this) * (1.0f - factor) + v2 * factor; }

@@ -37,19 +37,6 @@ public:
     Pipeline(int width, int height);
     ~Pipeline();
     void initialize();
-    // /* DrawModel_v1: pure color*/
-    // void DrawModelPureColor(Model &model, Vec4 &color, const PolygonMode &type = PolygonMode::Fill);
-    // /* DrawModel_v2: color with normal
-    //     lightDir: from the object to the light
-    // */
-    // void DrawModelNormalWithoutDepthInfo(Model &model, Vec3 &lightDir, Vec4 &color, const PolygonMode &type = PolygonMode::Fill);
-    // void DrawModelNormalWithDepthInfo(Model &model, Vec3 &lightDir, Vec4 &color, const PolygonMode &type = PolygonMode::Fill);
-
-    // void DrawModelWithTextureWithViewMat(Model &model, Vec3 &lightDir, const Texture2D &texture, const PolygonMode &type = PolygonMode::Fill);
-    // void DrawModelWithTextureWithoutViewMat(Model &model, Vec3 &lightDir, const Texture2D &texture, const PolygonMode &type = PolygonMode::Fill);
-    // void DrawModelWithShader(DrawData &drawData, const PolygonMode &type = PolygonMode::Fill);
-
-    // Vec3 CoordWorldFloatToScreenFloat(Vec3 &v);
 
     // state settings
     void SetDepthTesting(bool open) { m_config.m_depthTesting = open; }
@@ -77,13 +64,14 @@ public:
     void SetViewMatrix(Vec3 eye, const Mat4x4 &viewMat);
     void SetViewMatrix(Vec3 eye, Vec3 target, Vec3 up);
     void SetProjectMatrix(float fovy, float aspect, float near, float far);
+    void SetProjectMatrix(Mat4x4 mat);
 
     void SetViewPort(int left, int top, int width, int height)
     {
         m_config.m_viewPortMat.SetViewPort(left, top, width, height);
     }
 
-    // Illumination setting
+        // Illumination setting
     void SetShadingMode(ShadingMode mode);
     void SetPolygonMode(PolygonMode mode) { m_config.m_polygonMode = mode; }
 
@@ -99,7 +87,6 @@ private:
     // linear interpolation
     VertexOut Lerp(const VertexOut &n1, const VertexOut &n2, double weight);
 
- 
     bool BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     bool ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     void UpdateViewPlanes();

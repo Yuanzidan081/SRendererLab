@@ -70,6 +70,7 @@ public:
     void SetPerspective(float fovy, float aspect, float near, float far);
     void SetOrtho(float left, float right, float bottom, float top, float near, float far);
     void SetLookAt(Vec3 cameraPos, Vec3 target, Vec3 worldUp);
+    void SetLookAt(Vec3 cameraPos, Vec3 front, Vec3 right, Vec3 up);
     void SetViewPort(int left, int bottom, int width, int height);
 
     friend std::ostream &operator<<(std::ostream &os, Mat4x4 &m);

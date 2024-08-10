@@ -16,7 +16,7 @@ public:
     virtual Mat4x4 GetViewMatrix() = 0;
     virtual Vec3 GetPosition() = 0;
 
-    virtual void OnKeyPress(char key) = 0;
+    virtual void OnKeyPress(int key) = 0;
     virtual void OnWheelMove(double delta) = 0;
     virtual void OnMouseMove(double deltaX, double deltaY) = 0;
 };

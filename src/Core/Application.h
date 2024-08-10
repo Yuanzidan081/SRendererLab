@@ -22,6 +22,8 @@ public:
     void ResetFps() { m_fps = 0; }
 
     void Run();
+
+    void OnReceiveKeyEvent(int key);
 signals:
     void frameReady(unsigned char *image);
 
@@ -29,7 +31,7 @@ private:
     bool m_stopped;
     Pipeline *m_pipeline;
     int m_fps;
-    NaiveCamera *m_naiveCamera;
+    EulerFPSCamera *m_fpsCamera;
     int m_width;
     int m_height;
     /* QTimer *m_timer; */

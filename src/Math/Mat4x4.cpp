@@ -471,6 +471,26 @@ void Mat4x4::SetLookAt(Vec3 cameraPos, Vec3 target, Vec3 worldUp)
     entries[2][3] = -(zAxis.GetDotProduct(cameraPos));
 }
 
+void Mat4x4::SetLookAt(Vec3 cameraPos, Vec3 front, Vec3 right, Vec3 up)
+{
+    LoadIdentity();
+    entries[0][0] = right.x;
+    entries[0][1] = right.y;
+    entries[0][2] = right.z;
+
+    entries[1][0] = up.x;
+    entries[1][1] = up.y;
+    entries[1][2] = up.z;
+
+    entries[2][0] = front.x;
+    entries[2][1] = front.y;
+    entries[2][2] = front.z;
+
+    entries[0][3] = -(right.GetDotProduct(cameraPos));
+    entries[1][3] = -(up.GetDotProduct(cameraPos));
+    entries[2][3] = -(front.GetDotProduct(cameraPos));
+}
+
 void Mat4x4::SetViewPort(int left, int top, int width, int height)
 {
     LoadIdentity();

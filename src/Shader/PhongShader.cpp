@@ -6,7 +6,14 @@ PhongShader::PhongShader()
 
 VertexOut PhongShader::vertexShader(const Vertex &in)
 {
-    return VertexOut();
+    VertexOut result;
+    result.posWorld = m_modelMatrix * in.position;
+    result.posProj = m_projectMatrix * m_viewMatrix * result.posWorld;
+    result.color = in.color;
+    result.normal = in.normal;
+    result.texcoord = in.texcoord;
+
+    return result;
 }
 
 Vec4 PhongShader::fragmentShader(const VertexOut &in)

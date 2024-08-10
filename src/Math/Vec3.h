@@ -98,6 +98,8 @@ public:
 
     Vec3 operator-() const { return Vec3(-x, -y, -z); }
     Vec3 operator+() const { return *this; }
+    Vec3 operator-(float val) const { return Vec3(x - val, y - val, z + val); }
+    Vec3 operator+(float val) const { return Vec3(x + val, y + val, z + val); }
     float &operator[](size_t i) { return vec[i]; }
     const float &operator[](size_t i) const { return vec[i]; }
     // interpolation

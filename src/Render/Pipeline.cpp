@@ -93,6 +93,14 @@ bool Pipeline::UnBindTexture(const unsigned int &unit)
     m_config.m_shader->BindShaderTexture(nullptr);
     return true;
 }
+void Pipeline::BindTexture(Texture2D &tex)
+{
+    m_config.m_shader->BindShaderTexture(&tex);
+}
+void Pipeline::UnBindTexture()
+{
+    m_config.m_shader->BindShaderTexture(nullptr);
+}
 void Pipeline::ClearFrameBuffer(const Vec4 &color)
 {
     m_config.m_backBuffer->clearColorAndDepthBuffer(color);
@@ -168,14 +176,11 @@ void Pipeline::SetShadingMode(ShadingMode mode)
     }
 }
 
-bool Pipeline::DrawMesh()
+void Pipeline::DrawMesh()
 {
     if (m_config.m_indices->empty())
-        return false;
+        return;
 
-    // line clipping
-    bool line1 = false, line2 = false, line3 = false;
-    // unsigned int cnt = 0;
     UpdateViewPlanes();
     for (unsigned int i = 0; i < m_config.m_indices->size(); i += 3)
     {
@@ -197,7 +202,6 @@ bool Pipeline::DrawMesh()
         // view culling
         if (!ViewCulling(v1.posProj, v2.posProj, v3.posProj))
         {
-            // cnt++;
             continue;
         }
         // https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/
@@ -247,6 +251,23 @@ bool Pipeline::DrawMesh()
             }
         }
     }
+}
+
+void Pipeline::DrawModel(const Model &model)
+{
+    for (size_t i = 0; i < model.m_objectNum; ++i)
+    {
+        DrawObject(model.m_objects[i]);
+    }
+}
+
+void Pipeline::DrawObject(const Object &obj)
+{
+    BindTexture(*(obj.m_material.m_mainTex));
+    SetVertexBuffer(&obj.m_mesh.m_vertices);
+    SetIndexBuffer(&obj.m_mesh.m_indices);
+    DrawMesh();
+    UnBindTexture();
 }
 
 void Pipeline::PerspectiveDivision(VertexOut &target)

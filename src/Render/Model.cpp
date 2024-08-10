@@ -5,6 +5,9 @@
 Model::Model(const std::string &filename)
 {
     std::string fileStr = filename;
+    m_objectNum = 0;
+    m_minPoint = Vec3(+10000000000, +10000000000, +10000000000);
+    m_maxPoint = Vec3(-10000000000, -10000000000, -10000000000);
     size_t dotLastPos = fileStr.find_last_of('.');
     if (dotLastPos == std::string::npos)
     {
@@ -14,21 +17,47 @@ Model::Model(const std::string &filename)
     std::string fileTypeStr = fileStr.substr(dotLastPos + 1, fileStr.length() - dotLastPos);
 
     if (fileTypeStr == "obj")
-        loadObjModel(filename);
+        AddObjModel(filename);
     else
         std::cout << "invalid file type" << std::endl;
 }
 
+Model::Model(const std::initializer_list<std::string> &list)
+{
+    std::string fileStr;
+    m_objectNum = 0;
+    size_t dotLastPos;
+    std::string fileTypeStr;
+    for (auto it = list.begin(); it != list.end(); ++it)
+    {
+        fileStr = *it;
+        dotLastPos = fileStr.find_last_of('.');
+        if (dotLastPos == std::string::npos)
+        {
+            std::cout << "Could not find file extension" << std::endl;
+            return;
+        }
+        fileTypeStr = fileStr.substr(dotLastPos + 1, fileStr.length() - dotLastPos);
+        if (fileStr == "obj")
+            AddObjModel(fileStr);
+        else
+        {
+            std::cout << "invalid file type" << std::endl;
+            return;
+        }
+    }
+}
+
 Mat4x4 Model::SetSize(float sx, float sy, float sz) const
 {
-    float length = fabs(maxPoint.x - minPoint.x);
+    float length = fabs(m_maxPoint.x - m_minPoint.x);
     float scaleFactor = 1.0f / length;
     Mat4x4 result;
     result.SetScale(Vec3(sx * scaleFactor, sy * scaleFactor, sz * scaleFactor));
     return result;
 }
 
-void Model::loadObjModel(const std::string &filename)
+void Model::AddObjModel(const std::string &filename)
 {
     std::ifstream file;
 
@@ -40,11 +69,12 @@ void Model::loadObjModel(const std::string &filename)
         return;
     }
     std::string line;
-    minPoint = Vec3(+10000000000, +10000000000, +10000000000);
-    maxPoint = Vec3(-10000000000, -10000000000, -10000000000);
+
     std::vector<Vec3> vertices;
     std::vector<Vec3> normals;
     std::vector<Vec2> texcoords;
+
+    bool flag = false;
     while (!file.eof())
     {
         std::getline(file, line);
@@ -52,22 +82,29 @@ void Model::loadObjModel(const std::string &filename)
         char trash;
         if (!line.compare(0, 2, "v "))
         {
+            if (!flag)
+            {
+                m_objectNum++;
+                Object o;
+                m_objects.push_back(o);
+                flag = true;
+            }
             buf >> trash; // trash: filter "v"
             Vec3 vertex;
             buf >> vertex.x >> vertex.y >> vertex.z;
             vertices.push_back(vertex);
-            if (minPoint.x > vertex.x)
-                minPoint.x = vertex.x;
-            if (minPoint.y > vertex.y)
-                minPoint.y = vertex.y;
-            if (minPoint.z > vertex.z)
-                minPoint.z = vertex.z;
-            if (maxPoint.x < vertex.x)
-                maxPoint.x = vertex.x;
-            if (maxPoint.y < vertex.y)
-                maxPoint.y = vertex.y;
-            if (maxPoint.z < vertex.z)
-                maxPoint.z = vertex.z;
+            if (m_minPoint.x > vertex.x)
+                m_minPoint.x = vertex.x;
+            if (m_minPoint.y > vertex.y)
+                m_minPoint.y = vertex.y;
+            if (m_minPoint.z > vertex.z)
+                m_minPoint.z = vertex.z;
+            if (m_maxPoint.x < vertex.x)
+                m_maxPoint.x = vertex.x;
+            if (m_maxPoint.y < vertex.y)
+                m_maxPoint.y = vertex.y;
+            if (m_maxPoint.z < vertex.z)
+                m_maxPoint.z = vertex.z;
         }
 
         else if (!line.compare(0, 3, "vn "))
@@ -86,6 +123,8 @@ void Model::loadObjModel(const std::string &filename)
         }
         else if (!line.compare(0, 2, "f "))
         {
+            if (flag)
+                flag = false;
             buf >> trash; // trash: filter "f"
             int index[3];
 
@@ -96,12 +135,20 @@ void Model::loadObjModel(const std::string &filename)
                 data.texcoord = texcoords[index[1] - 1];
                 data.normal = normals[index[2] - 1];
                 data.color = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
-                m_indices.push_back(m_vertices.size());
-                m_vertices.push_back(data);
+                int offset = m_objects[m_objectNum - 1].m_mesh.m_vertices.size();
+                m_objects[m_objectNum - 1].m_mesh.m_indices.push_back(offset);
+                m_objects[m_objectNum - 1].m_mesh.m_vertices.push_back(data);
             }
         }
     }
     file.close();
     return;
+}
+
+void Model::AddObjModel(const std::initializer_list<std::string> &list)
+{
+    for (auto it = list.begin(); it != list.end(); ++it)
+    {
+        AddObjModel(*it);
+    }
 }

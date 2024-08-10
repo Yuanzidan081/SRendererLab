@@ -54,6 +54,7 @@ enum ShadingMode
     Gouraud,
     Phong
 };
+
 const int screenWidth = 500;
 const int screenHeight = 500;
 

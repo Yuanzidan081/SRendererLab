@@ -516,3 +516,52 @@ std::ostream &operator<<(std::ostream &os, Mat4x4 &m)
 
     return os;
 }
+
+Mat4x4 GetTranslate(const Vec3 &v)
+{
+    Mat4x4 result;
+    result.SetTranslation(v);
+    return result;
+}
+
+Mat4x4 GetScale(const Vec3 &scale)
+{
+    Mat4x4 result;
+    result.SetScale(scale);
+    return result;
+}
+
+Mat4x4 GetRotationX(const double angle)
+{
+    Mat4x4 result;
+    result.SetRotationX(angle);
+    return result;
+}
+
+Mat4x4 GetRotationY(const double angle)
+{
+    Mat4x4 result;
+    result.SetRotationY(angle);
+    return result;
+}
+
+Mat4x4 GetRotationZ(const double angle)
+{
+    Mat4x4 result;
+    result.SetRotationZ(angle);
+    return result;
+}
+
+Mat4x4 GetRotationAxis(const double angle, const Vec3 &axis)
+{
+    Mat4x4 result;
+    result.SetRotationAxis(angle, axis);
+    return result;
+}
+
+Mat4x4 GetIdentity()
+{
+    Mat4x4 result;
+    result.LoadIdentity();
+    return result;
+}

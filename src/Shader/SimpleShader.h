@@ -8,7 +8,6 @@ public:
     virtual ~SimpleShader() = default;
     virtual VertexOut vertexShader(const Vertex &in);
     virtual Vec4 fragmentShader(const VertexOut &in);
-    void SetModel(Model *model) { this->model = model; }
     virtual void BindShaderTexture(Texture2D *tex) { m_tex = tex; }
     virtual void SetEyePos(const Vec3 &eye) {}
     virtual void SetModelMatrix(const Mat4x4 &world)

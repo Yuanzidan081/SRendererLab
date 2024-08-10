@@ -6,7 +6,6 @@
 class GouraudShader : public Shader
 {
 public:
-    Vec3 m_intensity;
     GouraudShader();
     ~GouraudShader() = default;
     // virtual Vec3 VertexShader(int faceInd, int VertInd) override;

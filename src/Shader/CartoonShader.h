@@ -5,10 +5,6 @@
 class CartoonShader : public Shader
 {
 public:
-    Vec3 m_intensity;
-
-    // virtual Vec3 VertexShader(int faceInd, int VertInd) override;
-    // virtual bool FragmentShader(v2f *v2fData, Vec4 &color) override;
     virtual VertexOut vertexShader(const Vertex &in);
     virtual Vec4 fragmentShader(const VertexOut &in);
     virtual void BindShaderTexture(Texture2D *tex) {}

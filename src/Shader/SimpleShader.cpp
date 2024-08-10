@@ -23,6 +23,7 @@ Vec4 SimpleShader::fragmentShader(const VertexOut &in)
     if (m_tex)
     {
         litColor = m_tex->SampleTexture(in.texcoord);
+        // std::cout << litColor << std::endl;
     }
     return litColor;
 }

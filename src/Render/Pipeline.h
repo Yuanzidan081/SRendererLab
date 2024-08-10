@@ -45,6 +45,9 @@ public:
     // setting texture
     bool BindTexture(const unsigned int &unit);
     bool UnBindTexture(const unsigned int &unit);
+
+    void BindTexture(Texture2D &tex);
+    void UnBindTexture();
     unsigned int LoadTexture(const std::string &path);
 
     // buffer settings
@@ -71,12 +74,14 @@ public:
         m_config.m_viewPortMat.SetViewPort(left, top, width, height);
     }
 
-        // Illumination setting
+    // Illumination setting
     void SetShadingMode(ShadingMode mode);
     void SetPolygonMode(PolygonMode mode) { m_config.m_polygonMode = mode; }
 
     // start the rendering pipeline
-    bool DrawMesh();
+    void DrawMesh();
+    void DrawModel(const Model &model);
+    void DrawObject(const Object &obj);
 
 private:
     // default config

@@ -37,16 +37,6 @@ void Application::Run()
     std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
     Shader *shader = new SimpleShader();
 
-    // head
-    Material headMat;
-    headMat.SetShader(shader);
-    Texture2D headTex(curPath + "obj/head/african_head_diffuse.tga");
-    headMat.SetTexture(&headTex);
-    Model head(curPath + "obj/head/african_head.obj");
-    Mat4x4 headTransformMat = head.SetSize(2.0, 2.0, 2.0);
-    head.SetMaterial(0, headMat);
-
-    // head.SetMaterial(headTex);
     //  Mesh
     Mesh cubeMesh;
     cubeMesh.asBox(1.0, 1.0, 1.0);
@@ -99,16 +89,28 @@ void Application::Run()
 
     Mat4x4 neptueTransformMat = neptune.SetSize(2.0, 2.0, 2.0);
     Mat4x4 tranlateMat;
-    tranlateMat.SetTranslation(Vec3(1.5f, 0.0f, 1.0f));
 
     // pipeline settings
 
     m_pipeline->SetShadingMode(ShadingMode::Phong);
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
-    m_pipeline->AddDirectionLight(Vec3(0.5, 0.5, 0.5),
-                                  Vec3(1.0, 1.0, 1.0),
-                                  Vec3(1.0, 1.0, 1.0),
-                                  Vec3(-1, -2, -1));
+    // m_pipeline->AddDirectionLight(Vec3(0.5, 0.5, 0.5),
+    //                               Vec3(0.6, 0.6, 0.6),
+    //                               Vec3(0.2, 0.2, 0.2),
+    //                               Vec3(-1, -2, -1));
+    // m_pipeline->AddPointLight(Vec3(0.2, 0.2, 0.2),
+    //                           Vec3(0.9, 0.1, 0.1),
+    //                           Vec3(0.9, 0.1, 0.1),
+    //                           Vec3(0.0, 0.0, 0.0),
+    //                           Vec3(1.0f, 0.07f, 0.017f));
+    m_pipeline->AddSpotLight(
+        Vec3(0.1, 0.1, 0.1),
+        Vec3(0.9, 0.1, 0.1),
+        Vec3(0.9, 0.1, 0.1),
+        15.0f,
+        Vec3(0.0, 2.8, 0.0),
+        Vec3(0.0, -3.0, 0.0),
+        Vec3(1.0f, 0.07f, 0.017f));
     //    m_pipeline->
     // m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
 
@@ -123,14 +125,14 @@ void Application::Run()
 
         // render cube
         {
-            // m_pipeline->SetModelMatrix(cubeTransformMat[0]);
-            // m_pipeline->DrawObject(cubeObj);
+            m_pipeline->SetModelMatrix(cubeTransformMat[0]);
+            m_pipeline->DrawObject(cubeObj);
 
-            // m_pipeline->SetModelMatrix(cubeTransformMat[1]);
-            // m_pipeline->DrawObject(cubeObj);
+            m_pipeline->SetModelMatrix(cubeTransformMat[1]);
+            m_pipeline->DrawObject(cubeObj);
 
-            // m_pipeline->SetModelMatrix(cubeTransformMat[2]);
-            // m_pipeline->DrawObject(cubeObj);
+            m_pipeline->SetModelMatrix(cubeTransformMat[2]);
+            m_pipeline->DrawObject(cubeObj);
         }
         // render head
         {
@@ -139,8 +141,8 @@ void Application::Run()
         }
 
         {
-            // m_pipeline->SetModelMatrix(tranlateMat * rotateMat * neptueTransformMat);
-            // m_pipeline->DrawModel(neptune);
+            m_pipeline->SetModelMatrix(tranlateMat * rotateMat * neptueTransformMat);
+            m_pipeline->DrawModel(neptune);
         }
         {
             m_pipeline->SetModelMatrix(floorTransformMat);

@@ -1,4 +1,13 @@
 #include "Vec3.h"
+#include "Vec4.h"
+Vec3::Vec3(const Vec4 &rhs) : x(rhs.x), y(rhs.y), z(rhs.z)
+{
+}
+
+Vec3 Vec3::operator=(Vec4 &v)
+{
+    return Vec3(v.x, v.y, v.z);
+}
 
 void Vec3::Normalize()
 {

@@ -54,22 +54,25 @@ void MainWidget::DisplayFps()
 void MainWidget::keyPressEvent(QKeyEvent *event)
 {
     int key = event->key();
-    // std::cout << key << std::endl;
-    switch (key)
+    if (ui->imageWidget->hasFocus())
     {
-    case SKey_W:
-    case SKey_S:
-    case SKey_D:
-    case SKey_A:
-    case SKey_Q:
-    case SKey_E:
-    case SKey_Down:
-    case SKey_Up:
-    case SKey_Left:
-    case SKey_Right:
+        // std::cout << key << std::endl;
+        switch (key)
+        {
+        case SKey_W:
+        case SKey_S:
+        case SKey_D:
+        case SKey_A:
+        case SKey_Q:
+        case SKey_E:
+        case SKey_Down:
+        case SKey_Up:
+        case SKey_Left:
+        case SKey_Right:
 
-        m_app->OnReceiveKeyEvent(key);
-        break;
+            m_app->OnReceiveKeyEvent(key);
+            break;
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 #include "PhongShader.h"
-
-PhongShader::PhongShader(): Shader()
+#include "Render/Material.h"
+#include "Render/Light.h"
+PhongShader::PhongShader() : Shader()
 {
 }
 
@@ -10,7 +11,7 @@ VertexOut PhongShader::vertexShader(const Vertex &in)
     result.posWorld = m_modelMatrix * in.position;
     result.posProj = m_projectMatrix * m_viewMatrix * result.posWorld;
     result.color = in.color;
-    result.normal = in.normal;
+    result.normal = m_invTransposeModelMatrix * Vec4(in.normal);
     result.texcoord = in.texcoord;
 
     return result;
@@ -18,32 +19,30 @@ VertexOut PhongShader::vertexShader(const Vertex &in)
 
 Vec4 PhongShader::fragmentShader(const VertexOut &in)
 {
-    return Vec4();
+    Vec4 litColor = in.color;
+    if (m_tex)
+        litColor = m_tex->SampleTexture(in.texcoord);
+    Vec3 amb, diff, spec;
+    if (m_light)
+    {
+        Vec3 eyeDir = m_eyePos - in.posWorld;
+        eyeDir.Normalize();
+        m_light->lighting(*m_material, in.posWorld, in.normal, eyeDir, amb, diff, spec);
+
+        litColor.x *= (amb.x + diff.x + spec.x);
+        litColor.y *= (amb.y + diff.y + spec.y);
+        litColor.z *= (amb.z + diff.z + spec.z);
+        litColor.w = 1.0f;
+    }
+    return litColor;
 }
 
-// Vec3f PhongShader::VertexShader(int faceInd, int VertInd)
-// {
+void PhongShader::SetMaterial(const Material *material)
+{
+    m_material = material;
+}
 
-//     varying.varying_uv[VertInd] = model->m_UVCoords[model->m_Faces[faceInd][VertInd][1]];
-//     varying.varying_normal[VertInd] = VecProject<3>(shaderData.modelTransViewMatInv * Vec4f(model->m_Normals[model->m_Faces[faceInd][VertInd][2]], 1.0f));
-//     Vec4f position(model->m_Vertices[model->m_Faces[faceInd][VertInd][0]], 1.0f);
-//     return Vec3f(shaderData.screenViewportMat *
-//                  shaderData.modelTransViewMat * position);
-// }
-
-// bool PhongShader::FragmentShader(v2f *v2fData, Vec4f &color)
-// {
-//     Vec2f uv = interpolateCorrection(v2fData, varying.varying_uv);
-//     Vec3f n = VecGetNormalize(interpolateCorrection(v2fData, varying.varying_normal));
-//     Vec3f l = VecGetNormalize(VecProject<3>(shaderData.modelTransViewMat * Vec4f(shaderData.lightDir, 1.0f)));
-//     Vec3f r = VecGetNormalize(VecGetDotProduct(n, l) * 2.0f * n - l);
-//     float spec = pow(std::max(0.0f, r.z), model->GetSpecularColor(uv)); // 以上都是定义在相机空间
-//     float diffuse = std::max(0.0f, VecGetDotProduct(n, l));
-
-//     Vec4f c = model->GetDiffuseColor(uv);
-
-//     color.a = 1.0f;
-//     for (int i = 0; i < 3; ++i)
-//         color[i] = std::min(c[i] * (diffuse + spec), 1.0f);
-//     return false;
-// }
+void PhongShader::SetLight(const Light *light)
+{
+    m_light = light;
+}

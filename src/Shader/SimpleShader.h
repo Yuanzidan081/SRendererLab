@@ -13,8 +13,6 @@ public:
     virtual void SetModelMatrix(const Mat4x4 &world)
     {
         m_modelMatrix = world;
-        m_invModelMatrix = m_modelMatrix.GetInverse();
-        m_invTransposeModelMatrix = m_invModelMatrix.GetTranspose();
     }
     virtual void SetViewMatrix(const Mat4x4 &view)
     {
@@ -28,8 +26,6 @@ public:
 private:
     Texture2D *m_tex;
     Mat4x4 m_modelMatrix;
-    Mat4x4 m_invModelMatrix;
-    Mat4x4 m_invTransposeModelMatrix;
     Mat4x4 m_viewMatrix;
     Mat4x4 m_projectMatrix;
 };

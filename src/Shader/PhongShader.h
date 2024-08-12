@@ -5,12 +5,6 @@
 class PhongShader : public Shader
 {
 public:
-    // struct Varying
-    // {
-    //     Vec2 varying_uv[3];
-    //     Vec3 varying_normal[3];
-    // };
-    // Varying varying;
     PhongShader();
     virtual ~PhongShader() = default;
     virtual VertexOut vertexShader(const Vertex &in);
@@ -22,8 +16,7 @@ public:
     virtual void SetModelMatrix(const Mat4x4 &world)
     {
         m_modelMatrix = world;
-        m_invModelMatrix = m_modelMatrix.GetInverse();
-        m_invTransposeModelMatrix = m_invModelMatrix.GetTranspose();
+        m_invTransposeModelMatrix = m_modelMatrix.GetInverseTranspose();
     }
     virtual void SetViewMatrix(const Mat4x4 &view)
     {
@@ -33,15 +26,20 @@ public:
     {
         m_projectMatrix = project;
     }
+    virtual void SetMaterial(const Material *material);
+
+    virtual void SetLight(const Light *light);
 
 private:
     Vec3 m_eyePos;
     Texture2D *m_tex;
     Mat4x4 m_modelMatrix;
-    Mat4x4 m_invModelMatrix;
     Mat4x4 m_invTransposeModelMatrix;
     Mat4x4 m_viewMatrix;
     Mat4x4 m_projectMatrix;
+
+    const Light *m_light;
+    const Material *m_material;
 };
 
 #endif // PHONGSHADER_H

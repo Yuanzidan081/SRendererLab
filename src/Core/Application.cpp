@@ -7,7 +7,7 @@
 #include "Shader/ShaderGroup.h"
 #include "time.h"
 #include "Render/Mesh.h"
-
+#include "Render/Light.h"
 #include <stdio.h>
 #include <direct.h>
 Application::Application(int width, int height) : m_stopped(false), m_fps(0), m_width(width), m_height(height)
@@ -36,6 +36,7 @@ void Application::Run()
 
     std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
     Shader *shader = new SimpleShader();
+
     // head
     Material headMat;
     headMat.SetShader(shader);
@@ -57,7 +58,7 @@ void Application::Run()
 
     // floor
     Mesh floorMesh;
-    floorMesh.asFloor(10.0, -1.5);
+    floorMesh.asFloor(4.3, -1.5);
     Material floorMat;
     floorMat.SetShader(shader);
     Texture2D floorTex(curPath + "obj/floor/floor.jpg");
@@ -67,9 +68,9 @@ void Application::Run()
     // transformation
     double angle = 0.0;
     Mat4x4 cubeTransformMat[3], floorTransformMat;
-    cubeTransformMat[0].SetTranslation(Vec3(3.0f, 0.0f, 1.0f));
-    cubeTransformMat[1].SetTranslation(Vec3(4.0f, 0.0f, 1.0f));
-    cubeTransformMat[2].SetTranslation(Vec3(3.5f, 1.0f, 1.0f));
+    cubeTransformMat[0].SetTranslation(Vec3(3.0f, -1.0f, -1.0f));
+    cubeTransformMat[1].SetTranslation(Vec3(4.0f, -1.0f, -1.0f));
+    cubeTransformMat[2].SetTranslation(Vec3(3.5f, 0.0f, -1.0f));
 
     Mat4x4 rotateMat;
 
@@ -98,11 +99,17 @@ void Application::Run()
 
     Mat4x4 neptueTransformMat = neptune.SetSize(2.0, 2.0, 2.0);
     Mat4x4 tranlateMat;
-    tranlateMat.SetTranslation(Vec3(-1.5f, 0.0f, 1.0f));
+    tranlateMat.SetTranslation(Vec3(1.5f, 0.0f, 1.0f));
 
     // pipeline settings
-    m_pipeline->SetShadingMode(ShadingMode::Simple);
+
+    m_pipeline->SetShadingMode(ShadingMode::Phong);
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
+    m_pipeline->AddDirectionLight(Vec3(0.5, 0.5, 0.5),
+                                  Vec3(1.0, 1.0, 1.0),
+                                  Vec3(1.0, 1.0, 1.0),
+                                  Vec3(-1, -2, -1));
+    //    m_pipeline->
     // m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
 
     clock_t start, finish;
@@ -116,14 +123,14 @@ void Application::Run()
 
         // render cube
         {
-            m_pipeline->SetModelMatrix(cubeTransformMat[0]);
-            m_pipeline->DrawObject(cubeObj);
+            // m_pipeline->SetModelMatrix(cubeTransformMat[0]);
+            // m_pipeline->DrawObject(cubeObj);
 
-            m_pipeline->SetModelMatrix(cubeTransformMat[1]);
-            m_pipeline->DrawObject(cubeObj);
+            // m_pipeline->SetModelMatrix(cubeTransformMat[1]);
+            // m_pipeline->DrawObject(cubeObj);
 
-            m_pipeline->SetModelMatrix(cubeTransformMat[2]);
-            m_pipeline->DrawObject(cubeObj);
+            // m_pipeline->SetModelMatrix(cubeTransformMat[2]);
+            // m_pipeline->DrawObject(cubeObj);
         }
         // render head
         {
@@ -132,8 +139,8 @@ void Application::Run()
         }
 
         {
-            m_pipeline->SetModelMatrix(tranlateMat * rotateMat * neptueTransformMat);
-            m_pipeline->DrawModel(neptune);
+            // m_pipeline->SetModelMatrix(tranlateMat * rotateMat * neptueTransformMat);
+            // m_pipeline->DrawModel(neptune);
         }
         {
             m_pipeline->SetModelMatrix(floorTransformMat);

@@ -3,6 +3,7 @@
 #include <cmath>
 #include "MathUtils.h"
 #include <iostream>
+class Vec4;
 class Vec3
 {
 public:
@@ -27,8 +28,10 @@ public:
 
     Vec3(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
     Vec3(const Vec3 &rhs) : x(rhs.x), y(rhs.y), z(rhs.z) {}
+    Vec3(const Vec4 &rhs);
     Vec3(const float *ptr) : x(ptr[0]), y(ptr[1]), z(ptr[2]) {}
     ~Vec3() = default;
+    Vec3 operator=(Vec4 &v);
 
     // setter getter
     void Set(float X, float Y, float Z)

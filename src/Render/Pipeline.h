@@ -1,9 +1,10 @@
 #ifndef PIPELINE_H
 #define PIPELINE_H
-#include "Render/FrameBuffer.h"
-#include "Render/Model.h"
-#include "Render/FPSCamera.h"
-#include "Render/Texture2D.h"
+#include "FrameBuffer.h"
+#include "Model.h"
+#include "FPSCamera.h"
+#include "Texture2D.h"
+#include "Light.h"
 
 #include "Core/Base.h"
 #include "Math/MathGroup.h"
@@ -31,6 +32,7 @@ public:
 
         const std::vector<unsigned int> *m_indices;
         const std::vector<Vertex> *m_vertices;
+        std::vector<Light *> m_lights;
         std::vector<Vec4> m_viewPlaneParameters;
         std::vector<Vec4> m_viewLineParameters;
     };
@@ -42,6 +44,8 @@ public:
     void SetDepthTesting(bool open) { m_config.m_depthTesting = open; }
     void SetBackFaceCulling(bool open) { m_config.m_backFaceCulling = open; }
 
+    // setting material
+    void SetMaterial(const Material *material);
     // setting texture
     bool BindTexture(const unsigned int &unit);
     bool UnBindTexture(const unsigned int &unit);
@@ -77,6 +81,11 @@ public:
     // Illumination setting
     void SetShadingMode(ShadingMode mode);
     void SetPolygonMode(PolygonMode mode) { m_config.m_polygonMode = mode; }
+    // Light
+    void AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir);
+    void AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte);
+    void AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff,
+                      Vec3 pos, Vec3 dir, Vec3 atte);
 
     // start the rendering pipeline
     void DrawMesh();

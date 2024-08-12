@@ -45,13 +45,15 @@ Pipeline::~Pipeline()
         delete m_config.m_textureUnits[i];
         m_config.m_textureUnits[i] = nullptr;
     }
-    /*  if (m_camera)
-         delete m_camera; */
 
+    for (size_t i = 0; i < m_config.m_lights.size(); ++i)
+    {
+        delete m_config.m_lights[i];
+        m_config.m_lights[i] = nullptr;
+    }
     m_config.m_backBuffer = nullptr;
     m_config.m_frontBuffer = nullptr;
     m_config.m_shader = nullptr;
-    /* m_camera = nullptr; */
 }
 
 void Pipeline::initialize()
@@ -78,6 +80,10 @@ unsigned int Pipeline::LoadTexture(const std::string &path)
         return 0;
     m_config.m_textureUnits.push_back(tex);
     return static_cast<unsigned int>(m_config.m_textureUnits.size() - 1);
+}
+void Pipeline::SetMaterial(const Material *material)
+{
+    m_config.m_shader->SetMaterial(material);
 }
 bool Pipeline::BindTexture(const unsigned int &unit)
 {
@@ -176,6 +182,33 @@ void Pipeline::SetShadingMode(ShadingMode mode)
     }
 }
 
+void Pipeline::AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir)
+{
+    DirectionalLight*light = new DirectionalLight();
+    light->SetDirectionalLight(amb, diff, spec, dir);
+    Light *m_light = light;
+    m_config.m_lights.push_back(m_light);
+    m_config.m_shader->SetLight(m_light);
+}
+
+void Pipeline::AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte)
+{
+    PointLight *light = new PointLight();
+    light->SetPointLight(amb, diff, spec, pos, atte);
+    Light *m_light = reinterpret_cast<Light *>(light);
+    m_config.m_lights.push_back(m_light);
+    m_config.m_shader->SetLight(m_light);
+}
+
+void Pipeline::AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff, Vec3 pos, Vec3 dir, Vec3 atte)
+{
+    SpotLight *light = new SpotLight();
+    light->SetSpotLight(amb, diff, spec, pos, dir, atte, cutoff);
+    Light *m_light = reinterpret_cast<Light *>(light);
+    m_config.m_lights.push_back(m_light);
+    m_config.m_shader->SetLight(m_light);
+}
+
 void Pipeline::DrawMesh()
 {
     if (m_config.m_indices->empty())
@@ -266,6 +299,7 @@ void Pipeline::DrawObject(const Object &obj)
     BindTexture(*(obj.m_material.m_mainTex));
     SetVertexBuffer(&obj.m_mesh.m_vertices);
     SetIndexBuffer(&obj.m_mesh.m_indices);
+    SetMaterial(&obj.m_material);
     DrawMesh();
     UnBindTexture();
 }

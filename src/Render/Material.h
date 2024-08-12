@@ -16,7 +16,7 @@ public:
 
     Material() : m_diffuse(Vec4(1.0, 1.0, 1.0, 1.0)),
                  m_specular(Vec4(1.0, 1.0, 1.0, 1.0)),
-                 m_gloss(32),
+                 m_gloss(16),
                  m_mainTex(nullptr) {}
     Material(const Vec4 &color, const Vec4 &specular, const int &gloss)
         : m_diffuse(color), m_specular(specular), m_gloss(gloss),

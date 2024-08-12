@@ -1,38 +1,49 @@
 #include "GouraudShader.h"
-
+#include "Render/Light.h"
+#include "Render/Material.h"
 GouraudShader::GouraudShader()
 {
 }
-
-// Vec3f GouraudShader::VertexShader(int faceInd, int VertInd)
-// {
-//     m_intensity[VertInd] = std::max(0.0f, VecGetDotProduct(model->m_Normals[model->m_Faces[faceInd][VertInd][2]], VecGetNormalize(shaderData.lightDir)));
-//     Vec4f position(model->m_Vertices[model->m_Faces[faceInd][VertInd][0]], 1.0f);
-
-//     return Vec3f(shaderData.screenViewportMat *
-//                  shaderData.cameraProjectionMat *
-//                  shaderData.cameraViewMat *
-//                  shaderData.modelTransMat * position);
-// }
-
-// bool GouraudShader::FragmentShader(v2f *v2fData, Vec4f &color)
-// {
-//     float intensity = (v2fData->triangleCoeff.u * m_intensity[0] * v2fData->oneDivideZ[0] +
-//                        v2fData->triangleCoeff.v * m_intensity[1] * v2fData->oneDivideZ[1] +
-//                        v2fData->triangleCoeff.w * m_intensity[2] * v2fData->oneDivideZ[2]) /
-//                       v2fData->oneDividepixelZ;
-//     // intensity = (intensity > 1.f ? 1.f : (intensity < 0.f ? 0.f : intensity));
-
-//     color = Vec4f(intensity, intensity, intensity, 1.0f);
-//     return false;
-// }
-
 VertexOut GouraudShader::vertexShader(const Vertex &in)
 {
-    return VertexOut();
+    VertexOut result;
+    result.posWorld = m_modelMatrix * in.position;
+    result.posProj = m_projectMatrix * m_viewMatrix * result.posWorld;
+    result.color = in.color;
+    result.texcoord = in.texcoord;
+    result.normal = m_invTransposeModelMatrix * Vec4(in.normal);
+
+    if (m_tex)
+        result.color = m_tex->SampleTexture(result.texcoord);
+    Vec3 amb, diff, spec;
+    if (m_light)
+    {
+        Vec3 eyeDir = m_eyePos - result.posWorld;
+        eyeDir.Normalize();
+        m_light->lighting(*m_material, result.posWorld, result.normal, eyeDir, amb, diff, spec);
+
+        result.color.x *= (amb.x + diff.x + spec.x);
+        result.color.y *= (amb.y + diff.y + spec.y);
+        result.color.z *= (amb.z + diff.z + spec.z);
+        result.color.w = 1.0f;
+    }
+    return result;
 }
 
 Vec4 GouraudShader::fragmentShader(const VertexOut &in)
 {
-    return Vec4();
+    Vec4 litColor = in.color;
+    return litColor;
+}
+
+void GouraudShader::SetMaterial(const Material *material)
+{
+
+    m_material = material;
+}
+
+void GouraudShader::SetLight(const Light *light)
+{
+
+    m_light = light;
 }

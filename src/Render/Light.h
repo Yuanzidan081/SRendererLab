@@ -1,6 +1,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 #include "Math/Vec3.h"
+#include <string>
 class Material;
 class Light
 {
@@ -15,6 +16,8 @@ public:
 class DirectionalLight : public Light
 {
 public:
+    std::string m_tag = "Directional Light";
+    std::string m_name = "Default Directional Light";
     Vec3 m_ambient;
     Vec3 m_diffuse;
     Vec3 m_specular;
@@ -36,6 +39,8 @@ public:
 class PointLight : public Light
 {
 public:
+    std::string m_tag = "Point Light";
+    std::string m_name = "Default Point Light";
     Vec3 m_ambient;
     Vec3 m_diffuse;
     Vec3 m_specular;
@@ -59,6 +64,8 @@ public:
 class SpotLight : public Light
 {
 public:
+    std::string m_tag = "Spot Light";
+    std::string m_name = "Default Spot Light";
     double m_cutoff, m_outcutoff;
 
     Vec3 m_ambient;

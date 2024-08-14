@@ -25,7 +25,7 @@ Model::Model(const std::string &filename)
 
     if (fileTypeStr == "obj")
     {
-        AddObjModel(filename);
+        AddObject(filename);
     }
     else
         std::cout << "invalid file type" << std::endl;
@@ -48,7 +48,7 @@ Model::Model(const std::initializer_list<std::string> &list)
         }
         fileTypeStr = fileStr.substr(lastDotPos + 1, fileStr.length() - lastDotPos);
         if (fileStr == "obj")
-            AddObjModel(fileStr);
+            AddObject(fileStr);
         else
         {
             std::cout << "invalid file type" << std::endl;
@@ -77,7 +77,7 @@ Mat4x4 Model::SetSize(float sx, float sy, float sz) const
     return result;
 }
 
-void Model::AddObjModel(const std::string &filename)
+void Model::AddObject(const std::string &filename)
 {
     std::ifstream file;
 
@@ -106,6 +106,7 @@ void Model::AddObjModel(const std::string &filename)
             {
                 m_objectNum++;
                 Object o;
+                // o.m_mesh = std::make_shared<Mesh>();
                 m_objects.push_back(o);
 
                 flag = true;
@@ -147,7 +148,7 @@ void Model::AddObjModel(const std::string &filename)
             if (flag)
             {
                 flag = false;
-                m_objects[m_objectNum - 1].m_mesh.m_name = m_name + "-element" + std::to_string(m_objectNum);
+                m_objects[m_objectNum - 1].m_mesh->m_name = m_name + "-element" + std::to_string(m_objectNum);
             }
             buf >> trash; // trash: filter "f"
             int index[3];
@@ -159,9 +160,9 @@ void Model::AddObjModel(const std::string &filename)
                 data.texcoord = texcoords[index[1] - 1];
                 data.normal = normals[index[2] - 1];
                 data.color = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
-                int offset = m_objects[m_objectNum - 1].m_mesh.m_vertices.size();
-                m_objects[m_objectNum - 1].m_mesh.m_indices.push_back(offset);
-                m_objects[m_objectNum - 1].m_mesh.m_vertices.push_back(data);
+                int offset = m_objects[m_objectNum - 1].m_mesh->m_vertices.size();
+                m_objects[m_objectNum - 1].m_mesh->m_indices.push_back(offset);
+                m_objects[m_objectNum - 1].m_mesh->m_vertices.push_back(data);
             }
         }
     }
@@ -170,7 +171,7 @@ void Model::AddObjModel(const std::string &filename)
     return;
 }
 
-void Model::AddObjModel(Object &obj)
+void Model::AddObject(Object &obj)
 {
     m_objects.push_back(obj);
     m_objectNum++;

@@ -45,7 +45,7 @@ void Application::Run()
     cubeMat.SetShader(shader);
     Texture2D *cubeTex = new Texture2D(curPath + "obj/cube/container.jpg");
     cubeMat.SetTexture(cubeTex);
-    Object cubeObj(cubeMesh, &cubeMat);
+    Object cubeObj(&cubeMesh, &cubeMat);
     Model cubeMdl;
     cubeMdl.SetModelName("cube");
     m_pipeline->m_config->AddModel(&cubeMdl);
@@ -57,7 +57,7 @@ void Application::Run()
     floorMat.SetShader(shader);
     Texture2D *floorTex = new Texture2D(curPath + "obj/floor/floor.jpg");
     floorMat.SetTexture(floorTex);
-    Object floorObj(floorMesh, &floorMat);
+    Object floorObj(&floorMesh, &floorMat);
 
     // transformation
     double angle = 0.0;

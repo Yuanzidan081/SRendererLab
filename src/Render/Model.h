@@ -41,8 +41,8 @@ public:
         m_objects[id].m_material = m;
     }
     // Model &operator=(const Model &model);
-    void AddObjModel(const std::string &path);
-    void Model::AddObjModel(Object &obj);
+    void AddObject(const std::string &path);
+    void Model::AddObject(Object &obj);
     void SetModelName(const std::string &name)
     {
         m_name = name;

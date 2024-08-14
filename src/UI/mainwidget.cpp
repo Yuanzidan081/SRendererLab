@@ -94,7 +94,7 @@ void MainWidget::DisplayTreeNode()
         itemMdl->appendRow(mdlItem);
         for (int j = 0; j < m_config->m_models[i]->m_objectNum; j++)
         {
-            QString obj = static_cast<QString>(("    " + m_config->m_models[i]->m_objects[j].m_mesh.m_name).c_str());
+            QString obj = static_cast<QString>(("    " + m_config->m_models[i]->m_objects[j].m_mesh->m_name).c_str());
             QStandardItem *objItem = new QStandardItem(obj);
             itemMdl->appendRow(objItem);
         }

@@ -11,7 +11,7 @@ public:
     Vec4 m_diffuse;
     Vec4 m_specular;
     int m_gloss;
-    Texture2D *m_mainTex;
+    std::shared_ptr<Texture2D> m_mainTex;
     Shader *m_shader;
 
     Material() : m_diffuse(Vec4(1.0, 1.0, 1.0, 1.0)),
@@ -25,10 +25,6 @@ public:
     }
     ~Material()
     {
-        if (m_mainTex)
-            delete m_mainTex;
-
-        m_mainTex = nullptr;
     }
     void SetShader(Shader *s)
     {
@@ -36,7 +32,7 @@ public:
     }
     void SetTexture(Texture2D *t)
     {
-        m_mainTex = t;
+        m_mainTex = std::make_shared<Texture2D>(*t);
     }
 };
 #endif // MATERIAL_H

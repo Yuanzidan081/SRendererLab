@@ -36,7 +36,7 @@ void Application::Run()
     m_fpsCamera = new EulerFPSCamera(Vec3(1.5f, 1.0f, 10.0f));
 
     std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
-    Shader *shader = new SimpleShader();
+    Shader *shader = PhongShader::GetInstance();
 
     //  cube
     Mesh cubeMesh;
@@ -161,7 +161,6 @@ void Application::Run()
         emit frameReady(m_pipeline->GetFrameResult());
         ++m_fps;
     }
-    delete shader;
 }
 void Application::OnReceiveKeyEvent(int key)
 {

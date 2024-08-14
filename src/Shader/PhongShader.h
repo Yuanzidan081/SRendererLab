@@ -3,8 +3,15 @@
 #include "Shader.h"
 class PhongShader : public Shader
 {
+private:
+    PhongShader() = default;
+
+    PhongShader(const PhongShader &s) = delete;
+    static PhongShader *s_shader;
+
 public:
-    PhongShader();
+    static PhongShader *GetInstance();
+    void Destroy();
     virtual ~PhongShader() = default;
     virtual VertexOut vertexShader(const Vertex &in);
     virtual Vec4 fragmentShader(const VertexOut &in);

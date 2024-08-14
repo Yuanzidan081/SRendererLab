@@ -1,8 +1,25 @@
 #include "SimpleShader.h"
 
+SimpleShader *SimpleShader::s_shader = nullptr;
 SimpleShader::SimpleShader()
 {
     m_tex = nullptr;
+}
+
+SimpleShader *SimpleShader::GetInstance()
+{
+    if (s_shader == nullptr)
+        s_shader = new SimpleShader();
+    return s_shader;
+}
+
+void SimpleShader::Destroy()
+{
+    if (s_shader)
+    {
+        delete s_shader;
+        s_shader = nullptr;
+    }
 }
 
 VertexOut SimpleShader::vertexShader(const Vertex &in)

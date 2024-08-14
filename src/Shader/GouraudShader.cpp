@@ -1,9 +1,22 @@
 #include "GouraudShader.h"
 #include "Render/Light.h"
 #include "Render/Material.h"
-GouraudShader::GouraudShader()
+GouraudShader *GouraudShader::s_shader = nullptr;
+
+GouraudShader *GouraudShader::GetInstance()
 {
+    if (s_shader == nullptr)
+        s_shader = new GouraudShader();
+    return s_shader;
 }
+
+void GouraudShader::Destroy()
+{
+    if (s_shader)
+        delete s_shader;
+    s_shader = nullptr;
+}
+
 VertexOut GouraudShader::vertexShader(const Vertex &in)
 {
     VertexOut result;

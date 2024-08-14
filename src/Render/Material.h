@@ -27,6 +27,7 @@ public:
     {
         if (m_mainTex)
             delete m_mainTex;
+
         m_mainTex = nullptr;
     }
     void SetShader(Shader *s)

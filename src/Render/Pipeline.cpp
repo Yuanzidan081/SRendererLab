@@ -43,7 +43,7 @@ void Pipeline::initialize()
     m_config->m_viewPortMat.SetViewPort(0.0f, 0.0f, (float)m_config->m_width, (float)m_config->m_height);
     m_config->m_backBuffer = new FrameBuffer(m_config->m_width, m_config->m_height);
     m_config->m_frontBuffer = new FrameBuffer(m_config->m_width, m_config->m_height);
-    m_config->m_shader = new SimpleShader();
+    m_config->m_shader = SimpleShader::GetInstance();
 }
 
 void Pipeline::SetMaterial(const Material *material)
@@ -111,23 +111,22 @@ void Pipeline::SetModelMatrix(Mat4x4 modelMatrix)
 void Pipeline::SetShadingMode(ShadingMode mode)
 {
     if (m_config->m_shader)
-        delete m_config->m_shader;
-    m_config->m_shader = nullptr;
+        m_config->m_shader->Destroy();
     switch (mode)
     {
     case ShadingMode::Simple:
     {
-        m_config->m_shader = new SimpleShader();
+        m_config->m_shader = SimpleShader::GetInstance();
         break;
     }
     case ShadingMode::Gouraud:
     {
-        m_config->m_shader = new GouraudShader();
+        m_config->m_shader = GouraudShader::GetInstance();
         break;
     }
     case ShadingMode::Phong:
     {
-        m_config->m_shader = new PhongShader();
+        m_config->m_shader = PhongShader::GetInstance();
         break;
     }
     }

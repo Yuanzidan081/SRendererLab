@@ -3,9 +3,15 @@
 #include "Shader.h"
 class SimpleShader : public Shader
 {
-public:
+private:
     SimpleShader();
+    SimpleShader(const SimpleShader &s) = delete;
+    static SimpleShader *s_shader;
+
+public:
+    static SimpleShader *GetInstance();
     virtual ~SimpleShader() = default;
+    void Destroy();
     virtual VertexOut vertexShader(const Vertex &in);
     virtual Vec4 fragmentShader(const VertexOut &in);
     virtual void BindShaderTexture(Texture2D *tex) { m_tex = tex; }

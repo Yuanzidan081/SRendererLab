@@ -4,8 +4,15 @@
 
 class GouraudShader : public Shader
 {
+private:
+    GouraudShader() = default;
+    GouraudShader(const GouraudShader &s) = delete;
+    static GouraudShader *s_shader;
+
 public:
-    GouraudShader();
+    static GouraudShader *GetInstance();
+    void Destroy();
+
     ~GouraudShader() = default;
     virtual VertexOut vertexShader(const Vertex &in);
     virtual Vec4 fragmentShader(const VertexOut &in);

@@ -1,8 +1,20 @@
 #include "PhongShader.h"
 #include "Render/Material.h"
 #include "Render/Light.h"
-PhongShader::PhongShader() : Shader()
+
+PhongShader *PhongShader::s_shader = nullptr;
+PhongShader *PhongShader::GetInstance()
 {
+    if (s_shader == nullptr)
+        s_shader = new PhongShader();
+    return s_shader;
+}
+
+void PhongShader::Destroy()
+{
+    if (s_shader)
+        delete s_shader;
+    s_shader = nullptr;
 }
 
 VertexOut PhongShader::vertexShader(const Vertex &in)

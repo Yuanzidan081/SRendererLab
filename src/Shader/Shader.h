@@ -11,6 +11,8 @@ class Shader
 {
 public:
     Shader() = default;
+
+    void Destroy() {}
     virtual ~Shader() = default;
     virtual void BindShaderTexture(Texture2D *tex) {}
     virtual VertexOut vertexShader(const Vertex &in) { return VertexOut(); }

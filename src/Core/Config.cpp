@@ -2,7 +2,7 @@
 #include "Render/Model.h"
 #include "Render/Vertex.h"
 #include "Render/FrameBuffer.h"
-#include "Shader/Shader.h"
+#include "Shader/ShaderGroup.h"
 #include "Render/Light.h"
 Config *Config::localInstance = nullptr;
 
@@ -54,6 +54,12 @@ void Config::Destroy()
         delete m_models[i];
         m_models[i] = nullptr;
     } */
+    Shader *shader = PhongShader::GetInstance();
+    shader->Destroy();
+    shader = GouraudShader::GetInstance();
+    shader->Destroy();
+    shader = SimpleShader::GetInstance();
+    shader->Destroy();
     m_backBuffer = nullptr;
     m_frontBuffer = nullptr;
     m_shader = nullptr;

@@ -43,9 +43,9 @@ void Application::Run()
     cubeMesh.asBox(1.0, 1.0, 1.0);
     Material cubeMat;
     cubeMat.SetShader(shader);
-    Texture2D cubeTex(curPath + "obj/cube/container.jpg");
-    cubeMat.SetTexture(&cubeTex);
-    Object cubeObj(cubeMesh, cubeMat);
+    Texture2D *cubeTex = new Texture2D(curPath + "obj/cube/container.jpg");
+    cubeMat.SetTexture(cubeTex);
+    Object cubeObj(cubeMesh, &cubeMat);
     Model cubeMdl;
     cubeMdl.SetModelName("cube");
     m_pipeline->m_config->AddModel(&cubeMdl);
@@ -55,9 +55,9 @@ void Application::Run()
     floorMesh.asFloor(4.3, -1.5);
     Material floorMat;
     floorMat.SetShader(shader);
-    Texture2D floorTex(curPath + "obj/floor/floor.jpg");
-    floorMat.SetTexture(&floorTex);
-    Object floorObj(floorMesh, floorMat);
+    Texture2D *floorTex = new Texture2D(curPath + "obj/floor/floor.jpg");
+    floorMat.SetTexture(floorTex);
+    Object floorObj(floorMesh, &floorMat);
 
     // transformation
     double angle = 0.0;
@@ -71,25 +71,25 @@ void Application::Run()
     // neptune
     Material bodyMat;
     bodyMat.SetShader(shader);
-    Texture2D bodyTexture(curPath + "obj/neptune/Texf_body02.jpg");
-    bodyMat.SetTexture(&bodyTexture);
+    Texture2D *bodyTexture = new Texture2D(curPath + "obj/neptune/Texf_body02.jpg");
+    bodyMat.SetTexture(bodyTexture);
     Material faceMat;
     faceMat.SetShader(shader);
-    Texture2D faceTexture(curPath + "obj/neptune/Tex002f_body01.jpg");
-    faceMat.SetTexture(&faceTexture);
+    Texture2D *faceTexture = new Texture2D(curPath + "obj/neptune/Tex002f_body01.jpg");
+    faceMat.SetTexture(faceTexture);
     Material mouseMat;
     mouseMat.SetShader(shader);
-    Texture2D mouseTexture(curPath + "obj/neptune/Texf_mouse.jpg");
-    mouseMat.SetTexture(&mouseTexture);
+    Texture2D *mouseTexture = new Texture2D(curPath + "obj/neptune/Texf_mouse.jpg");
+    mouseMat.SetTexture(mouseTexture);
     Material eyeMat;
     eyeMat.SetShader(shader);
-    Texture2D eyeTexture(curPath + "obj/neptune/Tex001f_eye.jpg");
-    eyeMat.SetTexture(&eyeTexture);
+    Texture2D *eyeTexture = new Texture2D(curPath + "obj/neptune/Tex001f_eye.jpg");
+    eyeMat.SetTexture(eyeTexture);
     Model neptune(curPath + "obj/neptune/neptune.obj");
-    neptune.SetMaterial(0, mouseMat);
-    neptune.SetMaterial(1, faceMat);
-    neptune.SetMaterial(2, bodyMat);
-    neptune.SetMaterial(3, eyeMat);
+    neptune.SetMaterial(0, &mouseMat);
+    neptune.SetMaterial(1, &faceMat);
+    neptune.SetMaterial(2, &bodyMat);
+    neptune.SetMaterial(3, &eyeMat);
 
     Mat4x4 neptueTransformMat = neptune.SetSize(2.0, 2.0, 2.0);
     Mat4x4 tranlateMat;

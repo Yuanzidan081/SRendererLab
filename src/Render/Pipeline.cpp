@@ -247,10 +247,10 @@ void Pipeline::DrawModel(const Model &model)
 
 void Pipeline::DrawObject(const Object &obj)
 {
-    BindTexture(*(obj.m_material.m_mainTex));
+    BindTexture(*(obj.m_material->m_mainTex));
     SetVertexBuffer(&obj.m_mesh.m_vertices);
     SetIndexBuffer(&obj.m_mesh.m_indices);
-    SetMaterial(&obj.m_material);
+    SetMaterial(obj.m_material);
     DrawMesh();
     UnBindTexture();
 }

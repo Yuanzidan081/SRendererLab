@@ -32,7 +32,7 @@ public:
         return *this;
     }
     Mat4x4 SetSize(float sx, float sy, float sz) const;
-    void SetMaterial(const int &id, const Material &m)
+    void SetMaterial(const int &id, Material *m)
     {
         m_objects[id].m_material = m;
     }

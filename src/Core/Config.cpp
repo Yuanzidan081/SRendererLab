@@ -49,11 +49,11 @@ void Config::Destroy()
         delete m_lights[i];
         m_lights[i] = nullptr;
     }
-    for (size_t i = 0; i < m_models.size(); ++i)
+    /* for (size_t i = 0; i < m_models.size(); ++i)
     {
         delete m_models[i];
         m_models[i] = nullptr;
-    }
+    } */
     m_backBuffer = nullptr;
     m_frontBuffer = nullptr;
     m_shader = nullptr;

@@ -23,6 +23,12 @@ public:
           m_mainTex(nullptr)
     {
     }
+    ~Material()
+    {
+        if (m_mainTex)
+            delete m_mainTex;
+        m_mainTex = nullptr;
+    }
     void SetShader(Shader *s)
     {
         m_shader = s;

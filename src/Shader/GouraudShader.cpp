@@ -16,11 +16,19 @@ VertexOut GouraudShader::vertexShader(const Vertex &in)
     if (m_tex)
         result.color = m_tex->SampleTexture(result.texcoord);
     Vec3 amb, diff, spec;
-    if (m_light)
+
+    if (m_lights)
     {
         Vec3 eyeDir = m_eyePos - result.posWorld;
         eyeDir.Normalize();
-        m_light->lighting(*m_material, result.posWorld, result.normal, eyeDir, amb, diff, spec);
+        Vec3 ambTmp, diffTmp, specTmp;
+        for (int i = 0; i < m_lights->size(); ++i)
+        {
+            (*m_lights)[i]->lighting(*m_material, result.posWorld, result.normal, eyeDir, ambTmp, diffTmp, specTmp);
+            amb += ambTmp;
+            diff += diffTmp;
+            spec += specTmp;
+        }
 
         result.color.x *= (amb.x + diff.x + spec.x);
         result.color.y *= (amb.y + diff.y + spec.y);
@@ -42,8 +50,8 @@ void GouraudShader::SetMaterial(const Material *material)
     m_material = material;
 }
 
-void GouraudShader::SetLight(const Light *light)
+void GouraudShader::SetLight(const std::vector<Light *> *lights)
 {
 
-    m_light = light;
+    m_lights = lights;
 }

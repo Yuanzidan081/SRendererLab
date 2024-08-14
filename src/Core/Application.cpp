@@ -10,6 +10,7 @@
 #include "Render/Light.h"
 #include <stdio.h>
 #include <direct.h>
+#include <memory>
 Application::Application(int width, int height) : m_stopped(false), m_fps(0), m_width(width), m_height(height)
 {
     m_pipeline = new Pipeline(width, height);
@@ -37,7 +38,7 @@ void Application::Run()
     std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
     Shader *shader = new SimpleShader();
 
-    //  Mesh
+    //  cube
     Mesh cubeMesh;
     cubeMesh.asBox(1.0, 1.0, 1.0);
     Material cubeMat;
@@ -45,6 +46,9 @@ void Application::Run()
     Texture2D cubeTex(curPath + "obj/cube/container.jpg");
     cubeMat.SetTexture(&cubeTex);
     Object cubeObj(cubeMesh, cubeMat);
+    Model cubeMdl;
+    cubeMdl.SetModelName("cube");
+    m_pipeline->m_config->AddModel(&cubeMdl);
 
     // floor
     Mesh floorMesh;
@@ -89,20 +93,20 @@ void Application::Run()
 
     Mat4x4 neptueTransformMat = neptune.SetSize(2.0, 2.0, 2.0);
     Mat4x4 tranlateMat;
+    m_pipeline->m_config->AddModel(&neptune);
 
     // pipeline settings
 
     m_pipeline->SetShadingMode(ShadingMode::Phong);
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
-    // m_pipeline->AddDirectionLight(Vec3(0.5, 0.5, 0.5),
-    //                               Vec3(0.6, 0.6, 0.6),
-    //                               Vec3(0.2, 0.2, 0.2),
-    //                               Vec3(-1, -2, -1));
-    // m_pipeline->AddPointLight(Vec3(0.2, 0.2, 0.2),
-    //                           Vec3(0.9, 0.1, 0.1),
-    //                           Vec3(0.9, 0.1, 0.1),
-    //                           Vec3(0.0, 0.0, 0.0),
-    //                           Vec3(1.0f, 0.07f, 0.017f));
+    m_pipeline->AddDirectionLight(Vec3(0.05, 0.05, 0.05),
+                                  Vec3(0.9, 0.1, 0.1),
+                                  Vec3(0.9, 0.1, 0.1), Vec3(-1, -2, -1));
+    m_pipeline->AddPointLight(Vec3(0.2, 0.2, 0.2),
+                              Vec3(0.9, 0.1, 0.1),
+                              Vec3(0.9, 0.1, 0.1),
+                              Vec3(0.0, 0.0, 0.0),
+                              Vec3(1.0f, 0.07f, 0.017f));
     m_pipeline->AddSpotLight(
         Vec3(0.1, 0.1, 0.1),
         Vec3(0.9, 0.1, 0.1),
@@ -111,6 +115,8 @@ void Application::Run()
         Vec3(0.0, 2.8, 0.0),
         Vec3(0.0, -3.0, 0.0),
         Vec3(1.0f, 0.07f, 0.017f));
+
+    m_pipeline->m_config->NotifySignalChanged();
     //    m_pipeline->
     // m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
 
@@ -133,11 +139,6 @@ void Application::Run()
 
             m_pipeline->SetModelMatrix(cubeTransformMat[2]);
             m_pipeline->DrawObject(cubeObj);
-        }
-        // render head
-        {
-            // m_pipeline->SetModelMatrix(rotateMat * headTransformMat);
-            // m_pipeline->DrawModel(head);
         }
 
         {

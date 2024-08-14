@@ -2,6 +2,7 @@
 #define OBJECT_H
 #include "Mesh.h"
 #include "Material.h"
+#include <memory>
 class Object
 {
 public:
@@ -10,7 +11,7 @@ public:
 
     Object() = default;
     ~Object() = default;
-    Object(const Mesh &m, const Material &mat) : m_mesh(m), m_material(mat) {}
+    Object(const Mesh m, const Material mat) : m_mesh(m), m_material(mat) {}
     Object(const Object &obj) : m_mesh(obj.m_mesh), m_material(obj.m_material)
     {
     }

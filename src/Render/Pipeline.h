@@ -9,62 +9,37 @@
 #include "Core/Base.h"
 #include "Math/MathGroup.h"
 #include "Shader/ShaderGroup.h"
+#include "Core/Config.h"
 class Pipeline
 {
 
 public:
-    struct Config
-    {
-        // state settings
-        bool m_depthTesting;
-        bool m_backFaceCulling;
-
-        // creted by pipeline
-        int m_width;
-        int m_height;
-        FrameBuffer *m_backBuffer;
-        FrameBuffer *m_frontBuffer;
-        PolygonMode m_polygonMode;
-        Mat4x4 m_viewPortMat;
-        Vec3 m_eyePos;
-        Shader *m_shader;
-        std::vector<Texture2D *> m_textureUnits;
-
-        const std::vector<unsigned int> *m_indices;
-        const std::vector<Vertex> *m_vertices;
-        std::vector<Light *> m_lights;
-        std::vector<Vec4> m_viewPlaneParameters;
-        std::vector<Vec4> m_viewLineParameters;
-    };
     Pipeline(int width, int height);
     ~Pipeline();
     void initialize();
 
     // state settings
-    void SetDepthTesting(bool open) { m_config.m_depthTesting = open; }
-    void SetBackFaceCulling(bool open) { m_config.m_backFaceCulling = open; }
+    void SetDepthTesting(bool open) { m_config->m_depthTesting = open; }
+    void SetBackFaceCulling(bool open) { m_config->m_backFaceCulling = open; }
 
     // setting material
     void SetMaterial(const Material *material);
     // setting texture
-    bool BindTexture(const unsigned int &unit);
-    bool UnBindTexture(const unsigned int &unit);
 
     void BindTexture(Texture2D &tex);
     void UnBindTexture();
-    unsigned int LoadTexture(const std::string &path);
 
     // buffer settings
     void ClearFrameBuffer(const Vec4 &color);
     unsigned char *GetFrameResult();
     void SwapFrameBuffer();
-    void SetVertexBuffer(const std::vector<Vertex> *vertices) { m_config.m_vertices = vertices; }
-    void SetIndexBuffer(const std::vector<unsigned int> *indices) { m_config.m_indices = indices; }
+    void SetVertexBuffer(const std::vector<Vertex> *vertices) { m_config->m_vertices = vertices; }
+    void SetIndexBuffer(const std::vector<unsigned int> *indices) { m_config->m_indices = indices; }
     int GetWidth()
     {
-        return m_config.m_width;
+        return m_config->m_width;
     }
-    int GetHeight() { return m_config.m_height; }
+    int GetHeight() { return m_config->m_height; }
 
     // matrix settings
     void SetModelMatrix(Mat4x4 modelMatrix);
@@ -75,12 +50,12 @@ public:
 
     void SetViewPort(int left, int top, int width, int height)
     {
-        m_config.m_viewPortMat.SetViewPort(left, top, width, height);
+        m_config->m_viewPortMat.SetViewPort(left, top, width, height);
     }
 
     // Illumination setting
     void SetShadingMode(ShadingMode mode);
-    void SetPolygonMode(PolygonMode mode) { m_config.m_polygonMode = mode; }
+    void SetPolygonMode(PolygonMode mode) { m_config->m_polygonMode = mode; }
     // Light
     void AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir);
     void AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte);
@@ -91,10 +66,9 @@ public:
     void DrawMesh();
     void DrawModel(const Model &model);
     void DrawObject(const Object &obj);
+    Config *m_config;
 
 private:
-    // default config
-    void SetDefaultConfig();
     // perspectiveDivision
     void PerspectiveDivision(VertexOut &target);
 
@@ -116,7 +90,7 @@ private:
     void RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
     void RasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
     void EdgeWalkingFillRasterization(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
-    Config m_config;
+
     Mat4x4 m_projectMatrix;
     Mat4x4 m_viewMatrix;
 };

@@ -13,6 +13,7 @@ class Model
 
 public:
     std::vector<Object> m_objects;
+    std::string m_name = "Unknown";
     int m_objectNum;
     Model() : m_objectNum(0) {}
     ~Model() = default;
@@ -22,6 +23,7 @@ public:
     Model(const Model &model)
         : m_objects(model.m_objects), m_objectNum(model.m_objectNum),
           m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint) {}
+    Model(const Mesh *mesh);
     Model &operator=(const Model &model)
     {
         if (&model == this)
@@ -36,10 +38,15 @@ public:
     }
     // Model &operator=(const Model &model);
     void AddObjModel(const std::string &path);
-    void AddObjModel(const std::initializer_list<std::string> &list);
+    void Model::AddObjModel(Object &obj);
+    void SetModelName(const std::string &name)
+    {
+        m_name = name;
+    }
 
 private:
-    Vec3 m_minPoint, m_maxPoint;
+    Vec3 m_minPoint,
+        m_maxPoint;
 };
 
 #endif // MODEL_H

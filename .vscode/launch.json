@@ -5,7 +5,7 @@
             "name": "launch SRendererLab",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Release/SRendererLab.exe",
+            "program": "${workspaceFolder}/bin/Debug/SRendererLab.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -8,36 +8,45 @@ Model::Model(const std::string &filename)
     m_objectNum = 0;
     m_minPoint = Vec3(+10000000000, +10000000000, +10000000000);
     m_maxPoint = Vec3(-10000000000, -10000000000, -10000000000);
-    size_t dotLastPos = fileStr.find_last_of('.');
-    if (dotLastPos == std::string::npos)
+    size_t lastDotPos = fileStr.find_last_of('.');
+    if (lastDotPos == std::string::npos)
     {
         std::cout << "Could not find file extension" << std::endl;
         return;
     }
-    std::string fileTypeStr = fileStr.substr(dotLastPos + 1, fileStr.length() - dotLastPos);
+    std::string fileTypeStr = fileStr.substr(lastDotPos + 1, fileStr.length() - lastDotPos);
 
     if (fileTypeStr == "obj")
+    {
         AddObjModel(filename);
+    }
     else
         std::cout << "invalid file type" << std::endl;
+
+    size_t lastSlashPos = fileStr.find_last_of("\\/");
+
+    if (lastDotPos != std::string::npos && lastDotPos > lastSlashPos)
+    {
+        m_name = fileStr.substr(lastSlashPos + 1, lastDotPos - lastSlashPos - 1); // 文件名
+    }
 }
 
 Model::Model(const std::initializer_list<std::string> &list)
 {
     std::string fileStr;
     m_objectNum = 0;
-    size_t dotLastPos;
+    size_t lastDotPos;
     std::string fileTypeStr;
     for (auto it = list.begin(); it != list.end(); ++it)
     {
         fileStr = *it;
-        dotLastPos = fileStr.find_last_of('.');
-        if (dotLastPos == std::string::npos)
+        lastDotPos = fileStr.find_last_of('.');
+        if (lastDotPos == std::string::npos)
         {
             std::cout << "Could not find file extension" << std::endl;
             return;
         }
-        fileTypeStr = fileStr.substr(dotLastPos + 1, fileStr.length() - dotLastPos);
+        fileTypeStr = fileStr.substr(lastDotPos + 1, fileStr.length() - lastDotPos);
         if (fileStr == "obj")
             AddObjModel(fileStr);
         else
@@ -45,7 +54,18 @@ Model::Model(const std::initializer_list<std::string> &list)
             std::cout << "invalid file type" << std::endl;
             return;
         }
+
+        size_t lastSlashPos = fileStr.find_last_of("\\/");
+        if (lastDotPos != std::string::npos && lastDotPos > lastSlashPos)
+        {
+            m_name = fileStr.substr(lastSlashPos + 1, lastDotPos - lastSlashPos - 1); // 文件名
+        }
     }
+}
+
+Model::Model(const Mesh *mesh)
+{
+    m_objectNum = 1;
 }
 
 Mat4x4 Model::SetSize(float sx, float sy, float sz) const
@@ -145,10 +165,8 @@ void Model::AddObjModel(const std::string &filename)
     return;
 }
 
-void Model::AddObjModel(const std::initializer_list<std::string> &list)
+void Model::AddObjModel(Object &obj)
 {
-    for (auto it = list.begin(); it != list.end(); ++it)
-    {
-        AddObjModel(*it);
-    }
+    m_objects.push_back(obj);
+    m_objectNum++;
 }

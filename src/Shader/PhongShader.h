@@ -1,7 +1,6 @@
 #ifndef PHONGSHADER_H
 #define PHONGSHADER_H
 #include "Shader.h"
-
 class PhongShader : public Shader
 {
 public:
@@ -28,7 +27,7 @@ public:
     }
     virtual void SetMaterial(const Material *material);
 
-    virtual void SetLight(const Light *light);
+    virtual void SetLight(const std::vector<Light *> *lights);
 
 private:
     Vec3 m_eyePos;
@@ -38,7 +37,7 @@ private:
     Mat4x4 m_viewMatrix;
     Mat4x4 m_projectMatrix;
 
-    const Light *m_light;
+    const std::vector<Light *> *m_lights;
     const Material *m_material;
 };
 

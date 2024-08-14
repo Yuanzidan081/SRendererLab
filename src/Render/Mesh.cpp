@@ -155,6 +155,13 @@ void Mesh::asBox(double width, double height, double depth)
     m_indices[35] = 23;
 }
 
+Mesh *CreateBox(double width, double height, double depth)
+{
+    Mesh *mesh = new Mesh();
+    mesh->asBox(width, height, depth);
+    return mesh;
+}
+
 void Mesh::asFloor(double length, double height)
 {
     m_vertices.resize(4);
@@ -202,4 +209,18 @@ void Mesh::asTriangle(const Vec3 p1, const Vec3 p2, const Vec3 p3)
     m_indices[0] = 0;
     m_indices[1] = 1;
     m_indices[2] = 2;
+}
+
+Mesh *Mesh::CreateFloor(double length, double height)
+{
+    Mesh *mesh = new Mesh();
+    mesh->asFloor(length, height);
+    return mesh;
+}
+
+Mesh *Mesh::CreateTriangle(const Vec3 p1, const Vec3 p2, const Vec3 p3)
+{
+    Mesh *mesh = new Mesh();
+    mesh->asTriangle(p1, p2, p3);
+    return mesh;
 }

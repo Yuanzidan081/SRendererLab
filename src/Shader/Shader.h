@@ -4,7 +4,7 @@
 #include "Core/Base.h"
 #include "Render/Vertex.h"
 #include "Render/Texture2D.h"
-
+#include <vector>
 class Light;
 class Material;
 class Shader
@@ -21,7 +21,7 @@ public:
     virtual void SetViewMatrix(const Mat4x4 &view) {}
     virtual void SetProjectMatrix(const Mat4x4 &project) {}
     virtual void SetMaterial(const Material *material) {};
-    virtual void SetLight(const Light *light) {};
+    virtual void SetLight(const std::vector<Light *> *light) {};
 };
 
 #endif // SHADER_H

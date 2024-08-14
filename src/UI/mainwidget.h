@@ -5,6 +5,8 @@
 // #include "window.h"
 #include "imageWidget.h"
 #include "Core/Application.h"
+#include "Core/Config.h"
+#include <QStandardItemModel>
 namespace Ui
 {
     class MainWidget;
@@ -21,6 +23,8 @@ public:
 
     void keyPressEvent(QKeyEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+public slots:
+    void DisplayTreeNode();
 
 private:
     Ui::MainWidget *ui;
@@ -28,6 +32,8 @@ private:
     Application *m_app;
     QThread *m_appThread;
     QTimer *m_timer;
+    Config *m_config;
+    QStandardItemModel *itemMdl;
 };
 
 #endif // MAINWIDGET_H

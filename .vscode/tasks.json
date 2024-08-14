@@ -38,7 +38,7 @@
                 "--build",
                 "build",
                 "--config",
-                "release"
+                "debug"
             ],
         },
         // 运行程序

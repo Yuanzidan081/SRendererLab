@@ -6,15 +6,11 @@
 
 Pipeline::Pipeline(int width, int height)
 {
-    m_config.m_width = width;
-    m_config.m_height = height;
-
-    m_config.m_backBuffer = nullptr;
-    m_config.m_frontBuffer = nullptr;
-    m_config.m_shader = nullptr;
-    m_config.m_eyePos = Vec3(0.0f, 0.0f, 0.0f);
-    m_config.m_viewPlaneParameters.resize(6, Vec4());
-    m_config.m_viewLineParameters = {
+    m_config = Config::GetInstance();
+    m_config->m_width = width;
+    m_config->m_height = height;
+    m_config->m_viewPlaneParameters.resize(6, Vec4());
+    m_config->m_viewLineParameters = {
         // near
         Vec4(0, 0, 1, 1),
         // far
@@ -28,155 +24,110 @@ Pipeline::Pipeline(int width, int height)
         // bottom
         Vec4(0, 1, 0, 1)};
 }
-/* m_camera = new FPSCamera(Vec3({2.0f, 1.0f, 3.0f}));
-m_projectionMat = Mat4x4GetProjectionNaive(m_camera->GetPosition().z);
-m_viewMat = m_camera->GetViewMatrix(); */
 
 Pipeline::~Pipeline()
 {
-    if (m_config.m_backBuffer)
-        delete m_config.m_backBuffer;
-    if (m_config.m_frontBuffer)
-        delete m_config.m_frontBuffer;
-    if (m_config.m_shader)
-        delete m_config.m_shader;
-    for (size_t i = 0; i < m_config.m_textureUnits.size(); ++i)
-    {
-        delete m_config.m_textureUnits[i];
-        m_config.m_textureUnits[i] = nullptr;
-    }
-
-    for (size_t i = 0; i < m_config.m_lights.size(); ++i)
-    {
-        delete m_config.m_lights[i];
-        m_config.m_lights[i] = nullptr;
-    }
-    m_config.m_backBuffer = nullptr;
-    m_config.m_frontBuffer = nullptr;
-    m_config.m_shader = nullptr;
+    m_config->Destroy();
 }
 
 void Pipeline::initialize()
 {
 
-    if (m_config.m_backBuffer)
-        delete m_config.m_backBuffer;
-    if (m_config.m_frontBuffer)
-        delete m_config.m_frontBuffer;
-    if (m_config.m_shader)
-        delete m_config.m_shader;
-    // m_config.m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height, 255.0f);
-    m_config.m_viewPortMat.SetViewPort(0.0f, 0.0f, (float)m_config.m_width, (float)m_config.m_height);
-    m_config.m_backBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
-    m_config.m_frontBuffer = new FrameBuffer(m_config.m_width, m_config.m_height);
-    m_config.m_shader = new SimpleShader();
-    SetDefaultConfig();
+    if (m_config->m_backBuffer)
+        delete m_config->m_backBuffer;
+    if (m_config->m_frontBuffer)
+        delete m_config->m_frontBuffer;
+    if (m_config->m_shader)
+        delete m_config->m_shader;
+    // m_config->m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_config->m_width, (float)m_config->m_height, 255.0f);
+    m_config->m_viewPortMat.SetViewPort(0.0f, 0.0f, (float)m_config->m_width, (float)m_config->m_height);
+    m_config->m_backBuffer = new FrameBuffer(m_config->m_width, m_config->m_height);
+    m_config->m_frontBuffer = new FrameBuffer(m_config->m_width, m_config->m_height);
+    m_config->m_shader = new SimpleShader();
 }
 
-unsigned int Pipeline::LoadTexture(const std::string &path)
-{
-    Texture2D *tex = new Texture2D();
-    if (!tex->LoadTexture(path))
-        return 0;
-    m_config.m_textureUnits.push_back(tex);
-    return static_cast<unsigned int>(m_config.m_textureUnits.size() - 1);
-}
 void Pipeline::SetMaterial(const Material *material)
 {
-    m_config.m_shader->SetMaterial(material);
-}
-bool Pipeline::BindTexture(const unsigned int &unit)
-{
-    if (unit >= m_config.m_textureUnits.size())
-        return false;
-    m_config.m_shader->BindShaderTexture(m_config.m_textureUnits[unit]);
-    return true;
-}
-bool Pipeline::UnBindTexture(const unsigned int &unit)
-{
-    if (unit >= m_config.m_textureUnits.size())
-        return false;
-    m_config.m_shader->BindShaderTexture(nullptr);
-    return true;
+    m_config->m_shader->SetMaterial(material);
 }
 void Pipeline::BindTexture(Texture2D &tex)
 {
-    m_config.m_shader->BindShaderTexture(&tex);
+    m_config->m_shader->BindShaderTexture(&tex);
 }
 void Pipeline::UnBindTexture()
 {
-    m_config.m_shader->BindShaderTexture(nullptr);
+    m_config->m_shader->BindShaderTexture(nullptr);
 }
 void Pipeline::ClearFrameBuffer(const Vec4 &color)
 {
-    m_config.m_backBuffer->clearColorAndDepthBuffer(color);
+    m_config->m_backBuffer->clearColorAndDepthBuffer(color);
 }
 
 unsigned char *Pipeline::GetFrameResult()
 {
-    return m_config.m_frontBuffer->GetColorBuffer();
+    return m_config->m_frontBuffer->GetColorBuffer();
 }
 
 void Pipeline::SwapFrameBuffer()
 {
-    FrameBuffer *temp = m_config.m_frontBuffer;
-    m_config.m_frontBuffer = m_config.m_backBuffer;
-    m_config.m_backBuffer = temp;
+    FrameBuffer *temp = m_config->m_frontBuffer;
+    m_config->m_frontBuffer = m_config->m_backBuffer;
+    m_config->m_backBuffer = temp;
 }
 
 void Pipeline::SetViewMatrix(Vec3 eye, const Mat4x4 &viewMat)
 {
-    m_config.m_eyePos = eye;
-    m_config.m_shader->SetEyePos(eye);
+    m_config->m_eyePos = eye;
+    m_config->m_shader->SetEyePos(eye);
     m_viewMatrix = viewMat;
-    m_config.m_shader->SetViewMatrix(viewMat);
+    m_config->m_shader->SetViewMatrix(viewMat);
 }
 
 void Pipeline::SetViewMatrix(Vec3 eye, Vec3 target, Vec3 up)
 {
-    m_config.m_eyePos = eye;
-    m_config.m_shader->SetEyePos(eye);
+    m_config->m_eyePos = eye;
+    m_config->m_shader->SetEyePos(eye);
     m_viewMatrix.SetLookAt(eye, target, up);
-    m_config.m_shader->SetViewMatrix(m_viewMatrix);
+    m_config->m_shader->SetViewMatrix(m_viewMatrix);
 }
 
 void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
 {
     m_projectMatrix.SetPerspective(fovy, aspect, near, far);
-    m_config.m_shader->SetProjectMatrix(m_projectMatrix);
+    m_config->m_shader->SetProjectMatrix(m_projectMatrix);
 }
 
 void Pipeline::SetProjectMatrix(Mat4x4 mat)
 {
     m_projectMatrix = mat;
-    m_config.m_shader->SetProjectMatrix(m_projectMatrix);
+    m_config->m_shader->SetProjectMatrix(m_projectMatrix);
 }
 
 void Pipeline::SetModelMatrix(Mat4x4 modelMatrix)
 {
-    m_config.m_shader->SetModelMatrix(modelMatrix);
+    m_config->m_shader->SetModelMatrix(modelMatrix);
 }
 
 void Pipeline::SetShadingMode(ShadingMode mode)
 {
-    if (m_config.m_shader)
-        delete m_config.m_shader;
-    m_config.m_shader = nullptr;
+    if (m_config->m_shader)
+        delete m_config->m_shader;
+    m_config->m_shader = nullptr;
     switch (mode)
     {
     case ShadingMode::Simple:
     {
-        m_config.m_shader = new SimpleShader();
+        m_config->m_shader = new SimpleShader();
         break;
     }
     case ShadingMode::Gouraud:
     {
-        m_config.m_shader = new GouraudShader();
+        m_config->m_shader = new GouraudShader();
         break;
     }
     case ShadingMode::Phong:
     {
-        m_config.m_shader = new PhongShader();
+        m_config->m_shader = new PhongShader();
         break;
     }
     }
@@ -184,11 +135,11 @@ void Pipeline::SetShadingMode(ShadingMode mode)
 
 void Pipeline::AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir)
 {
-    DirectionalLight*light = new DirectionalLight();
+    DirectionalLight *light = new DirectionalLight();
     light->SetDirectionalLight(amb, diff, spec, dir);
     Light *m_light = light;
-    m_config.m_lights.push_back(m_light);
-    m_config.m_shader->SetLight(m_light);
+    m_config->m_lights.push_back(m_light);
+    m_config->m_shader->SetLight(&m_config->m_lights);
 }
 
 void Pipeline::AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte)
@@ -196,8 +147,8 @@ void Pipeline::AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte
     PointLight *light = new PointLight();
     light->SetPointLight(amb, diff, spec, pos, atte);
     Light *m_light = reinterpret_cast<Light *>(light);
-    m_config.m_lights.push_back(m_light);
-    m_config.m_shader->SetLight(m_light);
+    m_config->m_lights.push_back(m_light);
+    m_config->m_shader->SetLight(&m_config->m_lights);
 }
 
 void Pipeline::AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff, Vec3 pos, Vec3 dir, Vec3 atte)
@@ -205,32 +156,32 @@ void Pipeline::AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff, Vec3 
     SpotLight *light = new SpotLight();
     light->SetSpotLight(amb, diff, spec, pos, dir, atte, cutoff);
     Light *m_light = reinterpret_cast<Light *>(light);
-    m_config.m_lights.push_back(m_light);
-    m_config.m_shader->SetLight(m_light);
+    m_config->m_lights.push_back(m_light);
+    m_config->m_shader->SetLight(&m_config->m_lights);
 }
 
 void Pipeline::DrawMesh()
 {
-    if (m_config.m_indices->empty())
+    if (m_config->m_indices->empty())
         return;
 
     UpdateViewPlanes();
-    for (unsigned int i = 0; i < m_config.m_indices->size(); i += 3)
+    for (unsigned int i = 0; i < m_config->m_indices->size(); i += 3)
     {
         // assemble to a triangle primitive
         Vertex p1, p2, p3;
         {
-            p1 = (*m_config.m_vertices)[(*m_config.m_indices)[i + 0]];
-            p2 = (*m_config.m_vertices)[(*m_config.m_indices)[i + 1]];
-            p3 = (*m_config.m_vertices)[(*m_config.m_indices)[i + 2]];
+            p1 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 0]];
+            p2 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 1]];
+            p3 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 2]];
         }
 
         // vertex shader stage
         VertexOut v1, v2, v3;
         {
-            v1 = m_config.m_shader->vertexShader(p1);
-            v2 = m_config.m_shader->vertexShader(p2);
-            v3 = m_config.m_shader->vertexShader(p3);
+            v1 = m_config->m_shader->vertexShader(p1);
+            v2 = m_config->m_shader->vertexShader(p2);
+            v3 = m_config->m_shader->vertexShader(p3);
         }
         // view culling
         if (!ViewCulling(v1.posProj, v2.posProj, v3.posProj))
@@ -255,7 +206,7 @@ void Pipeline::DrawMesh()
             VertexOut v3 = clippingVertexs[i + 2];
             // back face culling
             {
-                if (m_config.m_backFaceCulling)
+                if (m_config->m_backFaceCulling)
                 {
                     if (!BackFaceClipping(v1.posProj, v2.posProj, v3.posProj))
                         continue;
@@ -264,20 +215,20 @@ void Pipeline::DrawMesh()
             // view port transformation
             {
                 // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
-                v1.posProj = m_config.m_viewPortMat * v1.posProj;
-                v2.posProj = m_config.m_viewPortMat * v2.posProj;
-                v3.posProj = m_config.m_viewPortMat * v3.posProj;
+                v1.posProj = m_config->m_viewPortMat * v1.posProj;
+                v2.posProj = m_config->m_viewPortMat * v2.posProj;
+                v3.posProj = m_config->m_viewPortMat * v3.posProj;
             }
 
             // rasterization and fragment shader stage
             {
-                if (m_config.m_polygonMode == PolygonMode::Wire)
+                if (m_config->m_polygonMode == PolygonMode::Wire)
                 {
                     BresenhamLineRasterization(v1, v2);
                     BresenhamLineRasterization(v2, v3);
                     BresenhamLineRasterization(v3, v1);
                 }
-                else if (m_config.m_polygonMode == PolygonMode::Fill)
+                else if (m_config->m_polygonMode == PolygonMode::Fill)
                 {
                     EdgeWalkingFillRasterization(v1, v2, v3);
                 }
@@ -333,7 +284,7 @@ VertexOut Pipeline::Lerp(const VertexOut &n1, const VertexOut &n2, double weight
 
 bool Pipeline::BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
 {
-    if (m_config.m_polygonMode == PolygonMode::Wire)
+    if (m_config->m_polygonMode == PolygonMode::Wire)
         return true;
     Vec3 edge1(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
     Vec3 edge2(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z);
@@ -352,24 +303,24 @@ bool Pipeline::ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
     maxPoint.y = max(v1.y, max(v2.y, v3.y));
     maxPoint.z = max(v1.z, max(v2.z, v3.z));
     // Near 和 Far culling: save the point inside
-    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[4]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[4]))
+    if (!IsInsideFrustum(minPoint, m_config->m_viewPlaneParameters[4]) && !IsInsideFrustum(maxPoint, m_config->m_viewPlaneParameters[4]))
         return false;
-    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[5]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[5]))
+    if (!IsInsideFrustum(minPoint, m_config->m_viewPlaneParameters[5]) && !IsInsideFrustum(maxPoint, m_config->m_viewPlaneParameters[5]))
         return false;
-    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[0]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[0]))
+    if (!IsInsideFrustum(minPoint, m_config->m_viewPlaneParameters[0]) && !IsInsideFrustum(maxPoint, m_config->m_viewPlaneParameters[0]))
         return false;
-    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[1]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[1]))
+    if (!IsInsideFrustum(minPoint, m_config->m_viewPlaneParameters[1]) && !IsInsideFrustum(maxPoint, m_config->m_viewPlaneParameters[1]))
         return false;
-    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[2]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[2]))
+    if (!IsInsideFrustum(minPoint, m_config->m_viewPlaneParameters[2]) && !IsInsideFrustum(maxPoint, m_config->m_viewPlaneParameters[2]))
         return false;
-    if (!IsInsideFrustum(minPoint, m_config.m_viewPlaneParameters[3]) && !IsInsideFrustum(maxPoint, m_config.m_viewPlaneParameters[3]))
+    if (!IsInsideFrustum(minPoint, m_config->m_viewPlaneParameters[3]) && !IsInsideFrustum(maxPoint, m_config->m_viewPlaneParameters[3]))
         return false;
     return true;
 }
 
 void Pipeline::UpdateViewPlanes()
 {
-    ViewingFrustumPlanes(m_config.m_viewPlaneParameters, m_projectMatrix * m_viewMatrix);
+    ViewingFrustumPlanes(m_config->m_viewPlaneParameters, m_projectMatrix * m_viewMatrix);
 }
 
 // get six frusum's  planes to use for frustum culling
@@ -455,7 +406,7 @@ std::vector<VertexOut> Pipeline::SutherlandHodgeman(const VertexOut &v1, const V
     std::vector<VertexOut> output = {v1, v2, v3};
     if (IsAllVertexsInsideViewPort(v1.posProj, v2.posProj, v3.posProj))
         return output;
-    for (int i = 0; i < m_config.m_viewLineParameters.size(); ++i)
+    for (int i = 0; i < m_config->m_viewLineParameters.size(); ++i)
     {
         std::vector<VertexOut> input(output);
         output.clear();
@@ -463,18 +414,18 @@ std::vector<VertexOut> Pipeline::SutherlandHodgeman(const VertexOut &v1, const V
         {
             VertexOut cur = input[j];
             VertexOut pre = input[(j + input.size() - 1) % input.size()];
-            if (IsInsideViewPort(m_config.m_viewLineParameters[i], cur.posProj))
+            if (IsInsideViewPort(m_config->m_viewLineParameters[i], cur.posProj))
             {
-                if (!IsInsideViewPort(m_config.m_viewLineParameters[i], pre.posProj))
+                if (!IsInsideViewPort(m_config->m_viewLineParameters[i], pre.posProj))
                 {
-                    VertexOut intersecting = GetViewPortIntersect(pre, cur, m_config.m_viewLineParameters[i]);
+                    VertexOut intersecting = GetViewPortIntersect(pre, cur, m_config->m_viewLineParameters[i]);
                     output.push_back(intersecting);
                 }
                 output.push_back(cur);
             }
-            else if (IsInsideViewPort(m_config.m_viewLineParameters[i], pre.posProj))
+            else if (IsInsideViewPort(m_config->m_viewLineParameters[i], pre.posProj))
             {
-                VertexOut intersecting = GetViewPortIntersect(pre, cur, m_config.m_viewLineParameters[i]);
+                VertexOut intersecting = GetViewPortIntersect(pre, cur, m_config->m_viewLineParameters[i]);
                 output.push_back(intersecting);
             }
         }
@@ -515,12 +466,12 @@ void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut
         {
             // linear interpolation
             tmp = Lerp(from, to, static_cast<float>(i) / dx);
-            float depth = m_config.m_backBuffer->GetPixelDepth(sx, sy);
+            float depth = m_config->m_backBuffer->GetPixelDepth(sx, sy);
             if (tmp.posProj.z > depth)
                 continue; // fail to pass the depth testing
-            m_config.m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
+            m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
             // fragment shader
-            m_config.m_backBuffer->SetPixelColor(sx, sy, m_config.m_shader->fragmentShader(tmp));
+            m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->fragmentShader(tmp));
             sx += stepX;
             if (flag <= 0)
                 flag += d2y;
@@ -537,13 +488,13 @@ void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut
         for (int i = 0; i < dy; ++i)
         {
             tmp = Lerp(from, to, static_cast<float>(i) / dy);
-            float depth = m_config.m_backBuffer->GetPixelDepth(sx, sy);
+            float depth = m_config->m_backBuffer->GetPixelDepth(sx, sy);
             if (tmp.posProj.z > depth)
                 continue; // fail to pass the depth testing
-            m_config.m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
+            m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
 
             // fragment shader
-            m_config.m_backBuffer->SetPixelColor(sx, sy, m_config.m_shader->fragmentShader(tmp));
+            m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->fragmentShader(tmp));
             sy += stepY;
             if (flag <= 0)
                 flag += d2x;
@@ -568,23 +519,23 @@ void Pipeline::ScanLinePerRow(const VertexOut &left, const VertexOut &right)
         current.posProj.y = left.posProj.y;
 
         // depth testing
-        if (m_config.m_depthTesting)
+        if (m_config->m_depthTesting)
         {
-            float depth = m_config.m_backBuffer->GetPixelDepth(current.posProj.x, current.posProj.y);
+            float depth = m_config->m_backBuffer->GetPixelDepth(current.posProj.x, current.posProj.y);
             if (current.posProj.z > depth)
                 continue; // fail to pass the depth testing
-            m_config.m_backBuffer->SetPixelDepth(current.posProj.x, current.posProj.y, current.posProj.z);
+            m_config->m_backBuffer->SetPixelDepth(current.posProj.x, current.posProj.y, current.posProj.z);
         }
         if (current.posProj.x < 0 || current.posProj.y < 0)
             continue;
-        if (current.posProj.x >= m_config.m_width || current.posProj.y >= m_config.m_height)
+        if (current.posProj.x >= m_config->m_width || current.posProj.y >= m_config->m_height)
             break;
         float w = 1.0f / current.oneDivZ;
         current.posWorld *= w;
         current.color *= w;
         current.texcoord *= w;
         // fragment shader
-        m_config.m_backBuffer->SetPixelColor(current.posProj.x, current.posProj.y, m_config.m_shader->fragmentShader(current));
+        m_config->m_backBuffer->SetPixelColor(current.posProj.x, current.posProj.y, m_config->m_shader->fragmentShader(current));
     }
 }
 void Pipeline::RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
@@ -685,10 +636,4 @@ void Pipeline::EdgeWalkingFillRasterization(const VertexOut &v1, const VertexOut
         RasterTopTriangle(target[0], newPoint, target[1]);
         RasterBottomTriangle(newPoint, target[1], target[2]);
     }
-}
-void Pipeline::SetDefaultConfig()
-{
-    SetDepthTesting(true);
-    SetBackFaceCulling(true);
-    // SetPolygonMode(PolygonMode::Fill);
 }

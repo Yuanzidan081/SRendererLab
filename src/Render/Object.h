@@ -26,6 +26,7 @@ public:
             return *this;
         m_mesh = obj.m_mesh;
         m_material = obj.m_material;
+        
         return *this;
     }
 };

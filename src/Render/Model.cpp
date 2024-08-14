@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
 Model::Model(const std::string &filename)
 {
     std::string fileStr = filename;
@@ -9,6 +10,12 @@ Model::Model(const std::string &filename)
     m_minPoint = Vec3(+10000000000, +10000000000, +10000000000);
     m_maxPoint = Vec3(-10000000000, -10000000000, -10000000000);
     size_t lastDotPos = fileStr.find_last_of('.');
+    size_t lastSlashPos = fileStr.find_last_of("\\/");
+    if (lastDotPos != std::string::npos && lastDotPos > lastSlashPos)
+    {
+        m_name = fileStr.substr(lastSlashPos + 1, lastDotPos - lastSlashPos - 1); // 文件名
+    }
+
     if (lastDotPos == std::string::npos)
     {
         std::cout << "Could not find file extension" << std::endl;
@@ -22,13 +29,6 @@ Model::Model(const std::string &filename)
     }
     else
         std::cout << "invalid file type" << std::endl;
-
-    size_t lastSlashPos = fileStr.find_last_of("\\/");
-
-    if (lastDotPos != std::string::npos && lastDotPos > lastSlashPos)
-    {
-        m_name = fileStr.substr(lastSlashPos + 1, lastDotPos - lastSlashPos - 1); // 文件名
-    }
 }
 
 Model::Model(const std::initializer_list<std::string> &list)
@@ -107,6 +107,7 @@ void Model::AddObjModel(const std::string &filename)
                 m_objectNum++;
                 Object o;
                 m_objects.push_back(o);
+
                 flag = true;
             }
             buf >> trash; // trash: filter "v"
@@ -144,7 +145,10 @@ void Model::AddObjModel(const std::string &filename)
         else if (!line.compare(0, 2, "f "))
         {
             if (flag)
+            {
                 flag = false;
+                m_objects[m_objectNum - 1].m_mesh.m_name = m_name + "-element" + std::to_string(m_objectNum);
+            }
             buf >> trash; // trash: filter "f"
             int index[3];
 
@@ -161,6 +165,7 @@ void Model::AddObjModel(const std::string &filename)
             }
         }
     }
+
     file.close();
     return;
 }

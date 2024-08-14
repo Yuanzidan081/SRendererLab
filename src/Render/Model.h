@@ -22,13 +22,17 @@ public:
 
     Model(const Model &model)
         : m_objects(model.m_objects), m_objectNum(model.m_objectNum),
-          m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint) {}
+          m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint), m_name(model.m_name) {}
     Model(const Mesh *mesh);
     Model &operator=(const Model &model)
     {
         if (&model == this)
             return *this;
         m_objects = model.m_objects;
+        m_objectNum = model.m_objectNum;
+        m_minPoint = model.m_minPoint;
+        m_maxPoint = model.m_maxPoint;
+        m_name = model.m_name;
         return *this;
     }
     Mat4x4 SetSize(float sx, float sy, float sz) const;

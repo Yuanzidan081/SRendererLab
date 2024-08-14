@@ -11,13 +11,14 @@ public:
     std::vector<unsigned int> m_indices;
     std::string m_name = "Unknown";
     Mesh() = default;
-    Mesh(const Mesh &mesh) : m_vertices(mesh.m_vertices), m_indices(mesh.m_indices) {}
+    Mesh(const Mesh &mesh) : m_vertices(mesh.m_vertices), m_indices(mesh.m_indices), m_name(mesh.m_name) {}
     Mesh &operator=(const Mesh &mesh)
     {
         if (&mesh == this)
             return *this;
         m_vertices = mesh.m_vertices;
         m_indices = mesh.m_indices;
+        m_name = mesh.m_name;
         return *this;
     }
     ~Mesh() = default;

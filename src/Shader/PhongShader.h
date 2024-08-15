@@ -15,8 +15,6 @@ public:
     virtual ~PhongShader() = default;
     virtual VertexOut vertexShader(const Vertex &in);
     virtual Vec4 fragmentShader(const VertexOut &in);
-    // virtual Vec3 VertexShader(int faceInd, int VertInd) override;
-    // virtual bool FragmentShader(v2f *v2fData, Vec4 &color) override;
     virtual void SetEyePos(const Vec3 &eye) { m_eyePos = eye; }
     virtual void BindShaderTexture(Texture2D *tex) { m_tex = tex; }
     virtual void SetModelMatrix(const Mat4x4 &world)

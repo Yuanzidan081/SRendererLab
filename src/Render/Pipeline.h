@@ -16,7 +16,6 @@ class Pipeline
 public:
     Pipeline(int width, int height);
     ~Pipeline();
-    void initialize();
 
     // state settings
     void SetDepthTesting(bool open) { m_config->m_depthTesting = open; }
@@ -45,7 +44,6 @@ public:
     void SetModelMatrix(Mat4x4 modelMatrix);
     void SetViewMatrix(Vec3 eye, const Mat4x4 &viewMat);
     void SetViewMatrix(Vec3 eye, Vec3 target, Vec3 up);
-    void SetProjectMatrix(float fovy, float aspect, float near, float far);
     void SetProjectMatrix(Mat4x4 mat);
 
     void SetViewPort(int left, int top, int width, int height)

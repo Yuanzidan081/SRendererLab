@@ -21,6 +21,11 @@ void ImageWidget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+void ImageWidget::mousePressEvent(QMouseEvent *event)
+{
+    //std::cout << "x:" << event->x() << " y:" << event->y() << std::endl;
+}
+
 void ImageWidget::reveiveFrame(unsigned char *image)
 {
 

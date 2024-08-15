@@ -177,7 +177,11 @@
              <height>709</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout"/>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QLineEdit" name="lineEdit1"/>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>

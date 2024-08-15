@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <QPixmap>
 #include <memory>
+#include <QMouseEvent>
 class MainWidget;
 class ImageWidget : public QWidget
 {
@@ -21,6 +22,9 @@ public:
 
     // void updateFrame();
     void paintEvent(QPaintEvent *event) override;
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
 
 public slots:
     void reveiveFrame(unsigned char *image);

@@ -77,11 +77,4 @@ public:
 };
 std::ostream &operator<<(std::ostream &os, Mat4x4 &m);
 
-Mat4x4 GetTranslate(const Vec3 &trandslation);
-Mat4x4 GetScale(const Vec3 &scale);
-Mat4x4 GetRotationX(const double angle);
-Mat4x4 GetRotationY(const double angle);
-Mat4x4 GetRotationZ(const double angle);
-Mat4x4 GetRotationAxis(const double angle, const Vec3 &axis);
-Mat4x4 GetIdentity();
 #endif // MAT4x4_H

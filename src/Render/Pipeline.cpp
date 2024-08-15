@@ -7,43 +7,12 @@
 Pipeline::Pipeline(int width, int height)
 {
     m_config = Config::GetInstance();
-    m_config->m_width = width;
-    m_config->m_height = height;
-    m_config->m_viewPlaneParameters.resize(6, Vec4());
-    m_config->m_viewLineParameters = {
-        // near
-        Vec4(0, 0, 1, 1),
-        // far
-        Vec4(0, 0, -1, 1),
-        // left
-        Vec4(1, 0, 0, 1),
-        // right
-        Vec4(-1, 0, 0, 1),
-        // top
-        Vec4(0, -1, 0, 1),
-        // bottom
-        Vec4(0, 1, 0, 1)};
+    m_config->Initialize(width, height);
 }
 
 Pipeline::~Pipeline()
 {
     m_config->Destroy();
-}
-
-void Pipeline::initialize()
-{
-
-    if (m_config->m_backBuffer)
-        delete m_config->m_backBuffer;
-    if (m_config->m_frontBuffer)
-        delete m_config->m_frontBuffer;
-    if (m_config->m_shader)
-        delete m_config->m_shader;
-    // m_config->m_viewPortMat = Mat4x4GetViewportNaive(0.0f, 0.0f, (float)m_config->m_width, (float)m_config->m_height, 255.0f);
-    m_config->m_viewPortMat.SetViewPort(0.0f, 0.0f, (float)m_config->m_width, (float)m_config->m_height);
-    m_config->m_backBuffer = new FrameBuffer(m_config->m_width, m_config->m_height);
-    m_config->m_frontBuffer = new FrameBuffer(m_config->m_width, m_config->m_height);
-    m_config->m_shader = SimpleShader::GetInstance();
 }
 
 void Pipeline::SetMaterial(const Material *material)
@@ -89,12 +58,6 @@ void Pipeline::SetViewMatrix(Vec3 eye, Vec3 target, Vec3 up)
     m_config->m_shader->SetEyePos(eye);
     m_viewMatrix.SetLookAt(eye, target, up);
     m_config->m_shader->SetViewMatrix(m_viewMatrix);
-}
-
-void Pipeline::SetProjectMatrix(float fovy, float aspect, float near, float far)
-{
-    m_projectMatrix.SetPerspective(fovy, aspect, near, far);
-    m_config->m_shader->SetProjectMatrix(m_projectMatrix);
 }
 
 void Pipeline::SetProjectMatrix(Mat4x4 mat)

@@ -11,9 +11,12 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
 {
     m_config = Config::GetInstance();
     ui->setupUi(this);
+
     // 设置窗口标志，禁止缩放
     setFocusPolicy(Qt::StrongFocus);
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+    setMouseTracking(true);
+    ui->imageWidget->setMouseTracking(true);
     m_timer = new QTimer(this);
     m_app = new Application(screenWidth, screenHeight);
     m_appThread = new QThread(this);
@@ -80,6 +83,14 @@ void MainWidget::keyPressEvent(QKeyEvent *event)
 
 void MainWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    // if (ui->imageWidget->underMouse())
+    // {
+    //     ui->lineEdit1->setText("Mouse inside child widget");
+    // }
+    // else
+    // {
+    //     ui->lineEdit1->setText("Mouse not inside child widget");
+    // }
 }
 
 void MainWidget::DisplayTreeNode()

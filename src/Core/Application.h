@@ -31,7 +31,6 @@ private:
     bool m_stopped;
     Pipeline *m_pipeline;
     int m_fps;
-    EulerFPSCamera *m_fpsCamera;
     int m_width;
     int m_height;
     /* QTimer *m_timer; */

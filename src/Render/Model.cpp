@@ -26,6 +26,7 @@ Model::Model(const std::string &filename)
     if (fileTypeStr == "obj")
     {
         AddObject(filename);
+        m_transform = {Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(1.0f, 1.0f, 1.0f)};
     }
     else
         std::cout << "invalid file type" << std::endl;
@@ -39,16 +40,7 @@ Model::Model(Mesh *meshPtr, const std::string &name) : m_objectNum(0), m_minPoin
     m_objects.push_back(o);
     m_objects[0].m_mesh.reset(meshPtr);
     m_objects[0].m_mesh->m_name = name + "-element" + std::to_string(m_objectNum);
-    
-}
-
-Mat4x4 Model::SetSize(float sx, float sy, float sz) const
-{
-    float length = fabs(m_maxPoint.x - m_minPoint.x);
-    float scaleFactor = 1.0f / length;
-    Mat4x4 result;
-    result.SetScale(Vec3(sx * scaleFactor, sy * scaleFactor, sz * scaleFactor));
-    return result;
+    m_transform = {Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(1.0f, 1.0f, 1.0f)};
 }
 
 void Model::AddObject(const std::string &filename)
@@ -149,4 +141,12 @@ void Model::AddObject(Object &obj)
 {
     m_objects.push_back(obj);
     m_objectNum++;
+}
+
+void Model::SetScale(Vec3 &s)
+{
+    float length = fabs(m_maxPoint.x - m_minPoint.x);
+    float scaleFactor = 1.0f / length;
+
+    m_transform.scale = s * scaleFactor;
 }

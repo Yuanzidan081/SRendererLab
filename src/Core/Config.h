@@ -9,6 +9,7 @@ class Vertex;
 class FrameBuffer;
 class Shader;
 class Light;
+class EulerFPSCamera;
 // 创建单例模式让view可以访问当前渲染的状态
 class Config : public QObject
 {
@@ -44,9 +45,9 @@ public:
     std::vector<Light *> m_lights;
     std::vector<Vec4> m_viewPlaneParameters;
     std::vector<Vec4> m_viewLineParameters;
-
+    EulerFPSCamera *m_fpsCamera;
     static Config *GetInstance();
-
+    void Initialize(int width, int height);
     void NotifyTreeNodeChanged() { emit TreeNodeChanged(); }
 signals:
     void TreeNodeChanged();

@@ -30,9 +30,9 @@ public:
     {
         m_shader = s;
     }
-    void SetTexture(Texture2D *t)
+    void SetMainTexture(std::shared_ptr<Texture2D> t)
     {
-        m_mainTex = std::make_shared<Texture2D>(*t);
+        m_mainTex = t;
     }
 };
 #endif // MATERIAL_H

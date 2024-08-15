@@ -31,41 +31,15 @@ Model::Model(const std::string &filename)
         std::cout << "invalid file type" << std::endl;
 }
 
-Model::Model(const std::initializer_list<std::string> &list)
+Model::Model(Mesh *meshPtr, const std::string &name) : m_objectNum(0), m_minPoint(Vec3(+10000000000, +10000000000, +10000000000)),
+                                                       m_maxPoint(Vec3(-10000000000, -10000000000, -10000000000)), m_name(name)
 {
-    std::string fileStr;
-    m_objectNum = 0;
-    size_t lastDotPos;
-    std::string fileTypeStr;
-    for (auto it = list.begin(); it != list.end(); ++it)
-    {
-        fileStr = *it;
-        lastDotPos = fileStr.find_last_of('.');
-        if (lastDotPos == std::string::npos)
-        {
-            std::cout << "Could not find file extension" << std::endl;
-            return;
-        }
-        fileTypeStr = fileStr.substr(lastDotPos + 1, fileStr.length() - lastDotPos);
-        if (fileStr == "obj")
-            AddObject(fileStr);
-        else
-        {
-            std::cout << "invalid file type" << std::endl;
-            return;
-        }
-
-        size_t lastSlashPos = fileStr.find_last_of("\\/");
-        if (lastDotPos != std::string::npos && lastDotPos > lastSlashPos)
-        {
-            m_name = fileStr.substr(lastSlashPos + 1, lastDotPos - lastSlashPos - 1); // 文件名
-        }
-    }
-}
-
-Model::Model(const Mesh *mesh)
-{
-    m_objectNum = 1;
+    m_objectNum++;
+    Object o;
+    m_objects.push_back(o);
+    m_objects[0].m_mesh.reset(meshPtr);
+    m_objects[0].m_mesh->m_name = name + "-element" + std::to_string(m_objectNum);
+    
 }
 
 Mat4x4 Model::SetSize(float sx, float sy, float sz) const

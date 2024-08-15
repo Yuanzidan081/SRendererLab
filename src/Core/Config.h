@@ -47,7 +47,7 @@ public:
 
     static Config *GetInstance();
 
-    void NotifySignalChanged() { emit TreeNodeChanged(); }
+    void NotifyTreeNodeChanged() { emit TreeNodeChanged(); }
 signals:
     void TreeNodeChanged();
 };

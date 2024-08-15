@@ -7,13 +7,16 @@ class Object
 {
 public:
     std::shared_ptr<Mesh> m_mesh;
-    Material *m_material;
+    std::shared_ptr<Material> m_material;
 
-    Object() : m_mesh(std::make_shared<Mesh>()), m_material(nullptr) {}
+    Object() : m_mesh(std::make_shared<Mesh>()), m_material(std::make_shared<Material>())
+    {
+    }
     ~Object()
     {
     }
-    Object(Mesh *m, Material *mat) : m_mesh(std::make_shared<Mesh>(*m)), m_material(mat) {}
+    // Object(Mesh *m, Material *mat) : m_mesh(std::make_shared<Mesh>(*m)),
+    //                                  m_material(std::make_shared<Material>(*mat)) {}
     Object(const Object &obj) : m_mesh(obj.m_mesh), m_material(obj.m_material)
     {
     }

@@ -11,6 +11,7 @@ public:
     Texture2D();
     Texture2D(const char *filename);
     Texture2D(const std::string &filename);
+
     ~Texture2D();
     const int GetWidth() const { return m_Width; }
     int GetWidth() { return m_Width; }

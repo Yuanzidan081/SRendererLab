@@ -38,26 +38,15 @@ void Application::Run()
     std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
     Shader *shader = PhongShader::GetInstance();
 
-    //  cube
-    Mesh cubeMesh;
-    cubeMesh.asBox(1.0, 1.0, 1.0);
-    Material cubeMat;
-    cubeMat.SetShader(shader);
-    Texture2D *cubeTex = new Texture2D(curPath + "obj/cube/container.jpg");
-    cubeMat.SetTexture(cubeTex);
-    Object cubeObj(&cubeMesh, &cubeMat);
-    Model cubeMdl;
-    cubeMdl.SetModelName("cube");
+    Model cubeMdl(Mesh::CreateBox(1.0, 1.0, 1.0), "cube");
+    cubeMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/cube/container.jpg"));
+    cubeMdl.SetShader(shader);
     m_pipeline->m_config->AddModel(&cubeMdl);
 
-    // floor
-    Mesh floorMesh;
-    floorMesh.asFloor(4.3, -1.5);
-    Material floorMat;
-    floorMat.SetShader(shader);
-    Texture2D *floorTex = new Texture2D(curPath + "obj/floor/floor.jpg");
-    floorMat.SetTexture(floorTex);
-    Object floorObj(&floorMesh, &floorMat);
+    Model floorMdl(Mesh::CreateFloor(4.3, -1.5), "floor");
+    floorMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/floor/floor.jpg"));
+    floorMdl.SetShader(shader);
+    m_pipeline->m_config->AddModel(&floorMdl);
 
     // transformation
     double angle = 0.0;
@@ -65,31 +54,14 @@ void Application::Run()
     cubeTransformMat[0].SetTranslation(Vec3(3.0f, -1.0f, -1.0f));
     cubeTransformMat[1].SetTranslation(Vec3(4.0f, -1.0f, -1.0f));
     cubeTransformMat[2].SetTranslation(Vec3(3.5f, 0.0f, -1.0f));
-
     Mat4x4 rotateMat;
 
-    // neptune
-    Material bodyMat;
-    bodyMat.SetShader(shader);
-    Texture2D *bodyTexture = new Texture2D(curPath + "obj/neptune/Texf_body02.jpg");
-    bodyMat.SetTexture(bodyTexture);
-    Material faceMat;
-    faceMat.SetShader(shader);
-    Texture2D *faceTexture = new Texture2D(curPath + "obj/neptune/Tex002f_body01.jpg");
-    faceMat.SetTexture(faceTexture);
-    Material mouseMat;
-    mouseMat.SetShader(shader);
-    Texture2D *mouseTexture = new Texture2D(curPath + "obj/neptune/Texf_mouse.jpg");
-    mouseMat.SetTexture(mouseTexture);
-    Material eyeMat;
-    eyeMat.SetShader(shader);
-    Texture2D *eyeTexture = new Texture2D(curPath + "obj/neptune/Tex001f_eye.jpg");
-    eyeMat.SetTexture(eyeTexture);
     Model neptune(curPath + "obj/neptune/neptune.obj");
-    neptune.SetMaterial(0, &mouseMat);
-    neptune.SetMaterial(1, &faceMat);
-    neptune.SetMaterial(2, &bodyMat);
-    neptune.SetMaterial(3, &eyeMat);
+    neptune.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_mouse.jpg"));
+    neptune.m_objects[1].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex002f_body01.jpg"));
+    neptune.m_objects[2].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_body02.jpg"));
+    neptune.m_objects[3].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex001f_eye.jpg"));
+    neptune.SetShader(shader);
 
     Mat4x4 neptueTransformMat = neptune.SetSize(2.0, 2.0, 2.0);
     Mat4x4 tranlateMat;
@@ -116,7 +88,7 @@ void Application::Run()
         Vec3(0.0, -3.0, 0.0),
         Vec3(1.0f, 0.07f, 0.017f));
 
-    m_pipeline->m_config->NotifySignalChanged();
+    m_pipeline->m_config->NotifyTreeNodeChanged();
     //    m_pipeline->
     // m_pipeline->SetProjectMatrix(45.0f, static_cast<float>(m_width) / m_height, 0.1f, 100.0f);
 
@@ -132,13 +104,12 @@ void Application::Run()
         // render cube
         {
             m_pipeline->SetModelMatrix(cubeTransformMat[0]);
-            m_pipeline->DrawObject(cubeObj);
+            m_pipeline->DrawModel(cubeMdl);
 
             m_pipeline->SetModelMatrix(cubeTransformMat[1]);
-            m_pipeline->DrawObject(cubeObj);
-
+            m_pipeline->DrawModel(cubeMdl);
             m_pipeline->SetModelMatrix(cubeTransformMat[2]);
-            m_pipeline->DrawObject(cubeObj);
+            m_pipeline->DrawModel(cubeMdl);
         }
 
         {
@@ -147,7 +118,7 @@ void Application::Run()
         }
         {
             m_pipeline->SetModelMatrix(floorTransformMat);
-            m_pipeline->DrawObject(floorObj);
+            m_pipeline->DrawModel(floorMdl);
         }
         finish = clock();
         double deltaFrameTime = (double)(finish - start) / CLOCKS_PER_SEC;

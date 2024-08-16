@@ -7,10 +7,28 @@
 #include <vector>
 class Light;
 class Material;
-class Shader
+class Uniform
 {
 public:
+    Vec3 eye;
+    Mat4x4 world;
+    Mat4x4 normalMatrix;
+    Mat4x4 view;
+    Mat4x4 project;
+    Material *material;
+    std::vector<Light *> *lights;
+    Texture2D *mainTexture;
+    Uniform();
+    Uniform(const Mat4x4 m,
+            const Mat4x4 v,
+            const Mat4x4 p);
+};
+class Shader
+{
+
+public:
     Shader() = default;
+    Uniform m_uniform;
 
     void Destroy() {}
     virtual ~Shader() = default;
@@ -18,6 +36,10 @@ public:
     virtual VertexOut vertexShader(const Vertex &in) { return VertexOut(); }
     virtual Vec4 fragmentShader(const VertexOut &in) { return Vec4(); }
 
+    void SetUniform(const Uniform &u)
+    {
+        m_uniform = u;
+    }
     virtual void SetEyePos(const Vec3 &eye) {}
     virtual void SetModelMatrix(const Mat4x4 &world) {}
     virtual void SetViewMatrix(const Mat4x4 &view) {}

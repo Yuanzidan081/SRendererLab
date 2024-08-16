@@ -33,7 +33,6 @@ private:
     int m_fps;
     int m_width;
     int m_height;
-    /* QTimer *m_timer; */
 };
 
 #endif // APPLICATION_H

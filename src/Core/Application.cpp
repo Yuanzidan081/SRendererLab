@@ -32,6 +32,7 @@ void Application::Run()
     Shader *shader = PhongShader::GetInstance();
 
     Model cubeMdl(Mesh::CreateBox(1.0, 1.0, 1.0), "cube");
+    // cubeMdl.SetMaterial(
     cubeMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/cube/container.jpg"));
     cubeMdl.SetShader(shader);
     m_pipeline->m_config->AddModel(&cubeMdl);
@@ -41,10 +42,10 @@ void Application::Run()
     floorMdl.SetShader(shader);
     m_pipeline->m_config->AddModel(&floorMdl);
 
-    // transformation instancing
-    Vec3 cubeTranslate[3] = {Vec3(3.0f, -1.0f, -1.0f),
-                             Vec3(4.0f, -1.0f, -1.0f),
-                             Vec3(3.5f, 0.0f, -1.0f)};
+    // // transformation instancing
+    // Vec3 cubeTranslate[3] = {Vec3(3.0f, -1.0f, -1.0f),
+    //                          Vec3(4.0f, -1.0f, -1.0f),
+    //                          Vec3(3.5f, 0.0f, -1.0f)};
 
     Model neptune(curPath + "obj/neptune/neptune.obj");
     neptune.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_mouse.jpg"));
@@ -80,28 +81,7 @@ void Application::Run()
     while (!m_stopped)
     {
         m_pipeline->ClearFrameBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
-        m_pipeline->SetProjectMatrix(m_pipeline->m_config->m_fpsCamera->GetPerspectiveMatrix());
-        m_pipeline->SetViewMatrix(m_pipeline->m_config->m_fpsCamera->GetPosition(), m_pipeline->m_config->m_fpsCamera->GetViewMatrix());
-
-        // render cube
-        {
-            for (size_t i = 0; i < 3; ++i)
-            {
-                cubeMdl.SetTranslate(cubeTranslate[i]);
-                m_pipeline->SetModelMatrix(cubeMdl.GetTransform());
-                m_pipeline->DrawModel(cubeMdl);
-            }
-        }
-        // render neptune
-        {
-            m_pipeline->SetModelMatrix(neptune.GetTransform());
-            m_pipeline->DrawModel(neptune);
-        }
-        // render floor
-        {
-            m_pipeline->SetModelMatrix(floorMdl.GetTransform());
-            m_pipeline->DrawModel(floorMdl);
-        }
+        m_pipeline->DrawScene();
 
         m_pipeline->SwapFrameBuffer();
         emit frameReady(m_pipeline->GetFrameResult());

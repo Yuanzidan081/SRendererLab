@@ -61,9 +61,12 @@ public:
                       Vec3 pos, Vec3 dir, Vec3 atte);
 
     // start the rendering pipeline
+    void DrawScene();
     void DrawMesh();
     void DrawModel(const Model &model);
+    void DrawModel(Model *model);
     void DrawObject(const Object &obj);
+    void DrawObject(const Object &obj, Uniform &u);
     Config *m_config;
 
 private:
@@ -73,6 +76,7 @@ private:
     // linear interpolation
     VertexOut Lerp(const VertexOut &n1, const VertexOut &n2, double weight);
 
+    // clipping and culling
     bool BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     bool ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     void UpdateViewPlanes();
@@ -82,6 +86,7 @@ private:
     bool Pipeline::IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
     VertexOut GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const Vec4 &lineParameter);
     std::vector<VertexOut> SutherlandHodgeman(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
+
     // rasterization
     void BresenhamLineRasterization(const VertexOut &from, const VertexOut &to);
     void ScanLinePerRow(const VertexOut &left, const VertexOut &right);

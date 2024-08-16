@@ -36,6 +36,7 @@ public:
     FrameBuffer *m_frontBuffer;
     PolygonMode m_polygonMode;
     Mat4x4 m_viewPortMat;
+
     Vec3 m_eyePos;
     Shader *m_shader;
 

@@ -122,6 +122,14 @@ void Pipeline::AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff, Vec3 
     m_config->m_shader->SetLight(&m_config->m_lights);
 }
 
+void Pipeline::DrawScene()
+{
+    for (size_t i = 0; i < m_config->m_models.size(); ++i)
+    {
+        DrawModel(m_config->m_models[i]);
+    }
+}
+
 void Pipeline::DrawMesh()
 {
     if (m_config->m_indices->empty())
@@ -201,9 +209,23 @@ void Pipeline::DrawMesh()
 
 void Pipeline::DrawModel(const Model &model)
 {
+
     for (size_t i = 0; i < model.m_objectNum; ++i)
     {
         DrawObject(model.m_objects[i]);
+    }
+}
+
+void Pipeline::DrawModel(Model *model)
+{
+    m_viewMatrix = m_config->m_fpsCamera->GetViewMatrix();
+    m_projectMatrix = m_config->m_fpsCamera->GetPerspectiveMatrix();
+    for (size_t i = 0; i < model->m_objectNum; ++i)
+    {
+        Uniform u(model->GetTransform(), m_viewMatrix, m_projectMatrix);
+        u.lights = &(m_config->m_lights);
+        u.eye = m_config->m_fpsCamera->GetPosition();
+        DrawObject(model->m_objects[i], u);
     }
 }
 
@@ -215,6 +237,17 @@ void Pipeline::DrawObject(const Object &obj)
     SetMaterial(obj.m_material.get());
     DrawMesh();
     UnBindTexture();
+}
+
+void Pipeline::DrawObject(const Object &obj, Uniform &u)
+{
+    u.material = obj.m_material.get();
+    u.mainTexture = obj.m_material->m_mainTex.get();
+    m_config->m_shader = obj.m_material->m_shader;
+    SetVertexBuffer(&obj.m_mesh->m_vertices);
+    SetIndexBuffer(&obj.m_mesh->m_indices);
+    m_config->m_shader->SetUniform(u);
+    DrawMesh();
 }
 
 void Pipeline::PerspectiveDivision(VertexOut &target)
@@ -283,6 +316,7 @@ bool Pipeline::ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
 void Pipeline::UpdateViewPlanes()
 {
     ViewingFrustumPlanes(m_config->m_viewPlaneParameters, m_projectMatrix * m_viewMatrix);
+    // ViewingFrustumPlanes(m_config->m_viewPlaneParameters, m_config->m_fpsCamera->GetPerspectiveMatrix() * m_config->m_fpsCamera->GetViewMatrix());
 }
 
 // get six frusum's  planes to use for frustum culling

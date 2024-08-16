@@ -10,14 +10,14 @@ class Material;
 class Uniform
 {
 public:
-    Vec3 eye;
-    Mat4x4 world;
-    Mat4x4 normalMatrix;
-    Mat4x4 view;
-    Mat4x4 project;
-    Material *material;
-    std::vector<Light *> *lights;
-    Texture2D *mainTexture;
+    Vec3 m_eyePos;
+    Mat4x4 m_modelMatrix;
+    Mat4x4 m_normalMatrix;
+    Mat4x4 m_viewMatrix;
+    Mat4x4 m_projectMatrix;
+    Material *m_material;
+    std::vector<Light *> *m_lights;
+    Texture2D *m_mainTex;
     Uniform();
     Uniform(const Mat4x4 m,
             const Mat4x4 v,
@@ -30,7 +30,7 @@ public:
     Shader() = default;
     Uniform m_uniform;
 
-    void Destroy() {}
+    virtual void Destroy() {}
     virtual ~Shader() = default;
     virtual void BindShaderTexture(Texture2D *tex) {}
     virtual VertexOut vertexShader(const Vertex &in) { return VertexOut(); }
@@ -40,12 +40,6 @@ public:
     {
         m_uniform = u;
     }
-    virtual void SetEyePos(const Vec3 &eye) {}
-    virtual void SetModelMatrix(const Mat4x4 &world) {}
-    virtual void SetViewMatrix(const Mat4x4 &view) {}
-    virtual void SetProjectMatrix(const Mat4x4 &project) {}
-    virtual void SetMaterial(const Material *material) {};
-    virtual void SetLight(const std::vector<Light *> *light) {};
 };
 
 #endif // SHADER_H

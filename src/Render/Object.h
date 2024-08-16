@@ -29,5 +29,17 @@ public:
 
         return *this;
     }
+    Material *GetMaterial() const
+    {
+        return m_material.get();
+    }
+    Texture2D *GetMainTex() const
+    {
+        return m_material->m_mainTex.get();
+    }
+    Shader *GetShader() const
+    {
+        return m_material->m_shader;
+    }
 };
 #endif // OBJECT_H

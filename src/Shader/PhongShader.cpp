@@ -1,10 +1,11 @@
 #include "PhongShader.h"
 #include "Render/Material.h"
 #include "Render/Light.h"
-
+#include <iostream>
 PhongShader *PhongShader::s_shader = nullptr;
 PhongShader *PhongShader::GetInstance()
 {
+
     if (s_shader == nullptr)
         s_shader = new PhongShader();
     return s_shader;
@@ -12,58 +13,21 @@ PhongShader *PhongShader::GetInstance()
 
 void PhongShader::Destroy()
 {
+    // m_uniform = nullptr;
+    // std::cout << "delete PhongShader" << std::endl;
     if (s_shader)
         delete s_shader;
     s_shader = nullptr;
 }
 
-// VertexOut PhongShader::vertexShader(const Vertex &in)
-// {
-//     VertexOut result;
-//     result.posWorld = m_modelMatrix * in.position;
-//     result.posProj = m_projectMatrix * m_viewMatrix * result.posWorld;
-//     result.color = in.color;
-//     result.normal = m_invTransposeModelMatrix * Vec4(in.normal);
-//     result.texcoord = in.texcoord;
-
-//     return result;
-// }
-
-// Vec4 PhongShader::fragmentShader(const VertexOut &in)
-// {
-//     Vec4 litColor = in.color;
-//     if (m_tex)
-//         litColor = m_tex->SampleTexture(in.texcoord);
-//     Vec3 amb, diff, spec;
-//     if (m_lights)
-//     {
-//         Vec3 eyeDir = m_eyePos - in.posWorld;
-//         eyeDir.Normalize();
-//         Vec3 ambTmp, diffTmp, specTmp;
-//         for (int i = 0; i < (*m_lights).size(); ++i)
-//         {
-//             (*m_lights)[i]->lighting(*m_material, in.posWorld, in.normal, eyeDir, ambTmp, diffTmp, diffTmp);
-//             amb += ambTmp;
-//             diff += diffTmp;
-//             spec += specTmp;
-//         }
-
-//         litColor.x *= (amb.x + diff.x + spec.x);
-//         litColor.y *= (amb.y + diff.y + spec.y);
-//         litColor.z *= (amb.z + diff.z + spec.z);
-//         litColor.w = 1.0f;
-//     }
-//     return litColor;
-// }
-
 VertexOut PhongShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
-    result.posWorld = m_uniform.world * in.position;
-    result.posProj = m_uniform.project * m_uniform.view * result.posWorld;
+    result.posWorld = m_uniform.m_modelMatrix * in.position;
+    result.posProj = m_uniform.m_projectMatrix * m_uniform.m_viewMatrix * result.posWorld;
 
     result.color = in.color;
-    result.normal = m_uniform.normalMatrix * Vec4(in.normal);
+    result.normal = m_uniform.m_normalMatrix * Vec4(in.normal);
     result.texcoord = in.texcoord;
 
     return result;
@@ -72,17 +36,17 @@ VertexOut PhongShader::vertexShader(const Vertex &in)
 Vec4 PhongShader::fragmentShader(const VertexOut &in)
 {
     Vec4 litColor = in.color;
-    if (m_uniform.mainTexture)
-        litColor = m_uniform.mainTexture->SampleTexture(in.texcoord);
+    if (m_uniform.m_mainTex)
+        litColor = m_uniform.m_mainTex->SampleTexture(in.texcoord);
     Vec3 amb, diff, spec;
-    if (m_uniform.lights)
+    if (m_uniform.m_lights)
     {
-        Vec3 eyeDir = m_uniform.eye - in.posWorld;
+        Vec3 eyeDir = m_uniform.m_eyePos - in.posWorld;
         eyeDir.Normalize();
         Vec3 ambTmp, diffTmp, specTmp;
-        for (int i = 0; i < m_uniform.lights->size(); ++i)
+        for (int i = 0; i < m_uniform.m_lights->size(); ++i)
         {
-            (*(m_uniform.lights))[i]->lighting(*(m_uniform.material), in.posWorld, in.normal, eyeDir, ambTmp, diffTmp, diffTmp);
+            (*(m_uniform.m_lights))[i]->lighting(*(m_uniform.m_material), in.posWorld, in.normal, eyeDir, ambTmp, diffTmp, diffTmp);
             amb += ambTmp;
             diff += diffTmp;
             spec += specTmp;
@@ -94,14 +58,4 @@ Vec4 PhongShader::fragmentShader(const VertexOut &in)
         litColor.w = 1.0f;
     }
     return litColor;
-}
-
-void PhongShader::SetMaterial(const Material *material)
-{
-    m_material = material;
-}
-
-void PhongShader::SetLight(const std::vector<Light *> *lights)
-{
-    m_lights = lights;
 }

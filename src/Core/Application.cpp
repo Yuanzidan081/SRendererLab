@@ -29,23 +29,19 @@ void Application::Run()
 {
 
     std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
-    Shader *shader = PhongShader::GetInstance();
+    Shader *shader = SimpleShader::GetInstance();
 
     Model cubeMdl(Mesh::CreateBox(1.0, 1.0, 1.0), "cube");
     // cubeMdl.SetMaterial(
     cubeMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/cube/container.jpg"));
     cubeMdl.SetShader(shader);
+    cubeMdl.SetTranslate(Vec3(3.0f, -1.0f, -1.0f));
     m_pipeline->m_config->AddModel(&cubeMdl);
 
     Model floorMdl(Mesh::CreateFloor(4.3, -1.5), "floor");
     floorMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/floor/floor.jpg"));
     floorMdl.SetShader(shader);
     m_pipeline->m_config->AddModel(&floorMdl);
-
-    // // transformation instancing
-    // Vec3 cubeTranslate[3] = {Vec3(3.0f, -1.0f, -1.0f),
-    //                          Vec3(4.0f, -1.0f, -1.0f),
-    //                          Vec3(3.5f, 0.0f, -1.0f)};
 
     Model neptune(curPath + "obj/neptune/neptune.obj");
     neptune.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_mouse.jpg"));
@@ -57,7 +53,7 @@ void Application::Run()
     m_pipeline->m_config->AddModel(&neptune);
 
     // pipeline settings
-    m_pipeline->SetShadingMode(ShadingMode::Phong);
+
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
     m_pipeline->AddDirectionLight(Vec3(0.05, 0.05, 0.05),
                                   Vec3(0.9, 0.1, 0.1),

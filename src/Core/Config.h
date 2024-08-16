@@ -24,7 +24,7 @@ public:
     Config &operator=(const Config &) = delete;
 
     void AddModel(Model *model);
-    void Destroy();
+     void Destroy();
     // state settings
     bool m_depthTesting;
     bool m_backFaceCulling;

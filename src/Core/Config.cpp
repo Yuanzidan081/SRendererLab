@@ -28,10 +28,6 @@ Config::Config() : m_depthTesting(true),
 }
 Config::~Config()
 {
-    // 其他地方也要析构一下
-    if (localInstance)
-        delete localInstance;
-    localInstance = nullptr;
 }
 void Config::AddModel(Model *model)
 {
@@ -43,8 +39,7 @@ void Config::Destroy()
         delete m_backBuffer;
     if (m_frontBuffer)
         delete m_frontBuffer;
-    if (m_shader)
-        delete m_shader;
+
     if (m_fpsCamera)
         delete m_fpsCamera;
     for (size_t i = 0; i < m_lights.size(); ++i)
@@ -57,6 +52,7 @@ void Config::Destroy()
         delete m_models[i];
         m_models[i] = nullptr;
     } */
+
     Shader *shader = PhongShader::GetInstance();
     shader->Destroy();
     shader = GouraudShader::GetInstance();
@@ -67,6 +63,9 @@ void Config::Destroy()
     m_backBuffer = nullptr;
     m_frontBuffer = nullptr;
     m_shader = nullptr;
+    if (localInstance)
+        delete localInstance;
+    localInstance = nullptr;
 }
 Config *Config::GetInstance()
 {

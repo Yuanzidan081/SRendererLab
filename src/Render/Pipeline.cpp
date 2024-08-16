@@ -15,18 +15,6 @@ Pipeline::~Pipeline()
     m_config->Destroy();
 }
 
-void Pipeline::SetMaterial(const Material *material)
-{
-    m_config->m_shader->SetMaterial(material);
-}
-void Pipeline::BindTexture(Texture2D &tex)
-{
-    m_config->m_shader->BindShaderTexture(&tex);
-}
-void Pipeline::UnBindTexture()
-{
-    m_config->m_shader->BindShaderTexture(nullptr);
-}
 void Pipeline::ClearFrameBuffer(const Vec4 &color)
 {
     m_config->m_backBuffer->clearColorAndDepthBuffer(color);
@@ -44,64 +32,12 @@ void Pipeline::SwapFrameBuffer()
     m_config->m_backBuffer = temp;
 }
 
-void Pipeline::SetViewMatrix(Vec3 eye, const Mat4x4 &viewMat)
-{
-    m_config->m_eyePos = eye;
-    m_config->m_shader->SetEyePos(eye);
-    m_viewMatrix = viewMat;
-    m_config->m_shader->SetViewMatrix(viewMat);
-}
-
-void Pipeline::SetViewMatrix(Vec3 eye, Vec3 target, Vec3 up)
-{
-    m_config->m_eyePos = eye;
-    m_config->m_shader->SetEyePos(eye);
-    m_viewMatrix.SetLookAt(eye, target, up);
-    m_config->m_shader->SetViewMatrix(m_viewMatrix);
-}
-
-void Pipeline::SetProjectMatrix(Mat4x4 mat)
-{
-    m_projectMatrix = mat;
-    m_config->m_shader->SetProjectMatrix(m_projectMatrix);
-}
-
-void Pipeline::SetModelMatrix(Mat4x4 modelMatrix)
-{
-    m_config->m_shader->SetModelMatrix(modelMatrix);
-}
-
-void Pipeline::SetShadingMode(ShadingMode mode)
-{
-    if (m_config->m_shader)
-        m_config->m_shader->Destroy();
-    switch (mode)
-    {
-    case ShadingMode::Simple:
-    {
-        m_config->m_shader = SimpleShader::GetInstance();
-        break;
-    }
-    case ShadingMode::Gouraud:
-    {
-        m_config->m_shader = GouraudShader::GetInstance();
-        break;
-    }
-    case ShadingMode::Phong:
-    {
-        m_config->m_shader = PhongShader::GetInstance();
-        break;
-    }
-    }
-}
-
 void Pipeline::AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir)
 {
     DirectionalLight *light = new DirectionalLight();
     light->SetDirectionalLight(amb, diff, spec, dir);
     Light *m_light = light;
     m_config->m_lights.push_back(m_light);
-    m_config->m_shader->SetLight(&m_config->m_lights);
 }
 
 void Pipeline::AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte)
@@ -110,7 +46,6 @@ void Pipeline::AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte
     light->SetPointLight(amb, diff, spec, pos, atte);
     Light *m_light = reinterpret_cast<Light *>(light);
     m_config->m_lights.push_back(m_light);
-    m_config->m_shader->SetLight(&m_config->m_lights);
 }
 
 void Pipeline::AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff, Vec3 pos, Vec3 dir, Vec3 atte)
@@ -119,7 +54,6 @@ void Pipeline::AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff, Vec3 
     light->SetSpotLight(amb, diff, spec, pos, dir, atte, cutoff);
     Light *m_light = reinterpret_cast<Light *>(light);
     m_config->m_lights.push_back(m_light);
-    m_config->m_shader->SetLight(&m_config->m_lights);
 }
 
 void Pipeline::DrawScene()
@@ -207,15 +141,6 @@ void Pipeline::DrawMesh()
     }
 }
 
-void Pipeline::DrawModel(const Model &model)
-{
-
-    for (size_t i = 0; i < model.m_objectNum; ++i)
-    {
-        DrawObject(model.m_objects[i]);
-    }
-}
-
 void Pipeline::DrawModel(Model *model)
 {
     m_viewMatrix = m_config->m_fpsCamera->GetViewMatrix();
@@ -223,27 +148,17 @@ void Pipeline::DrawModel(Model *model)
     for (size_t i = 0; i < model->m_objectNum; ++i)
     {
         Uniform u(model->GetTransform(), m_viewMatrix, m_projectMatrix);
-        u.lights = &(m_config->m_lights);
-        u.eye = m_config->m_fpsCamera->GetPosition();
+        u.m_lights = &(m_config->m_lights);
+        u.m_eyePos = m_config->m_fpsCamera->GetPosition();
         DrawObject(model->m_objects[i], u);
     }
 }
 
-void Pipeline::DrawObject(const Object &obj)
-{
-    BindTexture(*(obj.m_material->m_mainTex));
-    SetVertexBuffer(&obj.m_mesh->m_vertices);
-    SetIndexBuffer(&obj.m_mesh->m_indices);
-    SetMaterial(obj.m_material.get());
-    DrawMesh();
-    UnBindTexture();
-}
-
 void Pipeline::DrawObject(const Object &obj, Uniform &u)
 {
-    u.material = obj.m_material.get();
-    u.mainTexture = obj.m_material->m_mainTex.get();
-    m_config->m_shader = obj.m_material->m_shader;
+    m_config->m_shader = obj.GetShader();
+    u.m_material = obj.GetMaterial();
+    u.m_mainTex = obj.GetMainTex();
     SetVertexBuffer(&obj.m_mesh->m_vertices);
     SetIndexBuffer(&obj.m_mesh->m_indices);
     m_config->m_shader->SetUniform(u);

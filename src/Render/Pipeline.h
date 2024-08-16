@@ -21,13 +21,6 @@ public:
     void SetDepthTesting(bool open) { m_config->m_depthTesting = open; }
     void SetBackFaceCulling(bool open) { m_config->m_backFaceCulling = open; }
 
-    // setting material
-    void SetMaterial(const Material *material);
-    // setting texture
-
-    void BindTexture(Texture2D &tex);
-    void UnBindTexture();
-
     // buffer settings
     void ClearFrameBuffer(const Vec4 &color);
     unsigned char *GetFrameResult();
@@ -40,19 +33,7 @@ public:
     }
     int GetHeight() { return m_config->m_height; }
 
-    // matrix settings
-    void SetModelMatrix(Mat4x4 modelMatrix);
-    void SetViewMatrix(Vec3 eye, const Mat4x4 &viewMat);
-    void SetViewMatrix(Vec3 eye, Vec3 target, Vec3 up);
-    void SetProjectMatrix(Mat4x4 mat);
-
-    void SetViewPort(int left, int top, int width, int height)
-    {
-        m_config->m_viewPortMat.SetViewPort(left, top, width, height);
-    }
-
     // Illumination setting
-    void SetShadingMode(ShadingMode mode);
     void SetPolygonMode(PolygonMode mode) { m_config->m_polygonMode = mode; }
     // Light
     void AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir);
@@ -63,9 +44,7 @@ public:
     // start the rendering pipeline
     void DrawScene();
     void DrawMesh();
-    void DrawModel(const Model &model);
     void DrawModel(Model *model);
-    void DrawObject(const Object &obj);
     void DrawObject(const Object &obj, Uniform &u);
     Config *m_config;
 

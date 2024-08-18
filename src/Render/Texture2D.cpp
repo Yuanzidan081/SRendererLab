@@ -110,32 +110,43 @@ Vec2 CubeMap::GetUV(int index, const Vec3 &dir) const
     {
     case 0:
         factor = 1 / dir[0];
-        u = 1 - dir[2] * factor;
+        // u = 1 - dir[2] * factor;
+        u = 1 + dir[2] * factor;
         v = 1 + dir[1] * factor;
         break;
     case 1:
         factor = 1 / dir[1];
         u = 1 + dir[0] * factor;
-        v = 1 - dir[2] * factor;
+        // v = 1 - dir[2] * factor;
+        v = 1 + dir[2] * factor;
+
         break;
     case 2:
         factor = 1 / dir[2];
-        u = 1 + dir[0] * factor;
+        // u = 1 + dir[0] * factor;
+        u = 1 - dir[0] * factor;
+
         v = 1 + dir[1] * factor;
         break;
     case 3:
         factor = -1 / dir[0];
-        u = 1 + dir[2] * factor;
+        u = 1 - dir[2] * factor;
+
+        // v = 1 + dir[1] * factor;
         v = 1 + dir[1] * factor;
         break;
     case 4:
         factor = -1 / dir[1];
         u = 1 + dir[0] * factor;
-        v = 1 + dir[2] * factor;
+        // v = 1 + dir[2] * factor;
+        v = 1 - dir[2] * factor;
+
         break;
     case 5:
         factor = -1 / dir[2];
-        u = 1 - dir[0] * factor;
+        // u = 1 - dir[0] * factor;
+        u = 1 + dir[0] * factor;
+
         v = 1 + dir[1] * factor;
         break;
     }

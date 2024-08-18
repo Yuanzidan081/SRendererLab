@@ -12,137 +12,172 @@ void Mesh::asBox(double width, double height, double depth)
     m_vertices[0].position = Vec3(halfW, halfH, halfD);
     m_vertices[0].normal = Vec3(0.f, 0.f, 1.f);
     m_vertices[0].color = Vec4(1.f, 0.f, 0.f, 1.f);
-    m_vertices[0].texcoord = Vec2(1.f, 1.f);
+    // m_vertices[0].texcoord = Vec2(1.f, 1.f);
+    m_vertices[0].texcoord = Vec2(0.f, 1.f);
+
     m_vertices[1].position = Vec3(-halfW, halfH, halfD);
     m_vertices[1].normal = Vec3(0.f, 0.f, 1.f);
     m_vertices[1].color = Vec4(0.f, 1.f, 0.f, 1.f);
-    m_vertices[1].texcoord = Vec2(0.f, 1.f);
+    // m_vertices[1].texcoord = Vec2(0.f, 1.f);
+    m_vertices[1].texcoord = Vec2(1.f, 1.f);
+
     m_vertices[2].position = Vec3(-halfW, -halfH, halfD);
     m_vertices[2].normal = Vec3(0.f, 0.f, 1.f);
     m_vertices[2].color = Vec4(0.f, 0.f, 1.f, 1.f);
-    m_vertices[2].texcoord = Vec2(0.f, 0.f);
+    // m_vertices[2].texcoord = Vec2(0.f, 0.f);
+    m_vertices[2].texcoord = Vec2(1.f, 0.f);
+
     m_vertices[3].position = Vec3(halfW, -halfH, halfD);
     m_vertices[3].normal = Vec3(0.f, 0.f, 1.f);
     m_vertices[3].color = Vec4(0.f, 1.f, 1.f, 1.f);
-    m_vertices[3].texcoord = Vec2(1.f, 0.f);
+    // m_vertices[3].texcoord = Vec2(1.f, 0.f);
+    m_vertices[3].texcoord = Vec2(0.f, 0.f);
+
     // left
     m_vertices[4].position = Vec3(-halfW, +halfH, halfD);
     m_vertices[4].normal = Vec3(-1.f, 0.f, 0.f);
     m_vertices[4].color = Vec4(0.f, 0.f, 1.f, 1.f);
-    m_vertices[4].texcoord = Vec2(1.f, 1.f);
+    // m_vertices[4].texcoord = Vec2(1.f, 1.f);
+    // m_vertices[4].texcoord = Vec2(1.f, 1.f);
+    m_vertices[4].texcoord = Vec2(0.f, 1.f);
+
     m_vertices[5].position = Vec3(-halfW, +halfH, -halfD);
     m_vertices[5].normal = Vec3(-1.f, 0.f, 0.f);
     m_vertices[5].color = Vec4(1.f, 1.f, 0.f, 1.f);
-    m_vertices[5].texcoord = Vec2(0.f, 1.f);
+    // m_vertices[5].texcoord = Vec2(0.f, 1.f);
+    m_vertices[5].texcoord = Vec2(1.f, 1.f);
+
     m_vertices[6].position = Vec3(-halfW, -halfH, -halfD);
     m_vertices[6].normal = Vec3(-1.f, 0.f, 0.f);
     m_vertices[6].color = Vec4(0.f, 1.f, 0.f, 1.f);
-    m_vertices[6].texcoord = Vec2(0.f, 0.f);
+    // m_vertices[6].texcoord = Vec2(0.f, 0.f);
+    m_vertices[6].texcoord = Vec2(1.f, 0.f);
+
     m_vertices[7].position = Vec3(-halfW, -halfH, halfD);
     m_vertices[7].normal = Vec3(-1.f, 0.f, 0.f);
     m_vertices[7].color = Vec4(1.f, 1.f, 1.f, 1.f);
-    m_vertices[7].texcoord = Vec2(1.f, 0.f);
+    // m_vertices[7].texcoord = Vec2(1.f, 0.f);
+    m_vertices[7].texcoord = Vec2(0.f, 0.f);
+
     // back
     m_vertices[8].position = Vec3(-halfW, +halfH, -halfD);
     m_vertices[8].normal = Vec3(0.f, 0.f, -1.f);
     m_vertices[8].color = Vec4(1.f, 0.f, 1.f, 1.f);
     // m_vertices[8].texcoord = Vec2(0.f, 0.f);
-    m_vertices[8].texcoord = Vec2(1.f, 1.f);
+    // m_vertices[8].texcoord = Vec2(1.f, 1.f);
+    m_vertices[8].texcoord = Vec2(0.f, 1.f);
 
     m_vertices[9].position = Vec3(+halfW, +halfH, -halfD);
     m_vertices[9].normal = Vec3(0.f, 0.f, -1.f);
     m_vertices[9].color = Vec4(0.f, 1.f, 1.f, 1.f);
     // m_vertices[9].texcoord = Vec2(1.f, 0.f);
-    m_vertices[9].texcoord = Vec2(0.f, 1.f);
+    // m_vertices[9].texcoord = Vec2(0.f, 1.f);
+    m_vertices[9].texcoord = Vec2(1.f, 1.f);
 
     m_vertices[10].position = Vec3(+halfW, -halfH, -halfD);
     m_vertices[10].normal = Vec3(0.f, 0.f, -1.f);
     m_vertices[10].color = Vec4(1.f, 1.f, 0.f, 1.f);
     // m_vertices[10].texcoord = Vec2(1.f, 1.f);
-    m_vertices[9].texcoord = Vec2(0.f, 0.f);
+    // m_vertices[9].texcoord = Vec2(0.f, 0.f);
+    m_vertices[9].texcoord = Vec2(1.f, 0.f);
 
     m_vertices[11].position = Vec3(-halfW, -halfH, -halfD);
     m_vertices[11].normal = Vec3(0.f, 0.f, -1.f);
     m_vertices[11].color = Vec4(0.f, 0.f, 1.f, 1.f);
     // m_vertices[11].texcoord = Vec2(0.f, 1.f);
-    m_vertices[11].texcoord = Vec2(1.f, 0.f);
+    // m_vertices[11].texcoord = Vec2(1.f, 0.f);
+    m_vertices[11].texcoord = Vec2(0.f, 0.f);
 
     // right
     m_vertices[12].position = Vec3(halfW, +halfH, -halfD);
     m_vertices[12].normal = Vec3(1.f, 0.f, 0.f);
     m_vertices[12].color = Vec4(0.f, 1.f, 0.f, 1.f);
     // m_vertices[12].texcoord = Vec2(0.f, 0.f);
-    m_vertices[12].texcoord = Vec2(1.f, 1.f);
-    // m_vertices[12].texcoord = Vec2(0.f, 1.f);
+    // m_vertices[12].texcoord = Vec2(1.f, 1.f);
+    m_vertices[12].texcoord = Vec2(0.f, 1.f);
 
     m_vertices[13].position = Vec3(halfW, +halfH, +halfD);
     m_vertices[13].normal = Vec3(1.f, 0.f, 0.f);
     m_vertices[13].color = Vec4(1.f, 0.f, 0.f, 1.f);
     // m_vertices[13].texcoord = Vec2(1.f, 0.f);
-    m_vertices[13].texcoord = Vec2(0.f, 1.f);
-    // m_vertices[13].texcoord = Vec2(1.f, 1.f);
+    // m_vertices[13].texcoord = Vec2(0.f, 1.f);
+    m_vertices[13].texcoord = Vec2(1.f, 1.f);
 
     m_vertices[14].position = Vec3(halfW, -halfH, +halfD);
     m_vertices[14].normal = Vec3(1.f, 0.f, 0.f);
     m_vertices[14].color = Vec4(0.f, 1.f, 1.f, 1.f);
     // m_vertices[14].texcoord = Vec2(1.f, 1.f);
-    m_vertices[14].texcoord = Vec2(0.f, 0.f);
-    // m_vertices[14].texcoord = Vec2(1.f, 0.f);
+    // m_vertices[14].texcoord = Vec2(0.f, 0.f);
+    m_vertices[14].texcoord = Vec2(1.f, 0.f);
 
     m_vertices[15].position = Vec3(halfW, -halfH, -halfD);
     m_vertices[15].normal = Vec3(1.f, 0.f, 0.f);
     m_vertices[15].color = Vec4(1.f, 0.f, 1.f, 1.f);
     // m_vertices[15].texcoord = Vec2(0.f, 1.f);
-    m_vertices[15].texcoord = Vec2(1.f, 0.f);
-    // m_vertices[15].texcoord = Vec2(0.f, 0.f);
+    // m_vertices[15].texcoord = Vec2(1.f, 0.f);
+    m_vertices[15].texcoord = Vec2(0.f, 0.f);
 
     // top
     m_vertices[16].position = Vec3(+halfW, halfH, -halfD);
     m_vertices[16].normal = Vec3(0.f, 1.f, 0.f);
     m_vertices[16].color = Vec4(0.f, 0.f, 0.f, 1.f);
     // m_vertices[16].texcoord = Vec2(0.f, 0.f);
-    m_vertices[16].texcoord = Vec2(1.f, 1.f);
+    // m_vertices[16].texcoord = Vec2(1.f, 1.f);
+    m_vertices[16].texcoord = Vec2(1.f, 0.f);
 
     m_vertices[17].position = Vec3(-halfW, halfH, -halfD);
     m_vertices[17].normal = Vec3(0.f, 1.f, 0.f);
     m_vertices[17].color = Vec4(1.f, 1.f, 0.f, 1.f);
     // m_vertices[17].texcoord = Vec2(1.f, 0.f);
-    m_vertices[17].texcoord = Vec2(0.f, 1.f);
+    // m_vertices[17].texcoord = Vec2(0.f, 1.f);
+    m_vertices[17].texcoord = Vec2(0.f, 0.f);
+
     m_vertices[18].position = Vec3(-halfW, halfH, halfD);
     m_vertices[18].normal = Vec3(0.f, 1.f, 0.f);
     m_vertices[18].color = Vec4(0.f, 1.f, 1.f, 1.f);
     // m_vertices[18].texcoord = Vec2(1.f, 1.f);
-    m_vertices[18].texcoord = Vec2(0.f, 0.f);
+    // m_vertices[18].texcoord = Vec2(0.f, 0.f);
+    m_vertices[18].texcoord = Vec2(0.f, 1.f);
 
     m_vertices[19].position = Vec3(+halfW, halfH, halfD);
     m_vertices[19].normal = Vec3(0.f, 1.f, 0.f);
     m_vertices[19].color = Vec4(1.f, 0.f, 0.f, 1.f);
     // m_vertices[19].texcoord = Vec2(0.f, 1.f);
-    m_vertices[19].texcoord = Vec2(1.f, 0.f);
+    // m_vertices[19].texcoord = Vec2(1.f, 0.f);
+    m_vertices[19].texcoord = Vec2(1.f, 1.f);
+
     // down
     m_vertices[20].position = Vec3(+halfW, -halfH, -halfD);
     m_vertices[20].normal = Vec3(0.f, -1.f, 0.f);
     m_vertices[20].color = Vec4(0.f, 0.f, 1.f, 1.f);
     // m_vertices[20].texcoord = Vec2(0.f, 0.f);
-    m_vertices[20].texcoord = Vec2(1.f, 0.f);
+    // m_vertices[20].texcoord = Vec2(1.f, 0.f);
+    m_vertices[20].texcoord = Vec2(1.f, 1.f);
+
 
     m_vertices[21].position = Vec3(+halfW, -halfH, +halfD);
     m_vertices[21].normal = Vec3(0.f, -1.f, 0.f);
     m_vertices[21].color = Vec4(1.f, 1.f, 1.f, 1.f);
     // m_vertices[21].texcoord = Vec2(1.f, 0.f);
-    m_vertices[21].texcoord = Vec2(1.f, 1.f);
+    // m_vertices[21].texcoord = Vec2(1.f, 1.f);
+    m_vertices[21].texcoord = Vec2(1.f, 0.f);
+
 
     m_vertices[22].position = Vec3(-halfW, -halfH, +halfD);
     m_vertices[22].normal = Vec3(0.f, -1.f, 0.f);
     m_vertices[22].color = Vec4(0.f, 1.f, 0.f, 1.f);
     // m_vertices[22].texcoord = Vec2(1.f, 1.f);
-    m_vertices[22].texcoord = Vec2(0.f, 1.f);
+    // m_vertices[22].texcoord = Vec2(0.f, 1.f);
+    m_vertices[22].texcoord = Vec2(0.f, 0.f);
+
 
     m_vertices[23].position = Vec3(-halfW, -halfH, -halfD);
     m_vertices[23].normal = Vec3(0.f, -1.f, 0.f);
     m_vertices[23].color = Vec4(1.f, 0.f, 1.f, 1.f);
     // m_vertices[23].texcoord = Vec2(0.f, 1.f);
-    m_vertices[23].texcoord = Vec2(0.f, 0.f);
+    // m_vertices[23].texcoord = Vec2(0.f, 0.f);
+    m_vertices[23].texcoord = Vec2(0.f, 1.f);
+
 
     // front
     m_indices[0] = 0;

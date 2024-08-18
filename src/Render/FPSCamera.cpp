@@ -157,13 +157,14 @@ void EulerFPSCamera::RotateYaw(float angle)
     // UpdateCameraVectors();
 }
 
-void EulerFPSCamera::Zoom(float fov)
+void EulerFPSCamera::Zoom(float delta)
 {
     m_updatePerspectiveFlag = true;
+    m_fov += delta;
     if (m_fov < 1.0f)
         m_fov = 1.0f;
-    if (m_fov > 45.0f)
-        m_fov = 45.0f;
+    if (m_fov > 60.0f)
+        m_fov = 60.0f;
 }
 
 void EulerFPSCamera::UpdateCameraVectors()

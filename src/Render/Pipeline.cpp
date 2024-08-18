@@ -297,8 +297,10 @@ void Pipeline::ScanLinePerRow(const VertexOut &left, const VertexOut &right)
         if (m_config->m_depthTesting)
         {
             float depth = m_config->m_backBuffer->GetPixelDepth(current.posProj.x, current.posProj.y);
+
             if (current.posProj.z > depth)
                 continue; // fail to pass the depth testing
+
             m_config->m_backBuffer->SetPixelDepth(current.posProj.x, current.posProj.y, current.posProj.z);
         }
         if (current.posProj.x < 0 || current.posProj.y < 0)

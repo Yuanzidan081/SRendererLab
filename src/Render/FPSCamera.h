@@ -63,7 +63,7 @@ public:
     void RotatePitch(float angle);
     void RotateYaw(float angle);
 
-    void Zoom(float fov);
+    void Zoom(float delta);
 
     void UpdateCameraVectors();
 

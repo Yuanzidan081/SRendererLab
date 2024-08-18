@@ -35,7 +35,7 @@ void Application::Run()
     // cubeMdl.SetMaterial(
     cubeMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/cube/container.jpg"));
     cubeMdl.SetShader(shader);
-    cubeMdl.SetTranslate(Vec3(3.0f, -1.0f, -1.0f));
+    cubeMdl.SetTranslate(Vec3(1.0f, -1.0f, -1.0f));
     m_pipeline->m_config->AddModel(&cubeMdl);
 
     Model floorMdl(Mesh::CreateFloor(4.3, -1.5), "floor");
@@ -52,13 +52,27 @@ void Application::Run()
     neptune.SetScale(Vec3(2.0f, 2.0f, 2.0f));
     m_pipeline->m_config->AddModel(&neptune);
 
+    // m_pipeline->m_config->m_cubeMap = new CubeMap(
+    //     new Texture2D(curPath + "res/skybox_sea/right.jpg"),
+    //     new Texture2D(curPath + "res/skybox_sea/left.jpg"),
+    //     new Texture2D(curPath + "res/skybox_sea/top.jpg"),
+    //     new Texture2D(curPath + "res/skybox_sea/bottom.jpg"),
+    //     new Texture2D(curPath + "res/skybox_sea/back.jpg"),
+    //     new Texture2D(curPath + "res/skybox_sea/front.jpg"));
+    // m_pipeline->m_config->m_cubeMap = new CubeMap(
+    //     new Texture2D(curPath + "res/skybox_room/m0_px.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_nx.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_py.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_ny.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_nz.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_pz.jpg"));
     m_pipeline->m_config->m_cubeMap = new CubeMap(
-        new Texture2D(curPath + "res/skybox/right.jpg"),
-        new Texture2D(curPath + "res/skybox/left.jpg"),
-        new Texture2D(curPath + "res/skybox/top.jpg"),
-        new Texture2D(curPath + "res/skybox/bottom.jpg"),
-        new Texture2D(curPath + "res/skybox/front.jpg"),
-        new Texture2D(curPath + "res/skybox/back.jpg"));
+        new Texture2D(curPath + "res/skybox_avenue/posx.bmp"),
+        new Texture2D(curPath + "res/skybox_avenue/negx.bmp"),
+        new Texture2D(curPath + "res/skybox_avenue/posy.bmp"),
+        new Texture2D(curPath + "res/skybox_avenue/negy.bmp"),
+        new Texture2D(curPath + "res/skybox_avenue/negz.bmp"),
+        new Texture2D(curPath + "res/skybox_avenue/posz.bmp"));
 
     // pipeline settings
 

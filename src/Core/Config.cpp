@@ -11,6 +11,7 @@ Config::Config() : m_depthTesting(true),
                    m_backFaceCulling(true),
                    m_useSkyBox(true),
                    m_viewCull(true),
+
                    m_width(0),
                    m_height(0),
                    m_backBuffer(nullptr),
@@ -111,6 +112,4 @@ void Config::Initialize(int width, int height)
     m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 10.0f));
     m_skyBox = new Model(Mesh::CreateBox(2.0f, 2.0f, 2.0f), "skybox");
     m_skyBox->SetShader(SkyBoxShader::GetInstance());
-    m_projectionMat = m_fpsCamera->GetPerspectiveMatrix();
-    m_viewMat = m_fpsCamera->GetViewMatrix();
 }

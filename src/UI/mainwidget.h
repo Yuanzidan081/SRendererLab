@@ -42,7 +42,8 @@ private:
     // mouseMove
     bool m_firstMouseMove;
     QPoint m_preMousePos;
-    float m_speed = 0.1f;
+    float m_rotateSpeed = 0.1f;
+    float m_scaleSpeed = 0.01f;
     float m_deltaX, m_deltaY;
     // mousePress and mouseRelease
     QTimer *m_inputTimer;

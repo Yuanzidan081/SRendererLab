@@ -31,7 +31,7 @@ public:
     bool m_backFaceCulling;
     bool m_useSkyBox;
     bool m_viewCull;
-
+    
     FaceCullMode m_faceCullMode;
 
     // creted by pipeline
@@ -41,8 +41,6 @@ public:
     FrameBuffer *m_frontBuffer;
     PolygonMode m_polygonMode;
     Mat4x4 m_viewPortMat;
-    Mat4x4 m_projectionMat;
-    Mat4x4 m_viewMat;
 
     Vec3 m_eyePos;
     Shader *m_shader;

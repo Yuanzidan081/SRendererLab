@@ -110,10 +110,9 @@ bool MainWidget::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == ui->imageWidget)
     {
-        QMouseEvent *mouseEvent;
         if (event->type() == QEvent::MouseMove)
         {
-            mouseEvent = static_cast<QMouseEvent *>(event);
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (!(mouseEvent->buttons() & Qt::LeftButton))
                 m_firstMouseMove = true;
             if (m_firstMouseMove)
@@ -127,12 +126,19 @@ bool MainWidget::eventFilter(QObject *watched, QEvent *event)
                 m_preMousePos = mouseEvent->pos();
                 if (mouseEvent->buttons() & Qt::LeftButton)
                 {
-                    m_deltaX = m_speed * delta.x();
-                    m_deltaY = m_speed * delta.y();
+                    m_deltaX = m_rotateSpeed * delta.x();
+                    m_deltaY = m_rotateSpeed * delta.y();
                     m_config->m_fpsCamera->RotateYaw(-m_deltaX);
                     m_config->m_fpsCamera->RotatePitch(-m_deltaY);
                 }
             }
+        }
+        else if (event->type() == QEvent::Wheel)
+        {
+            QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
+            float delta = m_scaleSpeed * wheelEvent->delta();
+            // std::cout << delta << std::endl;
+            m_config->m_fpsCamera->Zoom(-delta);
         }
     }
     return QWidget::eventFilter(watched, event);

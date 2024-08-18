@@ -26,8 +26,6 @@ public:
     Vec3 Right() const;
 
 private:
-    // void Update();
-
     Mat4x4 m_viewMatrix;
     bool m_updateFlag;
     Vec3 m_translation;
@@ -43,7 +41,7 @@ public:
                    float fov = 45.0f,
                    int w = 500,
                    int h = 500,
-                   float near = 0.3f,
+                   float near = 0.01f,
                    float far = 100.0f);
     ~EulerFPSCamera() = default;
 

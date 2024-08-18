@@ -43,6 +43,14 @@ void Application::Run()
     floorMdl.SetShader(shader);
     m_pipeline->m_config->AddModel(&floorMdl);
 
+    Model sphereMdl(curPath + "obj/sphere/sphere.obj");
+    sphereMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/sphere/sphere_diffuse.png"));
+    sphereMdl.SetShader(shader);
+    sphereMdl.SetTranslate(Vec3(-2.0f, 0.0f, 0.0f));
+    sphereMdl.SetScale(Vec3(0.5f, 0.5f, 0.5f));
+
+    m_pipeline->m_config->AddModel(&sphereMdl);
+
     Model neptune(curPath + "obj/neptune/neptune.obj");
     neptune.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_mouse.jpg"));
     neptune.m_objects[1].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex002f_body01.jpg"));

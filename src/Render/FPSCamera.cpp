@@ -1,5 +1,6 @@
 #include "FPSCamera.h"
 #include "Core/KeyCode.h"
+#include "Algorithm/Clip.h"
 QuaternionFPSCamera::QuaternionFPSCamera(const Vec3 &pos) : m_translation(pos), m_updateFlag(true) {}
 
 Mat4x4 QuaternionFPSCamera::GetViewMatrix()
@@ -14,59 +15,6 @@ Mat4x4 QuaternionFPSCamera::GetViewMatrix()
         m_viewMatrix *= trans;
     }
     return m_viewMatrix;
-}
-
-void QuaternionFPSCamera::OnKeyPress(int key)
-{
-    switch (key)
-    {
-    case SKey_W:
-        this->Translate(Forward() * 0.2f);
-        break;
-    case SKey_S:
-        this->Translate(-Forward() * 0.2f);
-        break;
-    case SKey_A:
-        this->Translate(-Right() * 0.2f);
-        break;
-    case SKey_D:
-        this->Translate(+Right() * 0.2f);
-        break;
-    case SKey_Q:
-        this->Translate(Up() * 0.2f);
-        break;
-    case SKey_E:
-        this->Translate(-Up() * 0.2f);
-        break;
-    case SKey_Down:
-        this->Rotate(LocalRight, 1.0f);
-        break;
-    case SKey_Up:
-        this->Rotate(LocalRight, -1.0f);
-        break;
-    case SKey_Left:
-        this->Rotate(LocalUp, -1.0f);
-        break;
-    case SKey_Right:
-        this->Rotate(LocalUp, 1.0f);
-        break;
-
-    default:
-        break;
-    }
-}
-
-void QuaternionFPSCamera::OnWheelMove(double delta)
-{
-}
-
-void QuaternionFPSCamera::OnMouseMove(double deltaX, double deltaY)
-{
-    double speed = 0.1f;
-    deltaX *= speed;
-    deltaY *= speed;
-    this->Rotate(LocalUp, -deltaX);
-    this->Rotate(Right(), -deltaY);
 }
 
 void QuaternionFPSCamera::Translate(const Vec3 &dt)
@@ -120,9 +68,9 @@ Vec3 QuaternionFPSCamera::Right() const
 // }
 
 /* ----------------------- EulerFPSCamera ---------------------------*/
-EulerFPSCamera::EulerFPSCamera(const Vec3 &pos, Vec3 up, Vec3 lookat, float fov, int w, int h)
+EulerFPSCamera::EulerFPSCamera(const Vec3 &pos, Vec3 up, Vec3 lookat, float fov, int w, int h, float near, float far)
     : m_position(pos), m_worldUp(up), m_fov(fov), m_aspect((float)w / h), m_pitch(0), m_yaw(0),
-      m_updateViewFlag(true), m_updatePerspectiveFlag(true)
+      m_updateViewFlag(true), m_updatePerspectiveFlag(true), m_near(near), m_far(far)
 {
 
     m_front = (m_position - lookat).GetNormalize();
@@ -132,6 +80,10 @@ EulerFPSCamera::EulerFPSCamera(const Vec3 &pos, Vec3 up, Vec3 lookat, float fov,
     Vec3 FrontXZ = (Vec3(m_front.x, 0, m_front.z)).GetNormalize();
     m_pitch = rad2deg(atan2(m_front.y, sqrt(m_front.z * m_front.z + m_front.x * m_front.x)));
     m_yaw = rad2deg(atan2(m_front.z, m_front.x));
+
+    Clip::s_near = m_near;
+    Clip::s_far = m_far;
+
     // std::cout << m_pitch << "," << m_yaw << std::endl;
 }
 
@@ -140,6 +92,7 @@ Mat4x4 EulerFPSCamera::GetViewMatrix()
     if (m_updateViewFlag)
     {
         m_updateViewFlag = false;
+        UpdateCameraVectors();
         m_viewMatrix.SetLookAt(m_position, m_front, m_right, m_up);
         // std::cout << m_viewMatrix << std::endl;
     }
@@ -156,90 +109,52 @@ Mat4x4 &EulerFPSCamera::GetPerspectiveMatrix()
     return m_perspectiveMatrix;
 }
 
-void EulerFPSCamera::OnKeyPress(int key)
+void EulerFPSCamera::MoveForward(float distance)
 {
-    switch (key)
-    {
-    case SKey_W:
-        this->Translate(-m_front * 0.2f);
-        break;
-    case SKey_S:
-        this->Translate(m_front * 0.2f);
-        break;
-    case SKey_A:
-        this->Translate(-m_right * 0.2f);
-        break;
-    case SKey_D:
-        this->Translate(+m_right * 0.2f);
-        break;
-    case SKey_Q:
-        this->Translate(m_up * 0.2f);
-        break;
-    case SKey_E:
-        this->Translate(-m_up * 0.2f);
-        break;
-    case SKey_Down:
-        this->RotatePitch(1.0f);
-        break;
-    case SKey_Up:
-        this->RotatePitch(-1.0f);
-        break;
-    case SKey_Left:
-        this->RotateYaw(-1.0f);
-        break;
-    case SKey_Right:
-        this->RotateYaw(1.0f);
-        break;
-    default:
-        break;
-    }
+    m_position += m_front * distance;
+    m_updateViewFlag = true;
 }
 
-void EulerFPSCamera::OnWheelMove(double delta)
+void EulerFPSCamera::MoveRight(float distance)
 {
-    m_fov -= 0.5f;
-    Zoom(m_fov);
+    m_position += m_right * distance;
+    m_updateViewFlag = true;
 }
 
-void EulerFPSCamera::OnMouseMove(double deltaX, double deltaY)
+void EulerFPSCamera::MoveUp(float distance)
 {
-    /* m_yaw += deltaX * 0.1f;
-    m_pitch += deltaY * 0.1f;
-    if (m_pitch > 89.0f)
-        m_pitch = 89.0f;
-    if (m_pitch < -89.0f)
-        m_pitch = -89.0f; */
-    RotateYaw(deltaX * 0.1f);
-    RotatePitch(deltaY * 0.1f);
-    UpdateCameraVectors();
+    m_position += m_up * distance;
+    m_updateViewFlag = true;
 }
 
 void EulerFPSCamera::Translate(const Vec3 &dt)
 {
-    m_updateViewFlag = true;
     m_position += dt;
+    m_updateViewFlag = true;
 }
 
 void EulerFPSCamera::RotatePitch(float angle)
 {
-    m_updateViewFlag = true;
+
     m_pitch += angle;
     if (m_pitch > 89.0)
         m_pitch = 89.0;
     if (m_pitch < -89.0)
         m_pitch = -89.0;
-    UpdateCameraVectors();
+    m_updateViewFlag = true;
+    // UpdateCameraVectors();
 }
 
 void EulerFPSCamera::RotateYaw(float angle)
 {
-    m_updateViewFlag = true;
+
     m_yaw += angle;
     if (m_yaw > 360)
         m_yaw = 0;
     if (m_yaw < 0)
         m_yaw = 360;
-    UpdateCameraVectors();
+    m_updateViewFlag = true;
+    // UpdateCameraVectors();
 }
 
 void EulerFPSCamera::Zoom(float fov)

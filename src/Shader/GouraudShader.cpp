@@ -12,7 +12,7 @@ GouraudShader *GouraudShader::GetInstance()
 
 void GouraudShader::Destroy()
 {
-    // m_uniform = nullptr;
+    m_uniform = nullptr;
 
     if (s_shader)
         delete s_shader;
@@ -22,24 +22,24 @@ void GouraudShader::Destroy()
 VertexOut GouraudShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
-    result.posWorld = m_uniform.m_modelMatrix * in.position;
-    result.posProj = m_uniform.m_projectMatrix * m_uniform.m_viewMatrix * result.posWorld;
+    result.posWorld = m_uniform->m_modelMatrix * in.position;
+    result.posProj = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.posWorld;
     result.color = in.color;
     result.texcoord = in.texcoord;
-    result.normal = m_uniform.m_normalMatrix * Vec4(in.normal);
+    result.normal = m_uniform->m_normalMatrix * Vec4(in.normal);
 
-    if (m_uniform.m_mainTex)
-        result.color = m_uniform.m_mainTex->SampleTexture(result.texcoord);
+    if (m_uniform->m_mainTex)
+        result.color = m_uniform->m_mainTex->SampleTexture(result.texcoord);
     Vec3 amb, diff, spec;
 
-    if (m_uniform.m_lights)
+    if (m_uniform->m_lights)
     {
-        Vec3 eyeDir = m_uniform.m_eyePos - result.posWorld;
+        Vec3 eyeDir = m_uniform->m_eyePos - result.posWorld;
         eyeDir.Normalize();
         Vec3 ambTmp, diffTmp, specTmp;
-        for (int i = 0; i < m_uniform.m_lights->size(); ++i)
+        for (int i = 0; i < m_uniform->m_lights->size(); ++i)
         {
-            (*m_uniform.m_lights)[i]->lighting(*m_uniform.m_material, result.posWorld, result.normal, eyeDir, ambTmp, diffTmp, specTmp);
+            (*m_uniform->m_lights)[i]->lighting(*m_uniform->m_material, result.posWorld, result.normal, eyeDir, ambTmp, diffTmp, specTmp);
             amb += ambTmp;
             diff += diffTmp;
             spec += specTmp;

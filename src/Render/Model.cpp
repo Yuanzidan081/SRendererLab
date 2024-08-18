@@ -43,6 +43,7 @@ Model::Model(Mesh *meshPtr, const std::string &name) : m_objectNum(0), m_minPoin
     m_transform = {Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(1.0f, 1.0f, 1.0f)};
 }
 
+
 void Model::AddObject(const std::string &filename)
 {
     std::ifstream file;

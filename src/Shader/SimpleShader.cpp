@@ -11,7 +11,7 @@ SimpleShader *SimpleShader::GetInstance()
 
 void SimpleShader::Destroy()
 {
-    // m_uniform = nullptr;
+    m_uniform = nullptr;
 
     if (s_shader)
     {
@@ -23,8 +23,8 @@ void SimpleShader::Destroy()
 VertexOut SimpleShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
-    result.posWorld = m_uniform.m_modelMatrix * in.position;
-    result.posProj = m_uniform.m_projectMatrix * m_uniform.m_viewMatrix * result.posWorld;
+    result.posWorld = m_uniform->m_modelMatrix * in.position;
+    result.posProj = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.posWorld;
     result.color = in.color;
     result.normal = in.normal;
     result.texcoord = in.texcoord;
@@ -35,9 +35,9 @@ VertexOut SimpleShader::vertexShader(const Vertex &in)
 Vec4 SimpleShader::fragmentShader(const VertexOut &in)
 {
     Vec4 litColor = in.color;
-    if (m_uniform.m_mainTex)
+    if (m_uniform->m_mainTex)
     {
-        litColor = m_uniform.m_mainTex->SampleTexture(in.texcoord);
+        litColor = m_uniform->m_mainTex->SampleTexture(in.texcoord);
     }
     return litColor;
 }

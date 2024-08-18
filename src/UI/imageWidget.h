@@ -23,9 +23,6 @@ public:
     // void updateFrame();
     void paintEvent(QPaintEvent *event) override;
 
-protected:
-    void mousePressEvent(QMouseEvent *event) override;
-
 public slots:
     void reveiveFrame(unsigned char *image);
 

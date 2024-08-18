@@ -15,8 +15,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
     // 设置窗口标志，禁止缩放
     setFocusPolicy(Qt::StrongFocus);
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-    setMouseTracking(true);
+    this->setMouseTracking(true);
     ui->imageWidget->setMouseTracking(true);
+    ui->imageWidget->installEventFilter(this);
     m_timer = new QTimer(this);
     m_app = new Application(screenWidth, screenHeight);
     m_appThread = new QThread(this);
@@ -32,6 +33,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
     this->setWindowTitle("SRendererLab");
     m_timer->start(1000);
     m_appThread->start();
+
+    m_inputTimer = new QTimer(this);
 }
 
 MainWidget::~MainWidget()
@@ -58,39 +61,81 @@ void MainWidget::DisplayFps()
 
 void MainWidget::keyPressEvent(QKeyEvent *event)
 {
-    int key = event->key();
-    if (ui->imageWidget->hasFocus())
+    m_pressedKeys.append(static_cast<Qt::Key>(event->key()));
+    if (!m_inputTimer->isActive())
     {
-        // std::cout << key << std::endl;
-        switch (key)
-        {
-        case SKey_W:
-        case SKey_S:
-        case SKey_D:
-        case SKey_A:
-        case SKey_Q:
-        case SKey_E:
-        case SKey_Down:
-        case SKey_Up:
-        case SKey_Left:
-        case SKey_Right:
-
-            m_app->OnReceiveKeyEvent(key);
-            break;
-        }
+        m_inputTimer->start(100);
     }
 }
 
-void MainWidget::mouseMoveEvent(QMouseEvent *event)
+void MainWidget::keyReleaseEvent(QKeyEvent *event)
 {
-    // if (ui->imageWidget->underMouse())
-    // {
-    //     ui->lineEdit1->setText("Mouse inside child widget");
-    // }
-    // else
-    // {
-    //     ui->lineEdit1->setText("Mouse not inside child widget");
-    // }
+    if (m_inputTimer->isActive() && !m_pressedKeys.isEmpty())
+    {
+        m_inputTimer->stop();
+        DealInput();
+    }
+    m_pressedKeys.removeAll(static_cast<Qt::Key>(event->key()));
+}
+
+void MainWidget::DealInput()
+{
+    if (m_pressedKeys.contains(Qt::Key_W))
+    {
+        m_config->m_fpsCamera->MoveForward(-0.2);
+    }
+    if (m_pressedKeys.contains(Qt::Key_S))
+    {
+        m_config->m_fpsCamera->MoveForward(0.2);
+    }
+    if (m_pressedKeys.contains(Qt::Key_A))
+    {
+        m_config->m_fpsCamera->MoveRight(-0.2);
+    }
+    if (m_pressedKeys.contains(Qt::Key_D))
+    {
+        m_config->m_fpsCamera->MoveRight(0.2);
+    }
+    if (m_pressedKeys.contains(Qt::Key_Q))
+    {
+        m_config->m_fpsCamera->MoveUp(0.2);
+    }
+    if (m_pressedKeys.contains(Qt::Key_E))
+    {
+        m_config->m_fpsCamera->MoveUp(-0.2);
+    }
+}
+
+bool MainWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == ui->imageWidget)
+    {
+        QMouseEvent *mouseEvent;
+        if (event->type() == QEvent::MouseMove)
+        {
+            mouseEvent = static_cast<QMouseEvent *>(event);
+            if (!(mouseEvent->buttons() & Qt::LeftButton))
+                m_firstMouseMove = true;
+            if (m_firstMouseMove)
+            {
+                m_firstMouseMove = false;
+                m_preMousePos = mouseEvent->pos();
+            }
+            else
+            {
+                QPoint delta = mouseEvent->pos() - m_preMousePos;
+                m_preMousePos = mouseEvent->pos();
+                if (mouseEvent->buttons() & Qt::LeftButton)
+                {
+                    m_deltaX = m_speed * delta.x();
+                    m_deltaY = m_speed * delta.y();
+                    m_config->m_fpsCamera->RotateYaw(-m_deltaX);
+                    m_config->m_fpsCamera->RotatePitch(-m_deltaY);
+                }
+            }
+        }
+    }
+    return QWidget::eventFilter(watched, event);
 }
 
 void MainWidget::DisplayTreeNode()

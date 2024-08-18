@@ -18,6 +18,7 @@ public:
     Material *m_material;
     std::vector<Light *> *m_lights;
     Texture2D *m_mainTex;
+    CubeMap *m_cubeMap;
     Uniform();
     Uniform(const Mat4x4 m,
             const Mat4x4 v,
@@ -28,7 +29,7 @@ class Shader
 
 public:
     Shader() = default;
-    Uniform m_uniform;
+    Uniform *m_uniform;
 
     virtual void Destroy() {}
     virtual ~Shader() = default;
@@ -36,7 +37,7 @@ public:
     virtual VertexOut vertexShader(const Vertex &in) { return VertexOut(); }
     virtual Vec4 fragmentShader(const VertexOut &in) { return Vec4(); }
 
-    void SetUniform(const Uniform &u)
+    void SetUniform(Uniform *u)
     {
         m_uniform = u;
     }

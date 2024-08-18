@@ -7,6 +7,7 @@
 #include "Core/Application.h"
 #include "Core/Config.h"
 #include <QStandardItemModel>
+#include <QVector>
 namespace Ui
 {
     class MainWidget;
@@ -21,8 +22,11 @@ public:
     ~MainWidget();
     void DisplayFps();
 
+protected:
     void keyPressEvent(QKeyEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+    void DealInput();
+    bool eventFilter(QObject *watched, QEvent *event);
 public slots:
     void DisplayTreeNode();
 
@@ -34,6 +38,14 @@ private:
     QTimer *m_timer;
     Config *m_config;
     QStandardItemModel *itemMdl;
-};
 
+    // mouseMove
+    bool m_firstMouseMove;
+    QPoint m_preMousePos;
+    float m_speed = 0.1f;
+    float m_deltaX, m_deltaY;
+    // mousePress and mouseRelease
+    QTimer *m_inputTimer;
+    QVector<Qt::Key> m_pressedKeys;
+};
 #endif // MAINWIDGET_H

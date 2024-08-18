@@ -23,7 +23,6 @@ public:
 
     void Run();
 
-    void OnReceiveKeyEvent(int key);
 signals:
     void frameReady(unsigned char *image);
 

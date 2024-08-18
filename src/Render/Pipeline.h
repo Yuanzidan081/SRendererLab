@@ -45,26 +45,13 @@ public:
     void DrawScene();
     void DrawMesh();
     void DrawModel(Model *model);
+    void DrawSkyBox(Model *model);
     void DrawObject(const Object &obj, Uniform &u);
     Config *m_config;
 
 private:
     // perspectiveDivision
     void PerspectiveDivision(VertexOut &target);
-
-    // linear interpolation
-    VertexOut Lerp(const VertexOut &n1, const VertexOut &n2, double weight);
-
-    // clipping and culling
-    bool BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
-    bool ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
-    void UpdateViewPlanes();
-    void ViewingFrustumPlanes(std::vector<Vec4> &planeParameter, const Mat4x4 &vp);
-    bool IsInsideFrustum(const Vec3 &v, const Vec4 &planeParameter);
-    bool IsInsideViewPort(const Vec4 &lineParameter, const Vec4 &p);
-    bool Pipeline::IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3);
-    VertexOut GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const Vec4 &lineParameter);
-    std::vector<VertexOut> SutherlandHodgeman(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);
 
     // rasterization
     void BresenhamLineRasterization(const VertexOut &from, const VertexOut &to);

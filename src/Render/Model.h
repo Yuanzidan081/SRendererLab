@@ -29,6 +29,7 @@ public:
     ~Model() = default;
     Model(const std::string &path);
     Model(Mesh *meshPtr, const std::string &name = "Unknown");
+
     Model(const Model &model)
         : m_objects(model.m_objects), m_objectNum(model.m_objectNum),
           m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint), m_name(model.m_name),

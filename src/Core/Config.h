@@ -10,6 +10,7 @@ class FrameBuffer;
 class Shader;
 class Light;
 class EulerFPSCamera;
+class CubeMap;
 // 创建单例模式让view可以访问当前渲染的状态
 class Config : public QObject
 {
@@ -24,10 +25,14 @@ public:
     Config &operator=(const Config &) = delete;
 
     void AddModel(Model *model);
-     void Destroy();
+    void Destroy();
     // state settings
     bool m_depthTesting;
     bool m_backFaceCulling;
+    bool m_useSkyBox;
+    bool m_viewCull;
+
+    FaceCullMode m_faceCullMode;
 
     // creted by pipeline
     int m_width;
@@ -36,6 +41,8 @@ public:
     FrameBuffer *m_frontBuffer;
     PolygonMode m_polygonMode;
     Mat4x4 m_viewPortMat;
+    Mat4x4 m_projectionMat;
+    Mat4x4 m_viewMat;
 
     Vec3 m_eyePos;
     Shader *m_shader;
@@ -44,9 +51,15 @@ public:
     const std::vector<Vertex> *m_vertices;
     std::vector<Model *> m_models;
     std::vector<Light *> m_lights;
-    std::vector<Vec4> m_viewPlaneParameters;
-    std::vector<Vec4> m_viewLineParameters;
+    // std::vector<Vec4> m_viewPlaneParameters;
+    // std::vector<Vec4> m_viewLineParameters;
     EulerFPSCamera *m_fpsCamera;
+
+    // skybox
+    Model *m_skyBox;
+
+    // cubeMap
+    CubeMap *m_cubeMap;
     static Config *GetInstance();
     void Initialize(int width, int height);
     void NotifyTreeNodeChanged() { emit TreeNodeChanged(); }

@@ -52,6 +52,14 @@ void Application::Run()
     neptune.SetScale(Vec3(2.0f, 2.0f, 2.0f));
     m_pipeline->m_config->AddModel(&neptune);
 
+    m_pipeline->m_config->m_cubeMap = new CubeMap(
+        new Texture2D(curPath + "res/skybox/right.jpg"),
+        new Texture2D(curPath + "res/skybox/left.jpg"),
+        new Texture2D(curPath + "res/skybox/top.jpg"),
+        new Texture2D(curPath + "res/skybox/bottom.jpg"),
+        new Texture2D(curPath + "res/skybox/front.jpg"),
+        new Texture2D(curPath + "res/skybox/back.jpg"));
+
     // pipeline settings
 
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
@@ -84,10 +92,7 @@ void Application::Run()
         ++m_fps;
     }
 }
-void Application::OnReceiveKeyEvent(int key)
-{
-    m_pipeline->m_config->m_fpsCamera->OnKeyPress(key);
-}
+
 void Application::Stop()
 {
     m_stopped = true;

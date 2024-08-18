@@ -11,7 +11,7 @@ SkyBoxShader *SkyBoxShader::GetInstance()
 
 void SkyBoxShader::Destroy()
 {
-    //m_uniform = nullptr;
+    m_uniform = nullptr;
 
     if (s_shader)
         delete s_shader;
@@ -21,19 +21,20 @@ void SkyBoxShader::Destroy()
 VertexOut SkyBoxShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
-    result.posWorld = m_uniform.m_modelMatrix * in.position;
-    result.posProj = m_uniform.m_projectMatrix * m_uniform.m_viewMatrix * result.posWorld;
+    Mat4x4 rotView = m_uniform->m_viewMatrix.GetNoTranslate();
 
-    result.color = in.color;
-    result.normal = m_uniform.m_normalMatrix * Vec4(in.normal);
-    result.texcoord = in.texcoord;
-
+    result.posWorld = in.position;
+    Vec4 clipPos = m_uniform->m_projectMatrix * rotView * in.position;
+    result.posProj = Vec4(clipPos.x, clipPos.y, clipPos.w, clipPos.w);
     return result;
 }
 
 Vec4 SkyBoxShader::fragmentShader(const VertexOut &in)
 {
-    Vec4 litColor = in.color;
 
+    // Vec3 uv = in.posWorld.GetNormalize3D();
+    Vec4 litColor = in.color;
+    if (m_uniform->m_cubeMap)
+        litColor = m_uniform->m_cubeMap->SampleCubeMap(in.posWorld);
     return litColor;
 }

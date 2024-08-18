@@ -500,6 +500,13 @@ void Mat4x4::SetViewPort(int left, int top, int width, int height)
     entries[1][3] = static_cast<float>(top) + static_cast<float>(height) / 2.0f;
 }
 
+Mat4x4 Mat4x4::GetNoTranslate()
+{
+    Mat4x4 result(*this);
+    result[0][3] = result[1][3] = result[2][3] = 0.0f;
+    return result;
+}
+
 std::ostream &operator<<(std::ostream &os, Mat4x4 &m)
 {
     os << "[";

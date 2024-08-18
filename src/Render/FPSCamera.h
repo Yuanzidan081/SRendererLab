@@ -15,10 +15,6 @@ public:
 
     virtual Vec3 GetPosition() { return m_translation; }
 
-    virtual void OnKeyPress(int key);
-    virtual void OnWheelMove(double delta);
-    virtual void OnMouseMove(double deltaX, double deltaY);
-
     void Translate(const Vec3 &dt);
     void Rotate(const Vec3 &axis, float angle);
 
@@ -46,17 +42,22 @@ public:
                    Vec3 lookat = Vec3(0.0f, 0.0f, 0.0f),
                    float fov = 45.0f,
                    int w = 500,
-                   int h = 500);
+                   int h = 500,
+                   float near = 0.3f,
+                   float far = 100.0f);
     ~EulerFPSCamera() = default;
 
     virtual Mat4x4 GetViewMatrix();
-    Mat4x4& GetPerspectiveMatrix();
+    Mat4x4 &GetPerspectiveMatrix();
     void UpdateFov();
     virtual Vec3 GetPosition() { return m_position; }
 
-    virtual void OnKeyPress(int key);
-    virtual void OnWheelMove(double delta);
-    virtual void OnMouseMove(double deltaX, double deltaY);
+    // virtual void OnKeyPress(int key);
+    // virtual void OnWheelMove(double delta);
+
+    void MoveForward(float distance);
+    void MoveRight(float distance);
+    void MoveUp(float distance);
 
     void Translate(const Vec3 &dt);
     void RotatePitch(float angle);
@@ -65,6 +66,9 @@ public:
     void Zoom(float fov);
 
     void UpdateCameraVectors();
+
+    float m_pitch;
+    float m_yaw;
 
 private:
     // void Update();
@@ -75,8 +79,9 @@ private:
     Vec3 m_worldUp;
     float m_fov;
     float m_aspect;
-    float m_pitch;
-    float m_yaw;
+
+    float m_near;
+    float m_far;
 
     Mat4x4 m_viewMatrix;
     Mat4x4 m_perspectiveMatrix;

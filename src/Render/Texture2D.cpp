@@ -78,3 +78,77 @@ std::ostream &operator<<(std::ostream &out, const Texture2D &texture)
     out << texture.GetWidth() << " " << texture.GetHeight() << " " << texture.GetChannels() << std::endl;
     return out;
 }
+
+CubeMap::CubeMap(Texture2D *rightTex, Texture2D *leftTex,
+                 Texture2D *upTex, Texture2D *bottomTex,
+                 Texture2D *frontTex, Texture2D *backTex)
+{
+    cubeImage.resize(6, nullptr);
+    cubeImage[right].reset(rightTex);
+    cubeImage[left].reset(leftTex);
+    cubeImage[up].reset(upTex);
+    cubeImage[bottom].reset(bottomTex);
+    cubeImage[front].reset(frontTex);
+    cubeImage[back].reset(backTex);
+}
+
+CubeMap::~CubeMap()
+{
+}
+
+Vec4 CubeMap::SampleCubeMap(const Vec3 &dir) const
+{
+    int faceIndex = GetFaceID(dir);
+    Vec2 uv = GetUV(faceIndex, dir);
+    return cubeImage[faceIndex]->SampleTexture(uv);
+}
+
+Vec2 CubeMap::GetUV(int index, const Vec3 &dir) const
+{
+    float u = 0.0f, v = 0.0f, factor;
+    switch (index)
+    {
+    case 0:
+        factor = 1 / dir[0];
+        u = 1 - dir[2] * factor;
+        v = 1 + dir[1] * factor;
+        break;
+    case 1:
+        factor = 1 / dir[1];
+        u = 1 + dir[0] * factor;
+        v = 1 - dir[2] * factor;
+        break;
+    case 2:
+        factor = 1 / dir[2];
+        u = 1 + dir[0] * factor;
+        v = 1 + dir[1] * factor;
+        break;
+    case 3:
+        factor = -1 / dir[0];
+        u = 1 + dir[2] * factor;
+        v = 1 + dir[1] * factor;
+        break;
+    case 4:
+        factor = -1 / dir[1];
+        u = 1 + dir[0] * factor;
+        v = 1 + dir[2] * factor;
+        break;
+    case 5:
+        factor = -1 / dir[2];
+        u = 1 - dir[0] * factor;
+        v = 1 + dir[1] * factor;
+        break;
+    }
+    return Vec2(u / 2, v / 2);
+}
+
+int CubeMap::GetFaceID(const Vec3 &dir) const
+{
+    int AbsMaxInd = 0;
+    for (int i = 1; i < 3; ++i)
+    {
+        if (std::abs(dir[i]) > std::abs(dir[AbsMaxInd]))
+            AbsMaxInd = i;
+    }
+    return AbsMaxInd + (dir[AbsMaxInd] < 0 ? 3 : 0);
+}

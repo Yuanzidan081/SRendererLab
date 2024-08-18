@@ -99,6 +99,7 @@ public:
         return (*this) * (1.0f - factor) * (1.0f - factor) + v2 * 2.0f * factor * (1.0f - factor) + v3 * factor * factor;
     }
     friend std::ostream &operator<<(std::ostream &os, Vec4 &m);
+    Vec3 GetNormalize3D() const;
 };
 std::ostream &operator<<(std::ostream &os, Vec4 &m);
 

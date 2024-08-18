@@ -55,6 +55,12 @@ enum ShadingMode
     Phong
 };
 
+enum FaceCullMode
+{
+    BackFaceCull,
+    FrontFaceCull
+};
+
 const int screenWidth = 500;
 const int screenHeight = 500;
 

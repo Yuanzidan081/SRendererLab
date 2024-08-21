@@ -1,5 +1,4 @@
 #include "FPSCamera.h"
-#include "Core/KeyCode.h"
 #include "Algorithm/Clip.h"
 QuaternionFPSCamera::QuaternionFPSCamera(const Vec3 &pos) : m_translation(pos), m_updateFlag(true) {}
 

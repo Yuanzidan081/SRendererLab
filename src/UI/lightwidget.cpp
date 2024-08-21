@@ -1,5 +1,8 @@
 #include "lightwidget.h"
 #include "ui_lightwidget.h"
+#include <QMenu>
+#include <QDebug>
+#include <QGraphicsDropShadowEffect>
 LightWidget::LightWidget(QWidget *parent) : QWidget(parent),
                                             ui(new Ui::LightWidget)
 {
@@ -10,6 +13,24 @@ LightWidget::LightWidget(QWidget *parent) : QWidget(parent),
     ui->propWidget->setLayout(lightPropLayout);
     ui->addToolButton->setIcon(QIcon(QString("./res/icon/addIcon.png")));
     ui->removeToolButton->setIcon(QIcon(QString("./res/icon/minusIcon.png")));
+
+    // 创建QMenu
+    QMenu *addToolButtonMenu = new QMenu(ui->addToolButton);
+
+    // 添加动作到QMenu
+    QAction *addDirectionLight = new QAction("directional light", addToolButtonMenu);
+    QAction *addPointLight = new QAction("point light", addToolButtonMenu);
+    QAction *addSpotLight = new QAction("spot light", addToolButtonMenu);
+    addToolButtonMenu->addAction(addDirectionLight);
+    addToolButtonMenu->addAction(addPointLight);
+    addToolButtonMenu->addAction(addSpotLight);
+
+    // 设置QToolButton的属性以在点击时显示下拉菜单
+    ui->addToolButton->setMenu(addToolButtonMenu);
+    ui->addToolButton->setPopupMode(QToolButton::InstantPopup);
+
+    connect(ui->lightListView, &QListView::pressed, [&](QModelIndex pos)
+            { emit ChangeSelectedLight(pos.row()); });
 }
 
 LightWidget::~LightWidget()
@@ -42,8 +63,8 @@ void LightWidget::SetModel(QStandardItemModel *model, int selectedIndex, int lig
         // default: if not select, select 0
         if (selectedIndex == -1)
             selectedIndex = 0;
-        QModelIndex firstIndex = model->index(selectedIndex, 0);
-        ui->lightListView->setCurrentIndex(firstIndex);
+        QModelIndex currentIndex = model->index(selectedIndex, 0);
+        ui->lightListView->setCurrentIndex(currentIndex);
     }
 }
 void LightWidget::AddFloat3(QString &mainPropName, QString &prop1Name, QString &prop2Name, QString &prop3Name, Light *&light, Vec3 *val, double minVal, double maxVal)

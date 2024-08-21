@@ -5,6 +5,7 @@
 // #include "window.h"
 #include "imageWidget.h"
 #include "lightWidget.h"
+#include "modelWidget.h"
 
 #include "Core/Application.h"
 #include "Core/Config.h"
@@ -24,17 +25,28 @@ public:
     ~MainWidget();
     void DisplayFps();
 
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
-    void DealInput();
-    bool eventFilter(QObject *watched, QEvent *event);
-
+    // Set up
+    void SetUpModelTabWidget();
     void SetUpLightTabWidget();
 
+    void DealInput();
+
+    void UpdateSelectedLightProperty();
+    void UpdateSelectedModelProperty();
+
+    void SelectedModelChanged(int index);
+
+    void OnChangeSelectedLight(int index);
+
+protected:
+    // system callbacks
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event);
+
 public slots:
-    void UpdateLightProp();
-    void DisplayTreeNode();
+    void UpdateLightWidget();
+    void UpdateModelHierachyListView();
 
 private:
     Ui::MainWidget *ui;
@@ -45,10 +57,14 @@ private:
     Config *m_config;
     QStandardItemModel *m_itemMdl;
     QStandardItemModel *m_itemLight;
+
     int m_selectedLightIndex;
+    int m_selectedModelIndex;
     int m_lightNum;
+    int m_modelNum;
     // UI pointer
     LightWidget *lightWidget;
+    ModelWidget *modelWidget;
 
     // mouseMove
     bool m_firstMouseMove;
@@ -56,6 +72,7 @@ private:
     float m_rotateSpeed = 0.1f;
     float m_scaleSpeed = 0.01f;
     float m_deltaX, m_deltaY;
+
     // mousePress and mouseRelease
     QTimer *m_inputTimer;
     QVector<Qt::Key> m_pressedKeys;

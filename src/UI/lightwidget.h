@@ -28,6 +28,9 @@ public:
     void AddFloat3(QString &mainPropName, QString &prop1Name, QString &prop2Name, QString &prop3Name, Light *&light, Vec3 *val, double minVal = -1000.0, double maxVal = 1000.0);
     void AddFloat(QString &mainPropName, QString &prop1Name, Light *&light, double *val, double minVal = -1000.0, double maxVal = 1000.0);
 
+signals:
+    void ChangeSelectedLight(int selectedIndex);
+
 private:
     Ui::LightWidget *ui;
     QVBoxLayout *lightPropLayout;

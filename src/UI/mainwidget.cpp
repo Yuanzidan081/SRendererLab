@@ -4,10 +4,9 @@
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include <QKeyEvent>
-#include "Core/KeyCode.h"
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
                                           ui(new Ui::MainWidget), m_itemMdl(nullptr), m_itemLight(nullptr),
-                                          m_selectedLightIndex(0), m_lightNum(0)
+                                          m_selectedLightIndex(0), m_lightNum(0), m_selectedModelIndex(0), m_modelNum(0)
 
 {
     m_config = Config::GetInstance();
@@ -25,8 +24,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
 
     connect(m_appThread, &QThread::started, m_app, &Application::Run);
     connect(m_appThread, &QThread::finished, m_app, &QObject::deleteLater);
-    connect(m_config, &Config::TreeNodeChanged, this, &MainWidget::DisplayTreeNode);
-    connect(m_config, &Config::LightChanged, this, &MainWidget::UpdateLightProp);
+    connect(m_config, &Config::TreeNodeChanged, this, &MainWidget::UpdateModelHierachyListView);
+    connect(m_config, &Config::LightChanged, this, &MainWidget::UpdateLightWidget);
 
     m_app->moveToThread(m_appThread);
 
@@ -38,6 +37,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
     m_appThread->start();
 
     m_inputTimer = new QTimer(this);
+    SetUpModelTabWidget();
     SetUpLightTabWidget();
 }
 
@@ -61,6 +61,15 @@ void MainWidget::DisplayFps()
     m_app->ResetFps();
     ui->textEdit->clear();
     ui->textEdit->append(QString(" fps: %1 ").arg(fps));
+}
+
+void MainWidget::OnChangeSelectedLight(int index)
+{
+    if (m_selectedLightIndex != index)
+    {
+        m_selectedLightIndex = index;
+        UpdateLightWidget();
+    }
 }
 
 void MainWidget::keyPressEvent(QKeyEvent *event)
@@ -147,34 +156,30 @@ bool MainWidget::eventFilter(QObject *watched, QEvent *event)
     }
     return QWidget::eventFilter(watched, event);
 }
-
+void MainWidget::SetUpModelTabWidget()
+{
+    QWidget *modelWidgetPage = new QWidget();
+    QVBoxLayout *modelWidgetLayout = new QVBoxLayout(modelWidgetPage);
+    modelWidget = new ModelWidget();
+    modelWidgetLayout->setContentsMargins(0, 0, 0, 0);
+    modelWidgetLayout->addWidget(modelWidget);
+    ui->propTabWidget->insertTab(0, modelWidgetPage, "Model");
+    connect(ui->modelListView, &QListView::pressed, this, [&](QModelIndex pos)
+            { SelectedModelChanged(pos.row()); });
+}
 void MainWidget::SetUpLightTabWidget()
 {
-
     QWidget *lightWidgetPage = new QWidget();
-
     QVBoxLayout *lightWidgetLayout = new QVBoxLayout(lightWidgetPage);
     lightWidget = new LightWidget();
     lightWidgetLayout->setContentsMargins(0, 0, 0, 0);
     lightWidgetLayout->addWidget(lightWidget);
-    ui->propTabWidget->insertTab(0, lightWidgetPage, "Light");
+    ui->propTabWidget->insertTab(1, lightWidgetPage, "Light");
+    connect(lightWidget, static_cast<void (LightWidget::*)(int)>(&LightWidget::ChangeSelectedLight), this, static_cast<void (MainWidget::*)(int)>(&MainWidget::OnChangeSelectedLight));
 }
 
-void MainWidget::UpdateLightProp()
+void MainWidget::UpdateSelectedLightProperty()
 {
-    if (m_itemLight)
-        delete m_itemLight;
-    m_itemLight = new QStandardItemModel(this);
-    m_lightNum = m_config->m_lights.size();
-    for (size_t i = 0; i < m_lightNum; ++i)
-    {
-        QString lightName = static_cast<QString>(m_config->m_lights[i]->m_name.c_str());
-        QStandardItem *lightItem = new QStandardItem(lightName);
-        m_itemLight->appendRow(lightItem);
-    }
-    if (m_lightNum == 0)
-        m_selectedLightIndex = -1;
-    lightWidget->SetModel(m_itemLight, m_selectedLightIndex, m_lightNum);
     if (m_selectedLightIndex != -1)
     {
         Light *&light = m_config->m_lights[m_selectedLightIndex];
@@ -211,16 +216,49 @@ void MainWidget::UpdateLightProp()
     }
 }
 
-void MainWidget::DisplayTreeNode()
+void MainWidget::UpdateSelectedModelProperty()
+{
+    if (m_selectedModelIndex != -1)
+    {
+    }
+}
+
+void MainWidget::SelectedModelChanged(int index)
+{
+    qDebug() << index;
+}
+
+void MainWidget::UpdateLightWidget()
+{
+
+    if (m_itemLight)
+        delete m_itemLight;
+    m_itemLight = new QStandardItemModel(this);
+    m_lightNum = m_config->m_lights.size();
+    for (size_t i = 0; i < m_lightNum; ++i)
+    {
+        QString lightName = static_cast<QString>(m_config->m_lights[i]->m_name.c_str());
+        QStandardItem *lightItem = new QStandardItem(lightName);
+        m_itemLight->appendRow(lightItem);
+    }
+    if (m_lightNum == 0)
+        m_selectedLightIndex = -1;
+    lightWidget->SetModel(m_itemLight, m_selectedLightIndex, m_lightNum);
+    UpdateSelectedLightProperty();
+}
+
+void MainWidget::UpdateModelHierachyListView()
 {
     if (m_itemMdl)
         delete m_itemMdl;
     m_itemMdl = new QStandardItemModel(this);
+    m_modelNum = 0;
     for (size_t i = 0; i < m_config->m_models.size(); ++i)
     {
         QString mdl = static_cast<QString>(m_config->m_models[i]->m_name.c_str());
         QStandardItem *mdlItem = new QStandardItem(mdl);
         m_itemMdl->appendRow(mdlItem);
+        ++m_modelNum;
         if (m_config->m_models[i]->m_objectNum > 1)
         {
             for (int j = 0; j < m_config->m_models[i]->m_objectNum; j++)
@@ -228,8 +266,22 @@ void MainWidget::DisplayTreeNode()
                 QString obj = static_cast<QString>(("    " + m_config->m_models[i]->m_objects[j].m_mesh->m_name).c_str());
                 QStandardItem *objItem = new QStandardItem(obj);
                 m_itemMdl->appendRow(objItem);
+                ++m_modelNum;
             }
         }
     }
-    ui->listView->setModel(m_itemMdl);
+    if (m_modelNum == 0)
+        m_selectedModelIndex = -1;
+    ui->modelListView->setModel(m_itemMdl);
+
+    if (m_modelNum > 0)
+    {
+        // default: if not select, select 0
+        if (m_selectedModelIndex == -1)
+            m_selectedModelIndex = 0;
+        QModelIndex currentIndex = m_itemMdl->index(m_selectedModelIndex, 0);
+        ui->modelListView->setCurrentIndex(currentIndex);
+    }
+
+    UpdateSelectedModelProperty();
 }

@@ -27,13 +27,19 @@ public:
     Model() : m_objectNum(0), m_minPoint(Vec3(+10000000000, +10000000000, +10000000000)),
               m_maxPoint(Vec3(-10000000000, -10000000000, -10000000000)) {}
     ~Model() = default;
-    Model(const std::string &path);
+    Model(const std::string &path, const std::string &name = "Unknown");
     Model(Mesh *meshPtr, const std::string &name = "Unknown");
 
-    Model(const Model &model)
+    Model(const Model &model, const std::string &name = "Unknown")
         : m_objects(model.m_objects), m_objectNum(model.m_objectNum),
-          m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint), m_name(model.m_name),
-          m_transform(model.m_transform) {}
+          m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint),
+          m_transform(model.m_transform)
+    {
+        if (name != "Unknown")
+            m_name = name;
+        else
+            m_name = model.m_name;
+    }
 
     Model &operator=(const Model &model)
     {
@@ -51,6 +57,7 @@ public:
         m_objects[id].m_material = m;
     }
     void AddObject(const std::string &path);
+
     void Model::AddObject(Object &obj);
     void SetModelName(const std::string &name)
     {
@@ -72,11 +79,13 @@ public:
                 Transformation::GetRotationX(m_transform.rotation[0]) *
                 Transformation::GetScale(m_transform.scale));
     }
+
     void SetScale(Vec3 &s);
     void SetRotation(Vec3 &r) { m_transform.rotation = r; }
     void SetTranslate(Vec3 &p) { m_transform.position = p; }
 
 private:
+    void BuildTangents(std::vector<Vec4> &tangents, Mesh *mesh, bool hasFileTangent, std::vector<int> &vertID);
     Vec3 m_minPoint,
         m_maxPoint;
 };

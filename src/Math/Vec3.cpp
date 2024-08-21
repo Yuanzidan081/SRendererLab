@@ -34,3 +34,8 @@ std::ostream &operator<<(std::ostream &os, Vec3 &m)
     os << "(" << m.x << ", " << m.y << ", " << m.z << ")" << std::endl;
     return os;
 }
+
+Vec3 operator*(const float rhs, const Vec3 &v)
+{
+    return Vec3(v.x * rhs, v.y * rhs, v.z * rhs);
+}

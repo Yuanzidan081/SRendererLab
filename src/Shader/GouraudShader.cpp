@@ -26,7 +26,7 @@ VertexOut GouraudShader::vertexShader(const Vertex &in)
     result.posProj = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.posWorld;
     result.color = in.color;
     result.texcoord = in.texcoord;
-    result.normal = m_uniform->m_normalMatrix * Vec4(in.normal);
+    result.normal = m_uniform->m_normalMatrix * in.normal;
 
     if (m_uniform->m_mainTex)
         result.color = m_uniform->m_mainTex->SampleTexture(result.texcoord);

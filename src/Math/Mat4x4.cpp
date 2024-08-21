@@ -21,6 +21,14 @@ Mat4x4::Mat4x4(const Mat4x4 &rhs)
     memcpy(entries, rhs.entries, 16 * sizeof(float));
 }
 
+Mat4x4::Mat4x4(const Mat3x3 &rhs)
+{
+    entries[0][0] = rhs[0][0], entries[0][1] = rhs[0][1], entries[0][2] = rhs[0][2], entries[0][3] = 0.0f;
+    entries[1][0] = rhs[1][0], entries[1][1] = rhs[1][1], entries[1][2] = rhs[1][2], entries[1][3] = 0.0f;
+    entries[2][0] = rhs[2][0], entries[2][1] = rhs[2][1], entries[2][2] = rhs[2][2], entries[2][3] = 0.0f;
+    entries[3][0] = 0.0f, entries[3][1] = 0.0f, entries[3][2] = 0.0f, entries[3][3] = 1.0f;
+}
+
 Vec4 Mat4x4::GetRow(int position) const
 {
     switch (position)
@@ -327,6 +335,15 @@ Mat4x4 Mat4x4::GetInverseTranspose() const
     return result;
 }
 
+Mat4x4 Mat4x4::GetNormalMatrix() const
+{
+    Mat4x4 result;
+    result = this->GetInverseTranspose();
+    result[3][0] = result[3][1] = result[3][2] = 0.0f;
+
+    return result;
+}
+
 void Mat4x4::SetTranslation(const Vec3 &translation)
 {
     LoadIdentity();
@@ -500,10 +517,11 @@ void Mat4x4::SetViewPort(int left, int top, int width, int height)
     entries[1][3] = static_cast<float>(top) + static_cast<float>(height) / 2.0f;
 }
 
-Mat4x4 Mat4x4::GetNoTranslate()
+Mat3x3 Mat4x4::GetMat3x3()
 {
-    Mat4x4 result(*this);
-    result[0][3] = result[1][3] = result[2][3] = 0.0f;
+    Mat3x3 result(entries[0][0], entries[0][1], entries[0][2],
+                  entries[1][0], entries[1][1], entries[1][2],
+                  entries[2][0], entries[2][1], entries[2][2]);
     return result;
 }
 

@@ -114,5 +114,6 @@ public:
     friend std::ostream &operator<<(std::ostream &os, Vec3 &m);
 };
 std::ostream &operator<<(std::ostream &os, Vec3 &m);
+Vec3 operator*(const float rhs, const Vec3 &v);
 
 #endif // VEC_2_H

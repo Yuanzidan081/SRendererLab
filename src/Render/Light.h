@@ -6,6 +6,8 @@ class Material;
 class Light
 {
 public:
+    std::string m_tag;
+    std::string m_name;
     Light() = default;
     virtual ~Light() = default;
     virtual void lighting(const Material &material,
@@ -16,13 +18,12 @@ public:
 class DirectionalLight : public Light
 {
 public:
-    std::string m_tag = "Directional Light";
-    std::string m_name = "Default Directional Light";
     Vec3 m_ambient;
     Vec3 m_diffuse;
     Vec3 m_specular;
     Vec3 m_direction;
     virtual ~DirectionalLight() = default;
+
     virtual void lighting(const Material &material,
                           const Vec3 &position, const Vec3 &normal,
                           const Vec3 &eyeDir, Vec3 &ambient, Vec3 &diffuse, Vec3 &specular) const;
@@ -33,14 +34,14 @@ public:
         m_specular = spec;
         m_direction = dir;
         m_direction.Normalize();
+        m_tag = "Directional Light";
+        m_name = "Default Directional Light";
     }
 };
 
 class PointLight : public Light
 {
 public:
-    std::string m_tag = "Point Light";
-    std::string m_name = "Default Point Light";
     Vec3 m_ambient;
     Vec3 m_diffuse;
     Vec3 m_specular;
@@ -58,14 +59,14 @@ public:
         m_specular = spec;
         m_position = pos;
         m_attenuation = atte;
+        m_tag = "Point Light";
+        m_name = "Default Point Light";
     }
 };
 
 class SpotLight : public Light
 {
 public:
-    std::string m_tag = "Spot Light";
-    std::string m_name = "Default Spot Light";
     double m_cutoff, m_outcutoff;
 
     Vec3 m_ambient;
@@ -91,6 +92,8 @@ public:
         m_direction = dir;
         m_direction.Normalize();
         m_attenuation = atte;
+        m_tag = "Spot Light";
+        m_name = "Default Spot Light";
     }
 };
 

@@ -12,12 +12,13 @@ class Uniform
 public:
     Vec3 m_eyePos;
     Mat4x4 m_modelMatrix;
-    Mat4x4 m_normalMatrix;
+    Mat3x3 m_normalMatrix;
     Mat4x4 m_viewMatrix;
     Mat4x4 m_projectMatrix;
     Material *m_material;
     std::vector<Light *> *m_lights;
     Texture2D *m_mainTex;
+    Texture2D *m_normalTex;
     CubeMap *m_cubeMap;
     Uniform();
     Uniform(const Mat4x4 m,

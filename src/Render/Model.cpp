@@ -2,8 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
-Model::Model(const std::string &filename)
+#include "Vertex.h"
+Model::Model(const std::string &filename, const std::string &name)
 {
     std::string fileStr = filename;
     m_objectNum = 0;
@@ -11,7 +11,9 @@ Model::Model(const std::string &filename)
     m_maxPoint = Vec3(-10000000000, -10000000000, -10000000000);
     size_t lastDotPos = fileStr.find_last_of('.');
     size_t lastSlashPos = fileStr.find_last_of("\\/");
-    if (lastDotPos != std::string::npos && lastDotPos > lastSlashPos)
+    if (name != "Unknown")
+        m_name = name;
+    else if (lastDotPos != std::string::npos && lastDotPos > lastSlashPos)
     {
         m_name = fileStr.substr(lastSlashPos + 1, lastDotPos - lastSlashPos - 1); // 文件名
     }
@@ -43,7 +45,6 @@ Model::Model(Mesh *meshPtr, const std::string &name) : m_objectNum(0), m_minPoin
     m_transform = {Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(1.0f, 1.0f, 1.0f)};
 }
 
-
 void Model::AddObject(const std::string &filename)
 {
     std::ifstream file;
@@ -58,10 +59,14 @@ void Model::AddObject(const std::string &filename)
     std::string line;
 
     std::vector<Vec3> vertices;
+    std::vector<int> vertID;
     std::vector<Vec3> normals;
     std::vector<Vec2> texcoords;
+    std::vector<Vec4> tangents;
 
     bool flag = false;
+    bool hasFileTangent = false;
+
     while (!file.eof())
     {
         std::getline(file, line);
@@ -71,9 +76,14 @@ void Model::AddObject(const std::string &filename)
         {
             if (!flag)
             {
+                // add tangent
+                if (m_objectNum != 0)
+                {
+                    BuildTangents(tangents, m_objects[m_objectNum - 1].m_mesh.get(), hasFileTangent, vertID);
+                    hasFileTangent = false;
+                }
                 m_objectNum++;
                 Object o;
-                // o.m_mesh = std::make_shared<Mesh>();
                 m_objects.push_back(o);
 
                 flag = true;
@@ -127,10 +137,32 @@ void Model::AddObject(const std::string &filename)
                 data.texcoord = texcoords[index[1] - 1];
                 data.normal = normals[index[2] - 1];
                 data.color = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+                vertID.push_back(index[0] - 1); // tangent's number is the same as the vertex, so record the vertID
                 int offset = m_objects[m_objectNum - 1].m_mesh->m_vertices.size();
                 m_objects[m_objectNum - 1].m_mesh->m_indices.push_back(offset);
                 m_objects[m_objectNum - 1].m_mesh->m_vertices.push_back(data);
             }
+        }
+        else if (!line.compare(0, 14, "# ext.tangent "))
+        {
+
+            hasFileTangent = true;
+            line = line.substr(14);
+            std::istringstream iss(line);
+            Vec4 tangent;
+            iss >> tangent.x;
+            iss >> tangent.y;
+            iss >> tangent.z;
+            iss >> tangent.w;
+            tangents.push_back(tangent);
+        }
+    }
+    if (!flag)
+    {
+        // add tangnet
+        if (m_objectNum != 0)
+        {
+            BuildTangents(tangents, m_objects[m_objectNum - 1].m_mesh.get(), hasFileTangent, vertID);
         }
     }
 
@@ -150,4 +182,26 @@ void Model::SetScale(Vec3 &s)
     float scaleFactor = 1.0f / length;
 
     m_transform.scale = s * scaleFactor;
+}
+
+void Model::BuildTangents(std::vector<Vec4> &tangents, Mesh *mesh, bool hasFileTangent, std::vector<int> &vertID)
+{
+    if (hasFileTangent)
+    {
+        for (size_t i = 0; i < mesh->m_indices.size(); i += 3)
+        {
+            mesh->m_vertices[i].tangent = tangents[vertID[i]];
+            mesh->m_vertices[i + 1].tangent = tangents[vertID[i + 1]];
+            mesh->m_vertices[i + 2].tangent = tangents[vertID[i + 2]];
+        }
+    }
+    else
+    {
+        for (size_t i = 0; i < mesh->m_indices.size(); i += 3)
+        {
+            mesh->m_vertices[i].tangent = Vertex::CalTangent(mesh->m_vertices[i], mesh->m_vertices[i + 1], mesh->m_vertices[i + 2]);
+            mesh->m_vertices[i + 1].tangent = mesh->m_vertices[i].tangent;
+            mesh->m_vertices[i + 2].tangent = mesh->m_vertices[i].tangent;
+        }
+    }
 }

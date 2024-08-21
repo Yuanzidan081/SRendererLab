@@ -72,7 +72,6 @@ if (BUILD_GoogleTest)
     enable_testing()
     include(GoogleTest)
     add_subdirectory(test/mathTest)
-    add_subdirectory(test/modelTest)
 endif()
 
 

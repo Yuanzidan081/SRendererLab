@@ -27,7 +27,8 @@ VertexOut PhongShader::vertexShader(const Vertex &in)
     result.posProj = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.posWorld;
 
     result.color = in.color;
-    result.normal = m_uniform->m_normalMatrix * Vec4(in.normal);
+    result.normal = m_uniform->m_normalMatrix * in.normal;
+    result.normal.Normalize();
     result.texcoord = in.texcoord;
 
     return result;
@@ -35,6 +36,7 @@ VertexOut PhongShader::vertexShader(const Vertex &in)
 
 Vec4 PhongShader::fragmentShader(const VertexOut &in)
 {
+    // Vec3 normal = in.normal.GetNormalize();
     Vec4 litColor = in.color;
     if (m_uniform->m_mainTex)
         litColor = m_uniform->m_mainTex->SampleTexture(in.texcoord);

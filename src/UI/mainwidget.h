@@ -4,6 +4,8 @@
 #include <QWidget>
 // #include "window.h"
 #include "imageWidget.h"
+#include "lightWidget.h"
+
 #include "Core/Application.h"
 #include "Core/Config.h"
 #include <QStandardItemModel>
@@ -27,7 +29,11 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
     void DealInput();
     bool eventFilter(QObject *watched, QEvent *event);
+
+    void SetUpLightTabWidget();
+
 public slots:
+    void UpdateLightProp();
     void DisplayTreeNode();
 
 private:
@@ -37,7 +43,12 @@ private:
     QThread *m_appThread;
     QTimer *m_timer;
     Config *m_config;
-    QStandardItemModel *itemMdl;
+    QStandardItemModel *m_itemMdl;
+    QStandardItemModel *m_itemLight;
+    int m_selectedLightIndex;
+    int m_lightNum;
+    // UI pointer
+    LightWidget *lightWidget;
 
     // mouseMove
     bool m_firstMouseMove;

@@ -3,6 +3,7 @@
 
 #include "MathUtils.h"
 #include "Vec4.h"
+#include "Mat3x3.h"
 #include <iostream>
 class Mat4x4
 {
@@ -21,6 +22,7 @@ public:
            float e30, float e31, float e32, float e33);
     Mat4x4(const float *rhs);
     Mat4x4(const Mat4x4 &rhs);
+    Mat4x4(const Mat3x3 &rhs);
     ~Mat4x4() = default;
 
     // setter,getter
@@ -58,6 +60,7 @@ public:
     Mat4x4 GetTranspose() const;
     void InvertTranspose();
     Mat4x4 GetInverseTranspose() const;
+    Mat4x4 GetNormalMatrix() const;
 
     // operation on space
     void SetTranslation(const Vec3 &translation);
@@ -72,7 +75,7 @@ public:
     void SetLookAt(Vec3 cameraPos, Vec3 target, Vec3 worldUp);
     void SetLookAt(Vec3 cameraPos, Vec3 front, Vec3 right, Vec3 up);
     void SetViewPort(int left, int bottom, int width, int height);
-    Mat4x4 GetNoTranslate();
+    Mat3x3 GetMat3x3();
 
     friend std::ostream &operator<<(std::ostream &os, Mat4x4 &m);
 };

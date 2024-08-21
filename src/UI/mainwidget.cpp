@@ -6,7 +6,8 @@
 #include <QKeyEvent>
 #include "Core/KeyCode.h"
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
-                                          ui(new Ui::MainWidget), itemMdl(nullptr)
+                                          ui(new Ui::MainWidget), m_itemMdl(nullptr), m_itemLight(nullptr),
+                                          m_selectedLightIndex(0), m_lightNum(0)
 
 {
     m_config = Config::GetInstance();
@@ -25,6 +26,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
     connect(m_appThread, &QThread::started, m_app, &Application::Run);
     connect(m_appThread, &QThread::finished, m_app, &QObject::deleteLater);
     connect(m_config, &Config::TreeNodeChanged, this, &MainWidget::DisplayTreeNode);
+    connect(m_config, &Config::LightChanged, this, &MainWidget::UpdateLightProp);
+
     m_app->moveToThread(m_appThread);
 
     // https://blog.debao.me/2013/08/how-to-use-qthread-in-the-right-way-part-1/
@@ -35,6 +38,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
     m_appThread->start();
 
     m_inputTimer = new QTimer(this);
+    SetUpLightTabWidget();
 }
 
 MainWidget::~MainWidget()
@@ -144,22 +148,88 @@ bool MainWidget::eventFilter(QObject *watched, QEvent *event)
     return QWidget::eventFilter(watched, event);
 }
 
+void MainWidget::SetUpLightTabWidget()
+{
+
+    QWidget *lightWidgetPage = new QWidget();
+
+    QVBoxLayout *lightWidgetLayout = new QVBoxLayout(lightWidgetPage);
+    lightWidget = new LightWidget();
+    lightWidgetLayout->setContentsMargins(0, 0, 0, 0);
+    lightWidgetLayout->addWidget(lightWidget);
+    ui->propTabWidget->insertTab(0, lightWidgetPage, "Light");
+}
+
+void MainWidget::UpdateLightProp()
+{
+    if (m_itemLight)
+        delete m_itemLight;
+    m_itemLight = new QStandardItemModel(this);
+    m_lightNum = m_config->m_lights.size();
+    for (size_t i = 0; i < m_lightNum; ++i)
+    {
+        QString lightName = static_cast<QString>(m_config->m_lights[i]->m_name.c_str());
+        QStandardItem *lightItem = new QStandardItem(lightName);
+        m_itemLight->appendRow(lightItem);
+    }
+    if (m_lightNum == 0)
+        m_selectedLightIndex = -1;
+    lightWidget->SetModel(m_itemLight, m_selectedLightIndex, m_lightNum);
+    if (m_selectedLightIndex != -1)
+    {
+        Light *&light = m_config->m_lights[m_selectedLightIndex];
+        QString tag = static_cast<QString>(light->m_tag.c_str());
+        if (tag == "Directional Light")
+        {
+            lightWidget->Clear();
+            lightWidget->AddFloat3(QString("direction"), QString("x"), QString("y"), QString("z"), light, &(static_cast<DirectionalLight *>(light)->m_direction));
+            lightWidget->AddFloat3(QString("ambient"), QString("x"), QString("y"), QString("z"), light, &(static_cast<DirectionalLight *>(light)->m_ambient), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("diffuse"), QString("x"), QString("y"), QString("z"), light, &(static_cast<DirectionalLight *>(light)->m_diffuse), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("specular"), QString("x"), QString("y"), QString("z"), light, &(static_cast<DirectionalLight *>(light)->m_specular), 0.0, 1.0);
+        }
+        else if (tag == "Point Light")
+        {
+            lightWidget->Clear();
+            lightWidget->AddFloat3(QString("position"), QString("x"), QString("y"), QString("z"), light, &(static_cast<PointLight *>(light)->m_position));
+            lightWidget->AddFloat3(QString("ambient"), QString("x"), QString("y"), QString("z"), light, &(static_cast<PointLight *>(light)->m_ambient), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("diffuse"), QString("x"), QString("y"), QString("z"), light, &(static_cast<PointLight *>(light)->m_diffuse), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("specular"), QString("x"), QString("y"), QString("z"), light, &(static_cast<PointLight *>(light)->m_specular), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("attenuation"), QString("x"), QString("y"), QString("z"), light, &(static_cast<PointLight *>(light)->m_attenuation), 0.0, 1.0);
+        }
+        else if (tag == "Spot Light")
+        {
+            lightWidget->Clear();
+            lightWidget->AddFloat3(QString("position"), QString("x"), QString("y"), QString("z"), light, &(static_cast<SpotLight *>(light)->m_position));
+            lightWidget->AddFloat3(QString("direction"), QString("x"), QString("y"), QString("z"), light, &(static_cast<SpotLight *>(light)->m_direction));
+            lightWidget->AddFloat3(QString("ambient"), QString("x"), QString("y"), QString("z"), light, &(static_cast<SpotLight *>(light)->m_ambient), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("diffuse"), QString("x"), QString("y"), QString("z"), light, &(static_cast<SpotLight *>(light)->m_diffuse), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("specular"), QString("x"), QString("y"), QString("z"), light, &(static_cast<SpotLight *>(light)->m_specular), 0.0, 1.0);
+            lightWidget->AddFloat3(QString("attenuation"), QString("x"), QString("y"), QString("z"), light, &(static_cast<SpotLight *>(light)->m_attenuation), 0.0, 1.0);
+            lightWidget->AddFloat(QString("cutoff"), QString("x"), light, &(static_cast<SpotLight *>(light)->m_cutoff), 0.0, 1.0);
+            lightWidget->AddFloat(QString("outCutoff"), QString("x"), light, &(static_cast<SpotLight *>(light)->m_outcutoff), 0.0, 1.0);
+        }
+    }
+}
+
 void MainWidget::DisplayTreeNode()
 {
-    if (itemMdl)
-        delete itemMdl;
-    itemMdl = new QStandardItemModel(this);
+    if (m_itemMdl)
+        delete m_itemMdl;
+    m_itemMdl = new QStandardItemModel(this);
     for (size_t i = 0; i < m_config->m_models.size(); ++i)
     {
         QString mdl = static_cast<QString>(m_config->m_models[i]->m_name.c_str());
         QStandardItem *mdlItem = new QStandardItem(mdl);
-        itemMdl->appendRow(mdlItem);
-        for (int j = 0; j < m_config->m_models[i]->m_objectNum; j++)
+        m_itemMdl->appendRow(mdlItem);
+        if (m_config->m_models[i]->m_objectNum > 1)
         {
-            QString obj = static_cast<QString>(("    " + m_config->m_models[i]->m_objects[j].m_mesh->m_name).c_str());
-            QStandardItem *objItem = new QStandardItem(obj);
-            itemMdl->appendRow(objItem);
+            for (int j = 0; j < m_config->m_models[i]->m_objectNum; j++)
+            {
+                QString obj = static_cast<QString>(("    " + m_config->m_models[i]->m_objects[j].m_mesh->m_name).c_str());
+                QStandardItem *objItem = new QStandardItem(obj);
+                m_itemMdl->appendRow(objItem);
+            }
         }
     }
-    ui->listView->setModel(itemMdl);
+    ui->listView->setModel(m_itemMdl);
 }

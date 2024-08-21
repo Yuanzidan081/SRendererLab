@@ -21,7 +21,7 @@ void SkyBoxShader::Destroy()
 VertexOut SkyBoxShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
-    Mat4x4 rotView = m_uniform->m_viewMatrix.GetNoTranslate();
+    Mat4x4 rotView = static_cast<Mat4x4>(m_uniform->m_viewMatrix.GetMat3x3());
 
     result.posWorld = in.position;
     Vec4 clipPos = m_uniform->m_projectMatrix * rotView * in.position;

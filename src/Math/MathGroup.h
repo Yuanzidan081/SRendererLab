@@ -5,5 +5,6 @@
 #include "Vec3.h"
 #include "Vec4.h"
 #include "Mat4x4.h"
+#include "Mat3x3.h"
 
 #endif // MATH_GROUP_H

@@ -19,11 +19,22 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+background: &quot;#CFDDEE&quot;;
+}</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_3">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
       <widget class="QGroupBox" name="groupBox_2">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="title">
         <string>节点树</string>
        </property>
@@ -44,7 +55,14 @@
          <number>5</number>
         </property>
         <item>
-         <widget class="QListView" name="listView"/>
+         <widget class="QListView" name="listView">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -137,7 +155,7 @@
       <widget class="QGroupBox" name="groupBox">
        <property name="maximumSize">
         <size>
-         <width>300</width>
+         <width>400</width>
          <height>16777215</height>
         </size>
        </property>
@@ -185,13 +203,28 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>277</width>
+             <width>300</width>
              <height>709</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item>
-             <widget class="QLineEdit" name="lineEdit1"/>
+             <widget class="QTabWidget" name="propTabWidget"/>
             </item>
            </layout>
           </widget>

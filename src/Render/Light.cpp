@@ -8,13 +8,15 @@ void DirectionalLight::lighting(const Material &material,
     // ambient
     ambient = m_ambient;
 
+    // diffuse
     float diff = max(normal.GetDotProduct(-this->m_direction), 0.0f);
     diffuse = m_diffuse * diff;
 
     // specular
     Vec3 halfwayDir = eyeDir - this->m_direction;
     halfwayDir.Normalize();
-    float spec = pow(max(halfwayDir.GetDotProduct(eyeDir), 0.0f), material.m_gloss);
+    float spec = pow(max(halfwayDir.GetDotProduct(normal), 0.0f), material.m_gloss);
+
     specular = m_specular * spec;
 }
 
@@ -65,13 +67,18 @@ void SpotLight::lighting(const Material &material,
     // specular
     Vec3 halfwayDir = eyeDir + lightDir;
     halfwayDir.Normalize();
-    float spec = pow(max(halfwayDir.GetDotProduct(eyeDir), 0.0f), material.m_gloss);
+    float spec = pow(max(halfwayDir.GetDotProduct(normal), 0.0f), material.m_gloss);
     specular = m_specular * spec;
 
     // spotLight
     float theta = lightDir.GetDotProduct(-m_direction);
     float epsilon = (m_cutoff - m_outcutoff);
-    float intensity = (theta - this->m_outcutoff) / epsilon;
+    float intensity;
+    if (epsilon <= 0.0f)
+        intensity = 0.0f;
+    else
+        intensity = (theta - m_outcutoff) / epsilon;
+
     if (intensity < 0.0f)
         intensity = 0.0f;
     if (intensity > 1.0f)

@@ -31,7 +31,7 @@ public:
     bool m_backFaceCulling;
     bool m_useSkyBox;
     bool m_viewCull;
-    
+
     FaceCullMode m_faceCullMode;
 
     // creted by pipeline
@@ -60,9 +60,17 @@ public:
     CubeMap *m_cubeMap;
     static Config *GetInstance();
     void Initialize(int width, int height);
-    void NotifyTreeNodeChanged() { emit TreeNodeChanged(); }
+    void NotifyTreeNodeChanged()
+    {
+        emit TreeNodeChanged();
+    }
+    void NotifyLightChanged()
+    {
+        emit LightChanged();
+    }
 signals:
     void TreeNodeChanged();
+    void LightChanged();
 };
 
 #endif // CONFIG_H

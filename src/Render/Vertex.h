@@ -10,11 +10,13 @@ public:
     Vec4 color;    // vertex color
     Vec2 texcoord; // texture coordinate
     Vec3 normal;   // vertex normal
+    Vec4 tangent;  // vertex tangent
     Vertex() = default;
-    Vertex(Vec4 pos_, Vec4 color_, Vec2 texcoord_, Vec3 normal_)
-        : position(pos_), color(color_), texcoord(texcoord_), normal(normal_) {}
+    Vertex(Vec4 pos_, Vec4 color_, Vec2 texcoord_, Vec3 normal_, Vec4 tangent_)
+        : position(pos_), color(color_), texcoord(texcoord_), normal(normal_), tangent(tangent_) {}
     Vertex(const Vertex &rhs)
-        : position(rhs.position), color(rhs.color), texcoord(rhs.texcoord), normal(rhs.normal) {}
+        : position(rhs.position), color(rhs.color), texcoord(rhs.texcoord), normal(rhs.normal), tangent(rhs.tangent) {}
+    static Vec3 CalTangent(const Vertex &v1, const Vertex &v2, const Vertex &v3);
 };
 class VertexOut
 {
@@ -24,6 +26,7 @@ public:
     Vec2 texcoord; // texture coordinates
     Vec3 normal;   // vertex normal
     Vec4 color;    // vertex color
+
     float oneDivZ;
     VertexOut() = default;
     VertexOut(Vec4 posWorld_, Vec4 posProj_, Vec2 tex_,
@@ -31,6 +34,8 @@ public:
                                                            normal(normal_), color(color_), oneDivZ(oneDivZ_) {}
     VertexOut(const VertexOut &rhs) : posWorld(rhs.posWorld),
                                       posProj(rhs.posProj), texcoord(rhs.texcoord),
-                                      normal(rhs.normal), color(rhs.color), oneDivZ(rhs.oneDivZ) {}
+                                      normal(rhs.normal), color(rhs.color), oneDivZ(rhs.oneDivZ)
+    {
+    }
 };
 #endif // VERTEX_H

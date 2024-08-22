@@ -29,19 +29,17 @@ void PointLight::lighting(const Material &material,
     ambient = m_ambient;
 
     // diffuse
-    Vec3 lightDir = m_position - position;
-    float lightDistance = lightDir.GetLength();
-    lightDir.Normalize();
+    Vec3 lightDir = Normalize(m_position - position);
     float diff = max(normal.GetDotProduct(lightDir), 0.0f);
     diffuse = m_diffuse * diff;
 
     // specular
-    Vec3 halfwayDir = eyeDir + lightDir;
-    halfwayDir.Normalize();
+    Vec3 halfwayDir = Normalize(eyeDir + lightDir);
     float spec = pow(max(halfwayDir.GetDotProduct(normal), 0.0f), material.m_gloss);
     specular = m_specular * spec;
 
     // attenuation
+    float lightDistance = (m_position - position).GetLength();
     float attenuation = 1.0 / (m_attenuation.x +
                                m_attenuation.y * lightDistance +
                                m_attenuation.z * (lightDistance * lightDistance));

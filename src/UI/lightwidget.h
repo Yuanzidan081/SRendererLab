@@ -24,7 +24,7 @@ public:
     explicit LightWidget(QWidget *parent = nullptr);
     ~LightWidget();
     void Clear();
-    void SetModel(QStandardItemModel *model, int selectedIndex, int lightNum);
+    void SetModel(QStandardItemModel *model, int selectedIndex);
     void AddFloat3(QString &mainPropName, QString &prop1Name, QString &prop2Name, QString &prop3Name, Light *&light, Vec3 *val, double minVal = -1000.0, double maxVal = 1000.0);
     void AddFloat(QString &mainPropName, QString &prop1Name, Light *&light, double *val, double minVal = -1000.0, double maxVal = 1000.0);
 

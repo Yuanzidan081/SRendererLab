@@ -55,17 +55,15 @@ void LightWidget::Clear()
     propMap.PropFloat.clear();
 }
 
-void LightWidget::SetModel(QStandardItemModel *model, int selectedIndex, int lightNum)
+void LightWidget::SetModel(QStandardItemModel *model, int selectedIndex)
 {
     ui->lightListView->setModel(model);
-    if (lightNum > 0)
-    {
-        // default: if not select, select 0
-        if (selectedIndex == -1)
-            selectedIndex = 0;
-        QModelIndex currentIndex = model->index(selectedIndex, 0);
-        ui->lightListView->setCurrentIndex(currentIndex);
-    }
+
+    // // default: if not select, select 0
+    if (selectedIndex == -1)
+        return;
+    QModelIndex currentIndex = model->index(selectedIndex, 0);
+    ui->lightListView->setCurrentIndex(currentIndex);
 }
 void LightWidget::AddFloat3(QString &mainPropName, QString &prop1Name, QString &prop2Name, QString &prop3Name, Light *&light, Vec3 *val, double minVal, double maxVal)
 {

@@ -99,6 +99,13 @@ public:
         }
     }
 
+    void operator/=(const Vec3 &rhs)
+    {
+        x /= rhs.x;
+        y /= rhs.y;
+        z /= rhs.z;
+    }
+
     Vec3 operator-() const { return Vec3(-x, -y, -z); }
     Vec3 operator+() const { return *this; }
     Vec3 operator-(float val) const { return Vec3(x - val, y - val, z + val); }
@@ -114,6 +121,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, Vec3 &m);
 };
 std::ostream &operator<<(std::ostream &os, Vec3 &m);
+Vec3 Normalize(const Vec3 &v);
 Vec3 operator*(const float rhs, const Vec3 &v);
 
 #endif // VEC_2_H

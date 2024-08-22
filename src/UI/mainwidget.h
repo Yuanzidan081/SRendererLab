@@ -34,7 +34,7 @@ public:
     void UpdateSelectedLightProperty();
     void UpdateSelectedModelProperty();
 
-    void SelectedModelChanged(int index);
+    void OnChangeSelectedModel(int index);
 
     void OnChangeSelectedLight(int index);
 
@@ -60,8 +60,8 @@ private:
 
     int m_selectedLightIndex;
     int m_selectedModelIndex;
-    int m_lightNum;
-    int m_modelNum;
+    int m_selectedMeshIndex;
+
     // UI pointer
     LightWidget *lightWidget;
     ModelWidget *modelWidget;

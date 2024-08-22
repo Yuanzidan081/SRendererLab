@@ -59,14 +59,14 @@ void Application::Run()
     sphereMdl2.SetTranslate(Vec3(-2.0f, 1.0f, 0.0f));
     m_pipeline->m_config->AddModel(&sphereMdl2);
 
-    // Model neptune(curPath + "obj/neptune/neptune.obj");
-    // neptune.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_mouse.jpg"));
-    // neptune.m_objects[1].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex002f_body01.jpg"));
-    // neptune.m_objects[2].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_body02.jpg"));
-    // neptune.m_objects[3].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex001f_eye.jpg"));
-    // neptune.SetShader(shader);
-    // neptune.SetScale(Vec3(2.0f, 2.0f, 2.0f));
-    // m_pipeline->m_config->AddModel(&neptune);
+    Model neptune(curPath + "obj/neptune/neptune.obj");
+    neptune.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_mouse.jpg"));
+    neptune.m_objects[1].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex002f_body01.jpg"));
+    neptune.m_objects[2].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_body02.jpg"));
+    neptune.m_objects[3].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex001f_eye.jpg"));
+    neptune.SetShader(shader);
+    neptune.SetScale(Vec3(2.0f, 2.0f, 2.0f));
+    m_pipeline->m_config->AddModel(&neptune);
 
     // // m_pipeline->m_config->m_cubeMap = new CubeMap(
     // //     new Texture2D(curPath + "res/skybox_sea/right.jpg"),
@@ -93,20 +93,22 @@ void Application::Run()
     // pipeline settings
 
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
-    // m_pipeline->AddDirectionLight(Vec3(0.2, 0.2, 0.2),
-    //                               Vec3(0.5, 0.5, 0.5),
-    //                               Vec3(1.0, 1.0, 1.0), Vec3(-1, -2, -1));
+    m_pipeline->AddDirectionLight(
+        Vec3(0.05, 0.05, 0.05),
+        Vec3(0.9, 0.1, 0.1),
+        Vec3(0.9, 0.1, 0.1),
+        Vec3(-1, -2, -1));
     m_pipeline->AddPointLight(Vec3(0.2, 0.2, 0.2),
                               Vec3(0.9, 0.1, 0.1),
                               Vec3(0.9, 0.1, 0.1),
-                              Vec3(0.0, 0.0, 0.0),
+                              Vec3(0.0, 3.0, 0.0),
                               Vec3(1.0f, 0.07f, 0.017f));
     m_pipeline->AddSpotLight(
         Vec3(0.1, 0.1, 0.1),
         Vec3(0.9, 0.1, 0.1),
         Vec3(0.9, 0.1, 0.1),
         60.0f,
-        Vec3(0.0, 2.0, 0.0),
+        Vec3(0.0, 5.0, 0.0),
         Vec3(0.0, -3.0, 0.0),
         Vec3(1.0f, 0.07f, 0.017f));
 

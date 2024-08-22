@@ -35,6 +35,19 @@ std::ostream &operator<<(std::ostream &os, Vec3 &m)
     return os;
 }
 
+Vec3 Normalize(const Vec3 &v)
+{
+    float length;
+    float scalefactor;
+    length = v.GetLength();
+    scalefactor = 1.0f / length;
+    Vec3 result = v;
+    result.x *= scalefactor;
+    result.y *= scalefactor;
+    result.z *= scalefactor;
+    return result;
+}
+
 Vec3 operator*(const float rhs, const Vec3 &v)
 {
     return Vec3(v.x * rhs, v.y * rhs, v.z * rhs);

@@ -6,7 +6,7 @@
 #include <QKeyEvent>
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
                                           ui(new Ui::MainWidget), m_itemMdl(nullptr), m_itemLight(nullptr),
-                                          m_selectedLightIndex(0), m_lightNum(0), m_selectedModelIndex(0), m_modelNum(0)
+                                          m_selectedLightIndex(-1), m_selectedModelIndex(-1)
 
 {
     m_config = Config::GetInstance();
@@ -65,10 +65,12 @@ void MainWidget::DisplayFps()
 
 void MainWidget::OnChangeSelectedLight(int index)
 {
+    if (index == -1)
+        return;
     if (m_selectedLightIndex != index)
     {
         m_selectedLightIndex = index;
-        UpdateLightWidget();
+        UpdateSelectedLightProperty();
     }
 }
 
@@ -165,7 +167,7 @@ void MainWidget::SetUpModelTabWidget()
     modelWidgetLayout->addWidget(modelWidget);
     ui->propTabWidget->insertTab(0, modelWidgetPage, "Model");
     connect(ui->modelListView, &QListView::pressed, this, [&](QModelIndex pos)
-            { SelectedModelChanged(pos.row()); });
+            { OnChangeSelectedModel(pos.row()); });
 }
 void MainWidget::SetUpLightTabWidget()
 {
@@ -218,14 +220,42 @@ void MainWidget::UpdateSelectedLightProperty()
 
 void MainWidget::UpdateSelectedModelProperty()
 {
-    if (m_selectedModelIndex != -1)
-    {
-    }
+    std::cout << m_selectedModelIndex << " " << m_selectedMeshIndex << std::endl;
 }
 
-void MainWidget::SelectedModelChanged(int index)
+void MainWidget::OnChangeSelectedModel(int index)
 {
-    qDebug() << index;
+    if (index == -1)
+        return;
+
+    // QModelIndex currentIndex = m_itemMdl->index(index, 0);
+    // ui->modelListView->setCurrentIndex(currentIndex);
+
+    int sb = 0;
+    for (int i = 0; i < m_config->m_models.size(); i++)
+    {
+        if (sb == index)
+        {
+            m_selectedModelIndex = i;
+            m_selectedMeshIndex = -1;
+            UpdateSelectedModelProperty();
+            return;
+        }
+        sb++;
+        for (int j = 0; j < m_config->m_models[i]->m_objects.size(); j++)
+        {
+            if (sb == index)
+            {
+                m_selectedModelIndex = i;
+                m_selectedMeshIndex = j;
+                // ui.matButton->setDisabled(false);
+                UpdateSelectedModelProperty();
+                return;
+            }
+            sb++;
+        }
+    }
+    UpdateSelectedModelProperty();
 }
 
 void MainWidget::UpdateLightWidget()
@@ -234,17 +264,14 @@ void MainWidget::UpdateLightWidget()
     if (m_itemLight)
         delete m_itemLight;
     m_itemLight = new QStandardItemModel(this);
-    m_lightNum = m_config->m_lights.size();
-    for (size_t i = 0; i < m_lightNum; ++i)
+    for (size_t i = 0; i < m_config->m_lights.size(); ++i)
     {
         QString lightName = static_cast<QString>(m_config->m_lights[i]->m_name.c_str());
         QStandardItem *lightItem = new QStandardItem(lightName);
         m_itemLight->appendRow(lightItem);
     }
-    if (m_lightNum == 0)
-        m_selectedLightIndex = -1;
-    lightWidget->SetModel(m_itemLight, m_selectedLightIndex, m_lightNum);
-    UpdateSelectedLightProperty();
+
+    lightWidget->SetModel(m_itemLight, m_selectedLightIndex);
 }
 
 void MainWidget::UpdateModelHierachyListView()
@@ -252,36 +279,19 @@ void MainWidget::UpdateModelHierachyListView()
     if (m_itemMdl)
         delete m_itemMdl;
     m_itemMdl = new QStandardItemModel(this);
-    m_modelNum = 0;
     for (size_t i = 0; i < m_config->m_models.size(); ++i)
     {
         QString mdl = static_cast<QString>(m_config->m_models[i]->m_name.c_str());
         QStandardItem *mdlItem = new QStandardItem(mdl);
         m_itemMdl->appendRow(mdlItem);
-        ++m_modelNum;
-        if (m_config->m_models[i]->m_objectNum > 1)
+
+        for (int j = 0; j < m_config->m_models[i]->m_objectNum; j++)
         {
-            for (int j = 0; j < m_config->m_models[i]->m_objectNum; j++)
-            {
-                QString obj = static_cast<QString>(("    " + m_config->m_models[i]->m_objects[j].m_mesh->m_name).c_str());
-                QStandardItem *objItem = new QStandardItem(obj);
-                m_itemMdl->appendRow(objItem);
-                ++m_modelNum;
-            }
+            QString obj = static_cast<QString>(("    " + m_config->m_models[i]->m_objects[j].m_mesh->m_name).c_str());
+            QStandardItem *objItem = new QStandardItem(obj);
+            m_itemMdl->appendRow(objItem);
         }
     }
-    if (m_modelNum == 0)
-        m_selectedModelIndex = -1;
+
     ui->modelListView->setModel(m_itemMdl);
-
-    if (m_modelNum > 0)
-    {
-        // default: if not select, select 0
-        if (m_selectedModelIndex == -1)
-            m_selectedModelIndex = 0;
-        QModelIndex currentIndex = m_itemMdl->index(m_selectedModelIndex, 0);
-        ui->modelListView->setCurrentIndex(currentIndex);
-    }
-
-    UpdateSelectedModelProperty();
 }

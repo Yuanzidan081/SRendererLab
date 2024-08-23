@@ -24,8 +24,10 @@ public:
     Transform m_transform;
     std::string m_name = "Unknown";
     int m_objectNum;
+    int m_vertexNum;
+    int m_triangleNum;
     Model() : m_objectNum(0), m_minPoint(Vec3(+10000000000, +10000000000, +10000000000)),
-              m_maxPoint(Vec3(-10000000000, -10000000000, -10000000000)) {}
+              m_maxPoint(Vec3(-10000000000, -10000000000, -10000000000)), m_vertexNum(0), m_triangleNum(0) {}
     ~Model() = default;
     Model(const std::string &path, const std::string &name = "Unknown");
     Model(Mesh *meshPtr, const std::string &name = "Unknown");
@@ -33,7 +35,7 @@ public:
     Model(const Model &model, const std::string &name = "Unknown")
         : m_objects(model.m_objects), m_objectNum(model.m_objectNum),
           m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint),
-          m_transform(model.m_transform)
+          m_transform(model.m_transform), m_vertexNum(model.m_vertexNum), m_triangleNum(model.m_triangleNum)
     {
         if (name != "Unknown")
             m_name = name;
@@ -50,6 +52,8 @@ public:
         m_minPoint = model.m_minPoint;
         m_maxPoint = model.m_maxPoint;
         m_name = model.m_name;
+        m_vertexNum = model.m_vertexNum;
+        m_triangleNum = model.m_triangleNum;
         return *this;
     }
     void SetMaterial(const int &id, std::shared_ptr<Material> m)

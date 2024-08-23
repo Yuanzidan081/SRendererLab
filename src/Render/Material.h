@@ -15,7 +15,7 @@ public:
     std::shared_ptr<Texture2D> m_normalTex;
     Shader *m_shader;
 
-    Material() : m_diffuse(Vec4(1.0, 1.0, 1.0, 1.0)),
+    Material() : m_diffuse(Vec4(0.8, 1.0, 1.0, 1.0)),
                  m_specular(Vec4(1.0, 1.0, 1.0, 1.0)),
                  m_gloss(16),
                  m_mainTex(nullptr), m_normalTex(nullptr) {}

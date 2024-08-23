@@ -10,8 +10,11 @@ public:
     std::vector<Vertex> m_vertices;
     std::vector<unsigned int> m_indices;
     std::string m_name = "Unknown";
+    int m_triangleNum;
+    int m_vertexNum;
     Mesh() = default;
-    Mesh(const Mesh &mesh) : m_vertices(mesh.m_vertices), m_indices(mesh.m_indices), m_name(mesh.m_name) {}
+    Mesh(const Mesh &mesh) : m_vertices(mesh.m_vertices), m_indices(mesh.m_indices), m_name(mesh.m_name), m_triangleNum(mesh.m_triangleNum),
+                             m_vertexNum(m_vertexNum) {}
     Mesh &operator=(const Mesh &mesh)
     {
         if (&mesh == this)
@@ -19,6 +22,8 @@ public:
         m_vertices = mesh.m_vertices;
         m_indices = mesh.m_indices;
         m_name = mesh.m_name;
+        m_vertexNum = mesh.m_vertexNum;
+        m_triangleNum = mesh.m_triangleNum;
         return *this;
     }
     ~Mesh() = default;

@@ -19,6 +19,7 @@ public:
     ~FloatWidget();
     void SetProp(const double &val);
     void BindData(double *bindPtr);
+    void BindData(int *bindPtr);
 
 private:
     Ui::FloatWidget *ui;

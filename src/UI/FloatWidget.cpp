@@ -33,3 +33,11 @@ void FloatWidget::BindData(double *bindPtr)
     connect(ui->spinBox1, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [this](double val)
             { if (prop) *prop = val; });
 }
+
+void FloatWidget::BindData(int *bindPtr)
+{
+    prop = reinterpret_cast<double *>(bindPtr);
+    connect(ui->spinBox1, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [this](double val)
+            { if (prop) *(reinterpret_cast<int*>(prop)) = val; });
+    ui->spinBox1->setDecimals(0);
+}

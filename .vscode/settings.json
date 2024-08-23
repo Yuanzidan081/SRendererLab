@@ -80,6 +80,7 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "qkeyevent": "cpp",
-        "qwidget": "cpp"
+        "qwidget": "cpp",
+        "qdoublespinbox": "cpp"
     }
 }

@@ -3,12 +3,11 @@
 #include <sstream>
 #include <iostream>
 #include "Vertex.h"
-Model::Model(const std::string &filename, const std::string &name)
+Model::Model(const std::string &filename, const std::string &name) : m_objectNum(0), m_minPoint(Vec3(+10000000000, +10000000000, +10000000000)),
+                                                                     m_maxPoint(Vec3(-10000000000, -10000000000, -10000000000)), m_vertexNum(0), m_triangleNum(0)
 {
     std::string fileStr = filename;
-    m_objectNum = 0;
-    m_minPoint = Vec3(+10000000000, +10000000000, +10000000000);
-    m_maxPoint = Vec3(-10000000000, -10000000000, -10000000000);
+
     size_t lastDotPos = fileStr.find_last_of('.');
     size_t lastSlashPos = fileStr.find_last_of("\\/");
     if (name != "Unknown")
@@ -37,10 +36,13 @@ Model::Model(const std::string &filename, const std::string &name)
 Model::Model(Mesh *meshPtr, const std::string &name) : m_objectNum(0), m_minPoint(Vec3(+10000000000, +10000000000, +10000000000)),
                                                        m_maxPoint(Vec3(-10000000000, -10000000000, -10000000000)), m_name(name)
 {
+
     m_objectNum++;
     Object o;
     m_objects.push_back(o);
     m_objects[0].m_mesh.reset(meshPtr);
+    m_vertexNum = m_objects[0].m_mesh->m_vertexNum;
+    m_triangleNum = m_objects[0].m_mesh->m_triangleNum;
     m_objects[0].m_mesh->m_name = name + "-element" + std::to_string(m_objectNum);
     m_transform = {Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(1.0f, 1.0f, 1.0f)};
 }
@@ -66,7 +68,8 @@ void Model::AddObject(const std::string &filename)
 
     bool flag = false;
     bool hasFileTangent = false;
-
+    int vertexCount = 0;
+    int triangleCount = 0;
     while (!file.eof())
     {
         std::getline(file, line);
@@ -81,13 +84,18 @@ void Model::AddObject(const std::string &filename)
                 {
                     BuildTangents(tangents, m_objects[m_objectNum - 1].m_mesh.get(), hasFileTangent, vertID);
                     hasFileTangent = false;
+                    m_objects[m_objectNum - 1].m_mesh->m_triangleNum = triangleCount;
+                    m_objects[m_objectNum - 1].m_mesh->m_vertexNum = vertexCount;
                 }
+                vertexCount = 0;
+                triangleCount = 0;
                 m_objectNum++;
                 Object o;
                 m_objects.push_back(o);
 
                 flag = true;
             }
+            ++vertexCount;
             buf >> trash; // trash: filter "v"
             Vec3 vertex;
             buf >> vertex.x >> vertex.y >> vertex.z;
@@ -142,6 +150,8 @@ void Model::AddObject(const std::string &filename)
                 m_objects[m_objectNum - 1].m_mesh->m_indices.push_back(offset);
                 m_objects[m_objectNum - 1].m_mesh->m_vertices.push_back(data);
             }
+
+            ++triangleCount;
         }
         else if (!line.compare(0, 14, "# ext.tangent "))
         {
@@ -163,9 +173,15 @@ void Model::AddObject(const std::string &filename)
         if (m_objectNum != 0)
         {
             BuildTangents(tangents, m_objects[m_objectNum - 1].m_mesh.get(), hasFileTangent, vertID);
+            m_objects[m_objectNum - 1].m_mesh->m_triangleNum = triangleCount;
+            m_objects[m_objectNum - 1].m_mesh->m_vertexNum = vertexCount;
         }
     }
-
+    for (size_t i = 0; i < m_objectNum; ++i)
+    {
+        m_triangleNum += m_objects[m_objectNum - 1].m_mesh->m_triangleNum;
+        m_vertexNum += m_objects[m_objectNum - 1].m_mesh->m_vertexNum;
+    }
     file.close();
     return;
 }

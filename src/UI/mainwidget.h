@@ -34,8 +34,8 @@ public:
     void UpdateSelectedLightProperty();
     void UpdateSelectedModelProperty();
 
+    // response to mouse click
     void OnChangeSelectedModel(int index);
-
     void OnChangeSelectedLight(int index);
 
 protected:

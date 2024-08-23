@@ -3,7 +3,7 @@
 #include <QMenu>
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
-LightWidget::LightWidget(QWidget *parent) : QWidget(parent),
+LightWidget::LightWidget(QWidget *parent) : TabWidget(parent),
                                             ui(new Ui::LightWidget)
 {
     ui->setupUi(this);
@@ -39,22 +39,6 @@ LightWidget::~LightWidget()
     delete ui;
 }
 
-void LightWidget::Clear()
-{
-    for (auto it = propMap.PropVec3.begin(); it != propMap.PropVec3.end(); ++it)
-    {
-        delete it.value();
-        it.value() = nullptr;
-    }
-    for (auto it = propMap.PropFloat.begin(); it != propMap.PropFloat.end(); ++it)
-    {
-        delete it.value();
-        it.value() = nullptr;
-    }
-    propMap.PropVec3.clear();
-    propMap.PropFloat.clear();
-}
-
 void LightWidget::SetModel(QStandardItemModel *model, int selectedIndex)
 {
     ui->lightListView->setModel(model);
@@ -62,10 +46,8 @@ void LightWidget::SetModel(QStandardItemModel *model, int selectedIndex)
     // // default: if not select, select 0
     if (selectedIndex == -1)
         return;
-    QModelIndex currentIndex = model->index(selectedIndex, 0);
-    ui->lightListView->setCurrentIndex(currentIndex);
 }
-void LightWidget::AddFloat3(QString &mainPropName, QString &prop1Name, QString &prop2Name, QString &prop3Name, Light *&light, Vec3 *val, double minVal, double maxVal)
+void LightWidget::AddFloat3(QString &mainPropName, QString &prop1Name, QString &prop2Name, QString &prop3Name, Vec3 *val, double minVal, double maxVal, const QString &tag)
 {
     Float3Widget *propWidget = new Float3Widget(mainPropName, prop1Name, prop2Name, prop3Name, minVal, maxVal, this);
     propWidget->SetProp(*val);
@@ -74,7 +56,7 @@ void LightWidget::AddFloat3(QString &mainPropName, QString &prop1Name, QString &
     propWidget->BindData(val);
 }
 
-void LightWidget::AddFloat(QString &mainPropName, QString &prop1Name, Light *&light, double *val, double minVal, double maxVal)
+void LightWidget::AddFloat(QString &mainPropName, QString &prop1Name, double *val, double minVal, double maxVal, const QString &tag)
 {
     FloatWidget *propWidget = new FloatWidget(mainPropName, prop1Name, minVal, maxVal, this);
     propWidget->SetProp(*val);

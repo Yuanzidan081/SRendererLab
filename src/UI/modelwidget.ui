@@ -40,7 +40,7 @@
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
-       <widget class="QWidget" name="propWidget">
+       <widget class="QWidget" name="transformPropWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -71,7 +71,7 @@
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
-       <widget class="QWidget" name="propWidget_2">
+       <widget class="QWidget" name="meshInfoPropWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -102,7 +102,7 @@
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
-       <widget class="QWidget" name="propWidget_3">
+       <widget class="QWidget" name="materialPropWidget">
         <property name="geometry">
          <rect>
           <x>0</x>

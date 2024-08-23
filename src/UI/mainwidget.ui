@@ -195,11 +195,14 @@ background: &quot;#CFDDEE&quot;;
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
           <property name="lineWidth">
            <number>0</number>
           </property>
           <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOn</enum>
+           <enum>Qt::ScrollBarAsNeeded</enum>
           </property>
           <property name="widgetResizable">
            <bool>true</bool>
@@ -209,7 +212,7 @@ background: &quot;#CFDDEE&quot;;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
+             <width>321</width>
              <height>709</height>
             </rect>
            </property>
@@ -230,7 +233,11 @@ background: &quot;#CFDDEE&quot;;
              <number>0</number>
             </property>
             <item>
-             <widget class="QTabWidget" name="propTabWidget"/>
+             <widget class="QTabWidget" name="propTabWidget">
+              <property name="usesScrollButtons">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

@@ -69,6 +69,15 @@ void LightWidget::AddColorImg3(QString &mainPropName, Vec4 *color)
 {
     ColorImgWidget *propWidget = new ColorImgWidget(mainPropName);
     propWidget->SetProp(*color);
+    propMap.propColorTexture.insert(QString(mainPropName), propWidget);
+    lightPropLayout->addWidget(propWidget);
+    propWidget->BindData(color);
+}
+
+void LightWidget::AddColor(QString &mainPropName, Vec4 *color)
+{
+    ColorWidget *propWidget = new ColorWidget(mainPropName);
+    propWidget->SetProp(*color);
     propMap.propColor.insert(QString(mainPropName), propWidget);
     lightPropLayout->addWidget(propWidget);
     propWidget->BindData(color);

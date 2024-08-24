@@ -1,46 +1,30 @@
-#include "colorimgwidget.h"
-#include "ui_colorimgwidget.h"
-#include <QDebug>
+#include "colorwidget.h"
+#include "ui_colorwidget.h"
+
 #include <QColorDialog>
 #include "Render/Texture2D.h"
 #include <QMenu>
 #include <QAction>
-ColorImgWidget::ColorImgWidget(QWidget *parent) : QWidget(parent),
-                                                  ui(new Ui::ColorImgWidget), m_color(nullptr), m_texture(nullptr)
 
+ColorWidget::ColorWidget(QWidget *parent) : QWidget(parent),
+                                            ui(new Ui::ColorWidget)
 {
     ui->setupUi(this);
 }
 
-ColorImgWidget::ColorImgWidget(QString &name, QWidget *parent) : QWidget(parent),
-                                                                 ui(new Ui::ColorImgWidget)
+ColorWidget::ColorWidget(QString &name, QWidget *parent) : QWidget(parent),
+                                                           ui(new Ui::ColorWidget)
 {
     ui->setupUi(this);
     ui->mainprop->setText(name);
-    // 创建QMenu
-    ui->textureButton->setIcon(QIcon(QString("./res/icon/refresh.png")));
-    QMenu *addTextureMenu = new QMenu(ui->textureButton);
-
-    // // 添加动作到QMenu
-    QAction *addTextureNone = new QAction("None", addTextureMenu);
-    connect(addTextureNone, &QAction::triggered, this, &ColorImgWidget::SetTextureNone);
-
-    QAction *addTextureFromFile = new QAction("From File", addTextureMenu);
-    connect(addTextureNone, &QAction::triggered, this, &ColorImgWidget::SetTextureFromFile);
-    addTextureMenu->addAction(addTextureNone);
-    addTextureMenu->addAction(addTextureFromFile);
-
-    // // 设置QToolButton的属性以在点击时显示下拉菜单
-    ui->textureButton->setMenu(addTextureMenu);
-    ui->textureButton->setPopupMode(QToolButton::InstantPopup);
 }
 
-ColorImgWidget::~ColorImgWidget()
+ColorWidget::~ColorWidget()
 {
     delete ui;
 }
 
-void ColorImgWidget::SetProp(const Vec4 &val)
+void ColorWidget::SetProp(const Vec4 &val)
 {
     QColor qColor = Vec4ToQColor(val);
     qColor.setRgbF(val.r, val.g, val.b, val.a);
@@ -63,14 +47,13 @@ void ColorImgWidget::SetProp(const Vec4 &val)
     ui->colorButton->setStyleSheet(styleSheetColor);
 }
 
-void ColorImgWidget::BindData(Vec4 *bindPtr, Texture2D *texture)
+void ColorWidget::BindData(Vec4 *bindPtr)
 {
     m_color = bindPtr;
-    connect(ui->colorButton, &QToolButton::clicked, this, &ColorImgWidget::OpenColorDialog);
-    m_texture = texture;
+    connect(ui->colorButton, &QToolButton::clicked, this, &ColorWidget::OpenColorDialog);
 }
 
-void ColorImgWidget::OpenColorDialog()
+void ColorWidget::OpenColorDialog()
 {
     QColorDialog colorDlg(this); // 设置颜色对话框
     colorDlg.setGeometry(1200, 250, 300, 280);
@@ -84,31 +67,14 @@ void ColorImgWidget::OpenColorDialog()
     }
 }
 
-void ColorImgWidget::SetTextureNone()
-{
-    // TODO: concurrency
-    // if (m_texture)
-    // {
-    //     m_texture = nullptr;
-    //     using std::swap;
-    //     swap(m_texture, )
-    //     delete m_texture;
-
-    //     }
-}
-
-void ColorImgWidget::SetTextureFromFile()
-{
-}
-
-QColor ColorImgWidget::Vec4ToQColor(const Vec4 &color)
+QColor ColorWidget::Vec4ToQColor(const Vec4 &color)
 {
     QColor qColor;
     qColor.setRgbF(color.r, color.g, color.b, color.a);
     return qColor;
 }
 
-Vec4 ColorImgWidget::QColorToVec4(const QColor &color)
+Vec4 ColorWidget::QColorToVec4(const QColor &color)
 {
     Vec4 result;
     result.r = color.redF();

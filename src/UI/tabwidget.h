@@ -5,6 +5,7 @@
 #include "Float3Widget.h"
 #include "FloatWidget.h"
 #include "colorimgwidget.h"
+#include "colorwidget.h"
 #include <QMap>
 #include <QString>
 namespace Ui
@@ -31,9 +32,10 @@ private:
 protected:
     struct Property
     {
-        QMap<QString, FloatWidget *> PropFloat;    // 浮点数 varying 列表
-        QMap<QString, Float3Widget *> PropVec3;    // 三维矢量 varying 列表
-        QMap<QString, ColorImgWidget *> propColor; // 颜色贴图
+        QMap<QString, FloatWidget *> PropFloat;           // 浮点数 varying 列表
+        QMap<QString, Float3Widget *> PropVec3;           // 三维矢量 varying 列表
+        QMap<QString, ColorImgWidget *> propColorTexture; // 颜色贴图
+        QMap<QString, ColorWidget *> propColor;           // 颜色 varying 列表
     };
     Property propMap;
 };

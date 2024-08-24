@@ -25,6 +25,11 @@ void TabWidget::Clear()
         delete it.value();
         it.value() = nullptr;
     }
+    for (auto it = propMap.propColorTexture.begin(); it != propMap.propColorTexture.end(); ++it)
+    {
+        delete it.value();
+        it.value() = nullptr;
+    }
     for (auto it = propMap.propColor.begin(); it != propMap.propColor.end(); ++it)
     {
         delete it.value();
@@ -32,5 +37,6 @@ void TabWidget::Clear()
     }
     propMap.PropVec3.clear();
     propMap.PropFloat.clear();
+    propMap.propColorTexture.clear();
     propMap.propColor.clear();
 }

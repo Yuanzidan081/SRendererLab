@@ -81,6 +81,7 @@
         "xutility": "cpp",
         "qkeyevent": "cpp",
         "qwidget": "cpp",
-        "qdoublespinbox": "cpp"
+        "qdoublespinbox": "cpp",
+        "qvboxlayout": "cpp"
     }
 }

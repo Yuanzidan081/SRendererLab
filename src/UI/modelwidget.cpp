@@ -69,7 +69,9 @@ void ModelWidget::AddColorImg3(QString &mainPropName, Vec4 *color, const QString
 {
     ColorImgWidget *propWidget = new ColorImgWidget(mainPropName);
     propWidget->SetProp(*color);
-    propMap.propColor.insert(QString(mainPropName), propWidget);
+    propMap.propColorTexture.insert(QString(mainPropName), propWidget);
     GetTargetVBoxLayout(tag)->addWidget(propWidget);
     propWidget->BindData(color);
 }
+
+

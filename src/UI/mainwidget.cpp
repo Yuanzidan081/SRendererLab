@@ -189,18 +189,18 @@ void MainWidget::UpdateSelectedLightProperty()
         lightWidget->Clear();
         if (tag == "DirectionalLight")
         {
-            lightWidget->AddColorImg3(QString("Color"), &(static_cast<DirectionalLight *>(light)->m_color));
+            lightWidget->AddColor(QString("Color"), &(static_cast<DirectionalLight *>(light)->m_color));
             lightWidget->AddFloat3(QString("Direction"), QString("x"), QString("y"), QString("z"), &(static_cast<DirectionalLight *>(light)->m_direction));
         }
         else if (tag == "PointLight")
         {
-            lightWidget->AddColorImg3(QString("Color"), &(static_cast<PointLight *>(light)->m_color));
+            lightWidget->AddColor(QString("Color"), &(static_cast<PointLight *>(light)->m_color));
             lightWidget->AddFloat3(QString("Position"), QString("x"), QString("y"), QString("z"), &(static_cast<PointLight *>(light)->m_position));
             lightWidget->AddFloat3(QString("Attenuation"), QString("x"), QString("y"), QString("z"), &(static_cast<PointLight *>(light)->m_attenuation), 0.0, 1.0);
         }
         else if (tag == "SpotLight")
         {
-            lightWidget->AddColorImg3(QString("Color"), &(static_cast<PointLight *>(light)->m_color));
+            lightWidget->AddColor(QString("Color"), &(static_cast<SpotLight *>(light)->m_color));
             lightWidget->AddFloat3(QString("Position"), QString("x"), QString("y"), QString("z"), &(static_cast<SpotLight *>(light)->m_position));
             lightWidget->AddFloat3(QString("Direction"), QString("x"), QString("y"), QString("z"), &(static_cast<SpotLight *>(light)->m_direction));
             lightWidget->AddFloat3(QString("Attenuation"), QString("x"), QString("y"), QString("z"), &(static_cast<SpotLight *>(light)->m_attenuation), 0.0, 1.0);

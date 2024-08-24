@@ -5,8 +5,10 @@
 #include "Render/Vertex.h"
 #include "Render/Texture2D.h"
 #include <vector>
+
 class Light;
 class Material;
+class LightGroup;
 class Uniform
 {
 public:
@@ -15,8 +17,10 @@ public:
     Mat3x3 m_normalMatrix;
     Mat4x4 m_viewMatrix;
     Mat4x4 m_projectMatrix;
+    Vec4 m_ambient;
     Material *m_material;
     std::vector<Light *> *m_lights;
+    // LightGroup *m_lights;
     Texture2D *m_mainTex;
     Texture2D *m_normalTex;
     CubeMap *m_cubeMap;

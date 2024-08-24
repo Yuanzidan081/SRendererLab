@@ -11,6 +11,7 @@ Config::Config() : m_depthTesting(true),
                    m_backFaceCulling(true),
                    m_useSkyBox(true),
                    m_viewCull(true),
+                   m_faceCullMode(BackFaceCull),
 
                    m_width(0),
                    m_height(0),
@@ -18,18 +19,17 @@ Config::Config() : m_depthTesting(true),
                    m_frontBuffer(nullptr),
                    m_polygonMode(PolygonMode::Fill),
                    m_viewPortMat(),
-                   m_eyePos(Vec3(0, 0, 0)),
                    m_shader(nullptr),
                    m_indices(nullptr),
                    m_vertices(nullptr),
                    m_models(),
                    m_lights(),
-                   //    m_viewPlaneParameters(),
-                   //    m_viewLineParameters(),
                    m_fpsCamera(nullptr),
+
+                   //    m_lightGroup(nullptr),
                    m_skyBox(nullptr),
                    m_cubeMap(nullptr),
-                   m_faceCullMode(BackFaceCull)
+                   m_ambient(Vec4(0.1f, 0.1f, 0.1f, 1.0f))
 {
 }
 Config::~Config()
@@ -54,9 +54,11 @@ void Config::Destroy()
         delete m_cubeMap;
     for (size_t i = 0; i < m_lights.size(); ++i)
     {
-        delete m_lights[i];
+        if (m_lights[i])
+            delete m_lights[i];
         m_lights[i] = nullptr;
     }
+
     /* for (size_t i = 0; i < m_models.size(); ++i)
     {
         delete m_models[i];
@@ -94,22 +96,12 @@ void Config::Initialize(int width, int height)
 {
     m_width = width;
     m_height = height;
-
-    if (m_backBuffer)
-        delete m_backBuffer;
-    if (m_frontBuffer)
-        delete m_frontBuffer;
-    if (m_shader)
-        delete m_shader;
-    if (m_fpsCamera)
-        delete m_fpsCamera;
-
     m_viewPortMat.SetViewPort(0.0f, 0.0f, (float)m_width, (float)m_height);
     m_backBuffer = new FrameBuffer(m_width, m_height);
     m_frontBuffer = new FrameBuffer(m_width, m_height);
     m_shader = SimpleShader::GetInstance();
-    // m_fpsCamera = new EulerFPSCamera(Vec3(1.5f, 1.0f, 10.0f));
-    m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 10.0f));
+    m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 5.0f));
     m_skyBox = new Model(Mesh::CreateBox(2.0f, 2.0f, 2.0f), "skybox");
     m_skyBox->SetShader(SkyBoxShader::GetInstance());
+    // m_lightGroup = new LightGroup();
 }

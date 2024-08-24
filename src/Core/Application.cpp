@@ -90,27 +90,16 @@ void Application::Run()
         new Texture2D(curPath + "res/skybox_avenue/negz.bmp"),
         new Texture2D(curPath + "res/skybox_avenue/posz.bmp"));
 
-    // pipeline settings
-
     m_pipeline->SetPolygonMode(PolygonMode::Fill);
     m_pipeline->AddDirectionLight(
-        Vec3(0.05, 0.05, 0.05),
-        Vec3(0.9, 0.1, 0.1),
-        Vec3(0.9, 0.1, 0.1),
-        Vec3(-1, -2, -1));
-    m_pipeline->AddPointLight(Vec3(0.2, 0.2, 0.2),
-                              Vec3(0.9, 0.1, 0.1),
-                              Vec3(0.9, 0.1, 0.1),
-                              Vec3(0.0, 3.0, 0.0),
-                              Vec3(1.0f, 0.07f, 0.017f));
+        Vec3(1.5, -1, -1), Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    m_pipeline->AddPointLight(Vec3(0.0, 3.0, 0.0),
+                              Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 1.0f, 0.0f, 1.0f));
     m_pipeline->AddSpotLight(
-        Vec3(0.1, 0.1, 0.1),
-        Vec3(0.9, 0.1, 0.1),
-        Vec3(0.9, 0.1, 0.1),
         60.0f,
-        Vec3(0.0, 5.0, 0.0),
-        Vec3(0.0, -3.0, 0.0),
-        Vec3(1.0f, 0.07f, 0.017f));
+        Vec3(0.0, 3.6, 2.4),
+        Vec3(0.0, -5.0, -5.0),
+        Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
     m_pipeline->m_config->NotifyTreeNodeChanged();
     m_pipeline->m_config->NotifyLightChanged();

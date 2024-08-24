@@ -41,7 +41,6 @@ bool Texture2D::LoadTexture(const std::string &filename)
     }
     return m_texelBuffer != nullptr;
 }
-// 如果是3位的channel，返回的最后一位为1就可以了
 const Vec4 Texture2D::SampleTexture(const Vec2 &texCoords) const
 {
 

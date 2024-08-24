@@ -23,8 +23,8 @@ void SimpleShader::Destroy()
 VertexOut SimpleShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
-    result.posWorld = m_uniform->m_modelMatrix * in.position;
-    result.posProj = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.posWorld;
+    result.worldPos = m_uniform->m_modelMatrix * in.position;
+    result.clipPos = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.worldPos;
     result.color = in.color;
     result.normal = in.normal;
     result.texcoord = in.texcoord;

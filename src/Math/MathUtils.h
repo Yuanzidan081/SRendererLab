@@ -32,4 +32,9 @@ T max(T a, T b)
     return a < b ? b : a;
 }
 
+inline float Clamp(float val, float min, float max)
+{
+    return (val > max ? max : (val < min ? min : val));
+}
+
 #endif

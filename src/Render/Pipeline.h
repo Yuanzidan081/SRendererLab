@@ -36,10 +36,10 @@ public:
     // Illumination setting
     void SetPolygonMode(PolygonMode mode) { m_config->m_polygonMode = mode; }
     // Light
-    void AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir);
-    void AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte);
-    void AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff,
-                      Vec3 pos, Vec3 dir, Vec3 atte);
+    void AddDirectionLight(const Vec3 &dir, const Vec4 &color);
+    void AddPointLight(Vec3 pos, Vec3 atte, const Vec4 &color);
+    void AddSpotLight(double cutoff,
+                      Vec3 pos, Vec3 dir, Vec3 atte, const Vec4 &color);
 
     // start the rendering pipeline
     void DrawScene();

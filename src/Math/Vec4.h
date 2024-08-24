@@ -25,6 +25,7 @@ public:
     Vec4(const Vec4 &rhs) : x(rhs.x), y(rhs.y), z(rhs.z), w(rhs.w) {}
     Vec4(const float *ptr) : x(ptr[0]), y(ptr[1]), z(ptr[2]), w(ptr[3]) {}
     Vec4(const Vec3 &rhs) : x(rhs.x), y(rhs.y), z(rhs.z), w(1.0f) {}
+    Vec4(const Vec3 &rhs, float w_) : x(rhs.x), y(rhs.y), z(rhs.z), w(w_) {}
     ~Vec4() = default;
 
     // setter getter
@@ -48,6 +49,7 @@ public:
     Vec4 operator+(const Vec4 &rhs) const { return Vec4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
     Vec4 operator-(const Vec4 &rhs) const { return Vec4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
     Vec4 operator*(const float rhs) const { return Vec4(x * rhs, y * rhs, z * rhs, w * rhs); }
+    Vec4 operator*(const Vec4 &rhs) const { return Vec4(x * rhs.x, y * rhs.y, z * rhs.z, w * rhs.w); }
     Vec4 operator/(const float rhs) const { return (rhs == 0) ? Vec4(0.0f, 0.0f, 0.0f, 0.0f) : Vec4(x / rhs, y / rhs, z / rhs, w / rhs); }
 
     bool operator==(const Vec4 &rhs) const { return (Equal(x, rhs.x) && Equal(y, rhs.y) && Equal(z, rhs.z) && Equal(w, rhs.w)); }

@@ -64,3 +64,12 @@ void LightWidget::AddFloat(QString &mainPropName, QString &prop1Name, double *va
     lightPropLayout->addWidget(propWidget);
     propWidget->BindData(val);
 }
+
+void LightWidget::AddColorImg3(QString &mainPropName, Vec4 *color)
+{
+    ColorImgWidget *propWidget = new ColorImgWidget(mainPropName);
+    propWidget->SetProp(*color);
+    propMap.propColor.insert(QString(mainPropName), propWidget);
+    lightPropLayout->addWidget(propWidget);
+    propWidget->BindData(color);
+}

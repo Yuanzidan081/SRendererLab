@@ -22,34 +22,33 @@ void GouraudShader::Destroy()
 VertexOut GouraudShader::vertexShader(const Vertex &in)
 {
     VertexOut result;
-    result.posWorld = m_uniform->m_modelMatrix * in.position;
-    result.posProj = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.posWorld;
-    result.color = in.color;
+    result.worldPos = m_uniform->m_modelMatrix * in.position;
+    result.clipPos = m_uniform->m_projectMatrix * m_uniform->m_viewMatrix * result.worldPos;
     result.texcoord = in.texcoord;
     result.normal = m_uniform->m_normalMatrix * in.normal;
 
+    Vec3 worldNormal = Normalize(result.normal);
+    Vec4 albedo = in.color;
     if (m_uniform->m_mainTex)
-        result.color = m_uniform->m_mainTex->SampleTexture(result.texcoord);
-    Vec3 amb, diff, spec;
-
-    if (m_uniform->m_lights)
+        albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
+    Vec3 resultColor = m_uniform->m_ambient * albedo;
+    Vec3 worldViewDir = Normalize(Vec3(m_uniform->m_eyePos - result.worldPos));
+    // for (int i = 0; i < m_uniform->m_lights->directionalLightGroup.size(); ++i)
+    //     resultColor += CalDirectionalLight(m_uniform->m_lights->directionalLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, albedo);
+    // for (int i = 0; i < m_uniform->m_lights->pointLightGroup.size(); ++i)
+    //     resultColor += CalPointLight(m_uniform->m_lights->pointLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
+    // for (int i = 0; i < m_uniform->m_lights->spotLightGroup.size(); ++i)
+    //     resultColor += CalSpotLight(m_uniform->m_lights->spotLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
+    for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
-        Vec3 eyeDir = m_uniform->m_eyePos - result.posWorld;
-        eyeDir.Normalize();
-        Vec3 ambTmp, diffTmp, specTmp;
-        for (int i = 0; i < m_uniform->m_lights->size(); ++i)
-        {
-            (*m_uniform->m_lights)[i]->lighting(*m_uniform->m_material, result.posWorld, result.normal, eyeDir, ambTmp, diffTmp, specTmp);
-            amb += ambTmp;
-            diff += diffTmp;
-            spec += specTmp;
-        }
-
-        result.color.x *= (amb.x + diff.x + spec.x);
-        result.color.y *= (amb.y + diff.y + spec.y);
-        result.color.z *= (amb.z + diff.z + spec.z);
-        result.color.w = 1.0f;
+        if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
+            resultColor += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, albedo);
+        else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
+            resultColor += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
+        else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
+            resultColor += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
     }
+    result.color = Vec4(resultColor, 1.0f);
     return result;
 }
 
@@ -57,4 +56,78 @@ Vec4 GouraudShader::fragmentShader(const VertexOut &in)
 {
     Vec4 litColor = in.color;
     return litColor;
+}
+
+Vec3 GouraudShader::CalDirectionalLight(DirectionalLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
+{
+    Vec3 worldLightDir = Normalize(-light->m_direction);
+
+    // ambient
+
+    // diffuse
+    float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
+    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+
+    // specular
+    Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
+    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    Vec3 result = diffuse + specular;
+    return result;
+}
+
+Vec3 GouraudShader::CalPointLight(PointLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+{
+    Vec3 worldLightDir = Normalize(light->m_position - worldPos);
+
+    // ambient
+    Vec4 ambient = m_uniform->m_ambient;
+
+    // diffuse
+    float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
+    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+
+    // specular
+    Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
+    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    // attenuation
+    float lightDistance = (light->m_position - worldPos).GetLength();
+    float attenuation = 1.0 / (light->m_attenuation.x +
+                               light->m_attenuation.y * lightDistance +
+                               light->m_attenuation.z * (lightDistance * lightDistance));
+    Vec3 result = (diffuse + specular) * attenuation;
+    return result;
+}
+
+Vec3 GouraudShader::CalSpotLight(SpotLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+{
+    Vec3 worldLightDir = Normalize(light->m_position - worldPos);
+
+    // ambient
+    Vec4 ambient = m_uniform->m_ambient;
+
+    // diffuse
+    float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
+    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+
+    // specular
+    Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
+    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+
+    // spotLight
+    float theta = worldLightDir.GetDotProduct(-light->m_direction);
+    float epsilon = light->m_cutoff - light->m_outcutoff;
+    float intensity = Clamp((theta - light->m_outcutoff), 0.0f, 1.0f);
+    diffuse *= intensity;
+    specular *= intensity;
+
+    // attenuation
+    float lightDistance = (light->m_position - worldPos).GetLength();
+    float attenuation = 1.0 / (light->m_attenuation.x +
+                               light->m_attenuation.y * lightDistance +
+                               light->m_attenuation.z * (lightDistance * lightDistance));
+    Vec3 result = (diffuse + specular) * attenuation;
+    return result;
 }

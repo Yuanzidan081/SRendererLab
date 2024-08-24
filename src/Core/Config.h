@@ -11,7 +11,8 @@ class Shader;
 class Light;
 class EulerFPSCamera;
 class CubeMap;
-// 创建单例模式让view可以访问当前渲染的状态
+class LightGroup;
+
 class Config : public QObject
 {
     Q_OBJECT
@@ -42,22 +43,24 @@ public:
     PolygonMode m_polygonMode;
     Mat4x4 m_viewPortMat;
 
-    Vec3 m_eyePos;
+    // pipeline
     Shader *m_shader;
-
     const std::vector<unsigned int> *m_indices;
     const std::vector<Vertex> *m_vertices;
+
     std::vector<Model *> m_models;
     std::vector<Light *> m_lights;
-    // std::vector<Vec4> m_viewPlaneParameters;
-    // std::vector<Vec4> m_viewLineParameters;
     EulerFPSCamera *m_fpsCamera;
 
-    // skybox
-    Model *m_skyBox;
+    // LightGroup *m_lightGroup;
 
     // cubeMap
     CubeMap *m_cubeMap;
+    Model *m_skyBox; // skybox
+
+    // eveironment Light
+    Vec4 m_ambient;
+
     static Config *GetInstance();
     void Initialize(int width, int height);
     void NotifyTreeNodeChanged()

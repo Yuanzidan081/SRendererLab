@@ -33,28 +33,34 @@ void Pipeline::SwapFrameBuffer()
     m_config->m_backBuffer = temp;
 }
 
-void Pipeline::AddDirectionLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 dir)
+void Pipeline::AddDirectionLight(const Vec3 &dir, const Vec4 &color)
 {
     DirectionalLight *light = new DirectionalLight();
-    light->SetDirectionalLight(amb, diff, spec, dir);
+    light->SetDirectionalLight(dir, color);
     Light *m_light = light;
     m_config->m_lights.push_back(m_light);
+
+    // m_config->m_lightGroup->directionalLightGroup.push_back(light);
 }
 
-void Pipeline::AddPointLight(Vec3 amb, Vec3 diff, Vec3 spec, Vec3 pos, Vec3 atte)
+void Pipeline::AddPointLight(Vec3 pos, Vec3 atte, const Vec4 &color)
 {
     PointLight *light = new PointLight();
-    light->SetPointLight(amb, diff, spec, pos, atte);
+    light->SetPointLight(pos, atte, color);
     Light *m_light = reinterpret_cast<Light *>(light);
     m_config->m_lights.push_back(m_light);
+
+    // m_config->m_lightGroup->pointLightGroup.push_back(light);
 }
 
-void Pipeline::AddSpotLight(Vec3 amb, Vec3 diff, Vec3 spec, double cutoff, Vec3 pos, Vec3 dir, Vec3 atte)
+void Pipeline::AddSpotLight(double cutoff, Vec3 pos, Vec3 dir, Vec3 atte, const Vec4 &color)
 {
     SpotLight *light = new SpotLight();
-    light->SetSpotLight(amb, diff, spec, pos, dir, atte, cutoff);
+    light->SetSpotLight(pos, dir, atte, cutoff, color);
     Light *m_light = reinterpret_cast<Light *>(light);
     m_config->m_lights.push_back(m_light);
+
+    // m_config->m_lightGroup->spotLightGroup.push_back(light);
 }
 
 void Pipeline::DrawScene()
@@ -95,12 +101,12 @@ void Pipeline::DrawMesh()
             v3 = m_config->m_shader->vertexShader(p3);
         }
         // view culling
-        // if (!ViewCulling(v1.posProj, v2.posProj, v3.posProj))
+        // if (!ViewCulling(v1.clipPos, v2.clipPos, v3.clipPos))
         // {
         //     continue;
         // }
 
-        if (m_config->m_viewCull && !ClipSpaceCull(v1.posProj, v2.posProj, v3.posProj))
+        if (m_config->m_viewCull && !ClipSpaceCull(v1.clipPos, v2.clipPos, v3.clipPos))
         {
             continue;
         }
@@ -125,16 +131,16 @@ void Pipeline::DrawMesh()
             {
                 if (m_config->m_polygonMode == PolygonMode::Fill && m_config->m_backFaceCulling)
                 {
-                    if (!BackFaceClipping(v1.posProj, v2.posProj, v3.posProj, m_config->m_faceCullMode))
+                    if (!BackFaceClipping(v1.clipPos, v2.clipPos, v3.clipPos, m_config->m_faceCullMode))
                         continue;
                 }
             }
             // view port transformation
             {
                 // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
-                v1.posProj = m_config->m_viewPortMat * v1.posProj;
-                v2.posProj = m_config->m_viewPortMat * v2.posProj;
-                v3.posProj = m_config->m_viewPortMat * v3.posProj;
+                v1.clipPos = m_config->m_viewPortMat * v1.clipPos;
+                v2.clipPos = m_config->m_viewPortMat * v2.clipPos;
+                v3.clipPos = m_config->m_viewPortMat * v3.clipPos;
             }
 
             // rasterization and fragment shader stage
@@ -160,7 +166,9 @@ void Pipeline::DrawModel(Model *model)
     for (size_t i = 0; i < model->m_objectNum; ++i)
     {
         Uniform u(model->GetTransform(), m_viewMatrix, m_projectMatrix);
+        u.m_ambient = m_config->m_ambient;
         u.m_lights = &(m_config->m_lights);
+        // u.m_lights = (m_config->m_lightGroup);
         u.m_eyePos = m_config->m_fpsCamera->GetPosition();
         DrawObject(model->m_objects[i], u);
     }
@@ -195,14 +203,14 @@ void Pipeline::DrawObject(const Object &obj, Uniform &u)
 void Pipeline::PerspectiveDivision(VertexOut &target)
 {
     // oneDivzZ to correct lerp
-    target.oneDivZ = 1.0f / target.posProj.w;
+    target.oneDivZ = 1.0f / target.clipPos.w;
 
-    target.posProj /= target.posProj.w;
-    target.posProj.w = 1.0f;
+    target.clipPos /= target.clipPos.w;
+    target.clipPos.w = 1.0f;
     // map from [-1, 1] to [0, 1]
-    target.posProj.z = (target.posProj.z + 1.0f) * 0.5f;
+    target.clipPos.z = (target.clipPos.z + 1.0f) * 0.5f;
 
-    target.posWorld *= target.oneDivZ;
+    target.worldPos *= target.oneDivZ;
     target.texcoord *= target.oneDivZ;
     target.color *= target.oneDivZ;
     target.normal *= target.oneDivZ;
@@ -212,8 +220,8 @@ void Pipeline::PerspectiveDivision(VertexOut &target)
 // https://liolok.com/zhs/bresenham-line-algorithm-and-decision-parameter/
 void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut &to)
 {
-    int dx = to.posProj.x - from.posProj.x;
-    int dy = to.posProj.y - from.posProj.y;
+    int dx = to.clipPos.x - from.clipPos.x;
+    int dy = to.clipPos.y - from.clipPos.y;
     int stepX = 1, stepY = 1;
     // 保证dx和dy都是正的，用来判断斜率，不用除法
     if (dx < 0)
@@ -228,8 +236,8 @@ void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut
     }
     int d2x = 2 * dx, d2y = 2 * dy;
     int d2y_minus_d2x = d2y - d2x;
-    int sx = from.posProj.x;
-    int sy = from.posProj.y;
+    int sx = from.clipPos.x;
+    int sy = from.clipPos.y;
 
     VertexOut tmp;
     // slop < 1
@@ -242,9 +250,9 @@ void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut
             // linear interpolation
             tmp = Lerp(from, to, static_cast<float>(i) / dx);
             float depth = m_config->m_backBuffer->GetPixelDepth(sx, sy);
-            if (tmp.posProj.z > depth)
+            if (tmp.clipPos.z > depth)
                 continue; // fail to pass the depth testing
-            m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
+            m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.clipPos.z);
             // fragment shader
             m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->fragmentShader(tmp));
             sx += stepX;
@@ -264,9 +272,9 @@ void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut
         {
             tmp = Lerp(from, to, static_cast<float>(i) / dy);
             float depth = m_config->m_backBuffer->GetPixelDepth(sx, sy);
-            if (tmp.posProj.z > depth)
+            if (tmp.clipPos.z > depth)
                 continue; // fail to pass the depth testing
-            m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.posProj.z);
+            m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.clipPos.z);
 
             // fragment shader
             m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->fragmentShader(tmp));
@@ -285,35 +293,35 @@ void Pipeline::ScanLinePerRow(const VertexOut &left, const VertexOut &right)
 {
     // scan the line from left to right
     VertexOut current;
-    int length = right.posProj.x - left.posProj.x + 1;
+    int length = right.clipPos.x - left.clipPos.x + 1;
     for (int i = 0; i <= length; ++i)
     {
         float weight = static_cast<float>(i) / length;
         current = Lerp(left, right, weight);
-        current.posProj.x = left.posProj.x + i;
-        current.posProj.y = left.posProj.y;
+        current.clipPos.x = left.clipPos.x + i;
+        current.clipPos.y = left.clipPos.y;
 
         // depth testing
         if (m_config->m_depthTesting)
         {
-            float depth = m_config->m_backBuffer->GetPixelDepth(current.posProj.x, current.posProj.y);
+            float depth = m_config->m_backBuffer->GetPixelDepth(current.clipPos.x, current.clipPos.y);
 
-            if (current.posProj.z > depth)
+            if (current.clipPos.z > depth)
                 continue; // fail to pass the depth testing
 
-            m_config->m_backBuffer->SetPixelDepth(current.posProj.x, current.posProj.y, current.posProj.z);
+            m_config->m_backBuffer->SetPixelDepth(current.clipPos.x, current.clipPos.y, current.clipPos.z);
         }
-        if (current.posProj.x < 0 || current.posProj.y < 0)
+        if (current.clipPos.x < 0 || current.clipPos.y < 0)
             continue;
-        if (current.posProj.x >= m_config->m_width || current.posProj.y >= m_config->m_height)
+        if (current.clipPos.x >= m_config->m_width || current.clipPos.y >= m_config->m_height)
             break;
         float w = 1.0f / current.oneDivZ;
-        current.posWorld *= w;
+        current.worldPos *= w;
         current.color *= w;
         current.texcoord *= w;
         current.normal *= w;
         // fragment shader
-        m_config->m_backBuffer->SetPixelColor(current.posProj.x, current.posProj.y, m_config->m_shader->fragmentShader(current));
+        m_config->m_backBuffer->SetPixelColor(current.clipPos.x, current.clipPos.y, m_config->m_shader->fragmentShader(current));
     }
 }
 void Pipeline::RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
@@ -322,13 +330,13 @@ void Pipeline::RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
     VertexOut right = v3;
     VertexOut dest = v1;
     VertexOut tmp, newleft, newright;
-    if (left.posProj.x > right.posProj.x)
+    if (left.clipPos.x > right.clipPos.x)
     {
         tmp = left;
         left = right;
         right = tmp;
     }
-    int dy = left.posProj.y - dest.posProj.y + 1;
+    int dy = left.clipPos.y - dest.clipPos.y + 1;
 
     for (int i = 0; i < dy; ++i)
     {
@@ -337,7 +345,7 @@ void Pipeline::RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
             weight = static_cast<float>(i) / dy;
         newleft = Lerp(left, dest, weight);
         newright = Lerp(right, dest, weight);
-        newleft.posProj.y = newright.posProj.y = left.posProj.y - i;
+        newleft.clipPos.y = newright.clipPos.y = left.clipPos.y - i;
         ScanLinePerRow(newleft, newright);
     }
 }
@@ -347,13 +355,13 @@ void Pipeline::RasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
     VertexOut right = v2;
     VertexOut dest = v3;
     VertexOut tmp, newleft, newright;
-    if (left.posProj.x > right.posProj.x)
+    if (left.clipPos.x > right.clipPos.x)
     {
         tmp = left;
         left = right;
         right = tmp;
     }
-    int dy = dest.posProj.y - left.posProj.y + 1;
+    int dy = dest.clipPos.y - left.clipPos.y + 1;
 
     for (int i = 0; i < dy; ++i)
     {
@@ -362,7 +370,7 @@ void Pipeline::RasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
             weight = static_cast<float>(i) / dy;
         newleft = Lerp(left, dest, weight);
         newright = Lerp(right, dest, weight);
-        newleft.posProj.y = newright.posProj.y = left.posProj.y + i;
+        newleft.clipPos.y = newright.clipPos.y = left.clipPos.y + i;
         ScanLinePerRow(newleft, newright);
     }
 }
@@ -379,36 +387,36 @@ void Pipeline::EdgeWalkingFillRasterization(const VertexOut &v1, const VertexOut
     //    *  *  vertexOut[1]
     //     *  vertexOut[2]
 
-    if (target[0].posProj.y > target[1].posProj.y)
+    if (target[0].clipPos.y > target[1].clipPos.y)
     {
         tmp = target[0];
         target[0] = target[1];
         target[1] = tmp;
     }
-    if (target[0].posProj.y > target[2].posProj.y)
+    if (target[0].clipPos.y > target[2].clipPos.y)
     {
         tmp = target[0];
         target[0] = target[2];
         target[2] = tmp;
     }
-    if (target[1].posProj.y > target[2].posProj.y)
+    if (target[1].clipPos.y > target[2].clipPos.y)
     {
         tmp = target[1];
         target[1] = target[2];
         target[2] = tmp;
     }
     // bottom triangle
-    if (Equal(target[0].posProj.y, target[1].posProj.y))
+    if (Equal(target[0].clipPos.y, target[1].clipPos.y))
     {
         RasterBottomTriangle(target[0], target[1], target[2]);
     }
-    else if (Equal(target[1].posProj.y, target[2].posProj.y))
+    else if (Equal(target[1].clipPos.y, target[2].clipPos.y))
     {
         RasterTopTriangle(target[0], target[1], target[2]);
     }
     else
     {
-        float weight = static_cast<float>(target[1].posProj.y - target[0].posProj.y) / (target[2].posProj.y - target[0].posProj.y);
+        float weight = static_cast<float>(target[1].clipPos.y - target[0].clipPos.y) / (target[2].clipPos.y - target[0].clipPos.y);
         VertexOut newPoint = Lerp(target[0], target[2], weight);
 
         RasterTopTriangle(target[0], newPoint, target[1]);

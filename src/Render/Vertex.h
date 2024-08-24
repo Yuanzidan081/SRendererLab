@@ -21,19 +21,19 @@ public:
 class VertexOut
 {
 public:
-    Vec4 posWorld; // position in world space
-    Vec4 posProj;  // projected position
+    Vec4 worldPos; // position in world space
+    Vec4 clipPos;  // projected position
     Vec2 texcoord; // texture coordinates
     Vec3 normal;   // vertex normal
     Vec4 color;    // vertex color
 
     float oneDivZ;
     VertexOut() = default;
-    VertexOut(Vec4 posWorld_, Vec4 posProj_, Vec2 tex_,
-              Vec3 normal_, Vec4 color_, float oneDivZ_) : posWorld(posWorld_), posProj(posProj_), texcoord(tex_),
+    VertexOut(Vec4 worldPos_, Vec4 clipPos_, Vec2 tex_,
+              Vec3 normal_, Vec4 color_, float oneDivZ_) : worldPos(worldPos_), clipPos(clipPos_), texcoord(tex_),
                                                            normal(normal_), color(color_), oneDivZ(oneDivZ_) {}
-    VertexOut(const VertexOut &rhs) : posWorld(rhs.posWorld),
-                                      posProj(rhs.posProj), texcoord(rhs.texcoord),
+    VertexOut(const VertexOut &rhs) : worldPos(rhs.worldPos),
+                                      clipPos(rhs.clipPos), texcoord(rhs.texcoord),
                                       normal(rhs.normal), color(rhs.color), oneDivZ(rhs.oneDivZ)
     {
     }

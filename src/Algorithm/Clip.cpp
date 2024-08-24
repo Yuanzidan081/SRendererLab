@@ -130,8 +130,8 @@ bool IsAllVertexsInsideViewPort(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)
 
 VertexOut GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const Vec4 &lineParameter)
 {
-    float da = v1.posProj.x * lineParameter.x + v1.posProj.y * lineParameter.y + v1.posProj.z * lineParameter.z + v1.posProj.w * lineParameter.w;
-    float db = v2.posProj.x * lineParameter.x + v2.posProj.y * lineParameter.y + v2.posProj.z * lineParameter.z + v2.posProj.w * lineParameter.w;
+    float da = v1.clipPos.x * lineParameter.x + v1.clipPos.y * lineParameter.y + v1.clipPos.z * lineParameter.z + v1.clipPos.w * lineParameter.w;
+    float db = v2.clipPos.x * lineParameter.x + v2.clipPos.y * lineParameter.y + v2.clipPos.z * lineParameter.z + v2.clipPos.w * lineParameter.w;
 
     float weight = da / (da - db);
     return Lerp(v1, v2, weight);
@@ -139,7 +139,7 @@ VertexOut GetViewPortIntersect(const VertexOut &v1, const VertexOut &v2, const V
 std::vector<VertexOut> SutherlandHodgeman(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3)
 {
     std::vector<VertexOut> output = {v1, v2, v3};
-    if (IsAllVertexsInsideViewPort(v1.posProj, v2.posProj, v3.posProj))
+    if (IsAllVertexsInsideViewPort(v1.clipPos, v2.clipPos, v3.clipPos))
         return output;
     for (int i = 0; i < m_viewLineParameters.size(); ++i)
     {
@@ -149,16 +149,16 @@ std::vector<VertexOut> SutherlandHodgeman(const VertexOut &v1, const VertexOut &
         {
             VertexOut cur = input[j];
             VertexOut pre = input[(j + input.size() - 1) % input.size()];
-            if (IsInsideViewPort(m_viewLineParameters[i], cur.posProj))
+            if (IsInsideViewPort(m_viewLineParameters[i], cur.clipPos))
             {
-                if (!IsInsideViewPort(m_viewLineParameters[i], pre.posProj))
+                if (!IsInsideViewPort(m_viewLineParameters[i], pre.clipPos))
                 {
                     VertexOut intersecting = GetViewPortIntersect(pre, cur, m_viewLineParameters[i]);
                     output.push_back(intersecting);
                 }
                 output.push_back(cur);
             }
-            else if (IsInsideViewPort(m_viewLineParameters[i], pre.posProj))
+            else if (IsInsideViewPort(m_viewLineParameters[i], pre.clipPos))
             {
                 VertexOut intersecting = GetViewPortIntersect(pre, cur, m_viewLineParameters[i]);
                 output.push_back(intersecting);

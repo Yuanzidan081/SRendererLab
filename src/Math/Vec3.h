@@ -27,6 +27,7 @@ public:
     Vec3() : x(0.0f), y(0.0f), z(0.0f) {}
 
     Vec3(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
+    Vec3(float val) : x(val), y(val), z(val) {}
     Vec3(const Vec3 &rhs) : x(rhs.x), y(rhs.y), z(rhs.z) {}
     Vec3(const Vec4 &rhs);
     Vec3(const float *ptr) : x(ptr[0]), y(ptr[1]), z(ptr[2]) {}
@@ -66,6 +67,7 @@ public:
     Vec3 operator+(const Vec3 &rhs) const { return Vec3(x + rhs.x, y + rhs.y, z + rhs.z); }
     Vec3 operator-(const Vec3 &rhs) const { return Vec3(x - rhs.x, y - rhs.y, z - rhs.z); }
     Vec3 operator*(const float rhs) const { return Vec3(x * rhs, y * rhs, z * rhs); }
+    Vec3 operator*(const Vec3 rhs) const { return Vec3(x * rhs.x, y * rhs.y, z * rhs.z); }
     Vec3 operator/(const float rhs) const { return (rhs == 0) ? Vec3(0.0f, 0.0f, 0.0f) : Vec3(x / rhs, y / rhs, z / rhs); }
 
     bool operator==(const Vec3 &rhs) const { return (Equal(x, rhs.x) && Equal(y, rhs.y) && Equal(z, rhs.z)); }

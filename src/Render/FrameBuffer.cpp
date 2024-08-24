@@ -57,9 +57,9 @@ void FrameBuffer::SetPixelColor(const unsigned int x, const unsigned int y, cons
     // int ind = (m_Height - 1 - y) * m_Width + x; // 把坐标的原点规定在左下角
     int ind = y * m_Width + x; // 把坐标的原点规定在左下角
 
-    m_ColorBuffer[ind * m_Channels + 0] = static_cast<unsigned char>(255.0f * color.r);
-    m_ColorBuffer[ind * m_Channels + 1] = static_cast<unsigned char>(255.0f * color.g);
-    m_ColorBuffer[ind * m_Channels + 2] = static_cast<unsigned char>(255.0f * color.b);
+    m_ColorBuffer[ind * m_Channels + 0] = static_cast<unsigned char>(255.0f * Clamp(color.r, 0.0f, 1.0f));
+    m_ColorBuffer[ind * m_Channels + 1] = static_cast<unsigned char>(255.0f * Clamp(color.g, 0.0f, 1.0f));
+    m_ColorBuffer[ind * m_Channels + 2] = static_cast<unsigned char>(255.0f * Clamp(color.b, 0.0f, 1.0f));
     m_ColorBuffer[ind * m_Channels + 3] = static_cast<unsigned char>(255.0f * color.a);
 }
 

@@ -144,7 +144,7 @@ void Model::AddObject(const std::string &filename)
                 data.position = vertices[index[0] - 1];
                 data.texcoord = texcoords[index[1] - 1];
                 data.normal = normals[index[2] - 1];
-                data.color = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+                data.color = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
                 vertID.push_back(index[0] - 1); // tangent's number is the same as the vertex, so record the vertID
                 int offset = m_objects[m_objectNum - 1].m_mesh->m_vertices.size();
                 m_objects[m_objectNum - 1].m_mesh->m_indices.push_back(offset);

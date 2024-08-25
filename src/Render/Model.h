@@ -84,6 +84,7 @@ public:
                 Transformation::GetScale(m_transform.scale));
     }
 
+    void SetRelScale(Vec3 &s);
     void SetScale(Vec3 &s);
     void SetRotation(Vec3 &r) { m_transform.rotation = r; }
     void SetTranslate(Vec3 &p) { m_transform.position = p; }

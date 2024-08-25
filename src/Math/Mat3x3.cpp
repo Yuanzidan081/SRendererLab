@@ -14,6 +14,13 @@ Mat3x3::Mat3x3(const float *rhs)
     memcpy(entries, rhs, 9 * sizeof(float));
 }
 
+Mat3x3::Mat3x3(const Vec3 &v1, const Vec3 &v2, const Vec3 &v3)
+{
+    entries[0][0] = v1.x, entries[0][1] = v2.x, entries[0][2] = v3.x;
+    entries[1][0] = v1.y, entries[1][1] = v2.y, entries[1][2] = v3.y;
+    entries[2][0] = v1.z, entries[2][1] = v2.z, entries[2][2] = v3.z;
+}
+
 Mat3x3::Mat3x3(const Mat3x3 &rhs)
 {
     memcpy(entries, rhs.entries, 9 * sizeof(float));
@@ -45,6 +52,13 @@ Vec4 Mat3x3::GetColumn(int position) const
         return Vec3(entries[0][2], entries[1][2], entries[2][2]);
     }
     return Vec3(0.0f, 0.0f, 0.0f);
+}
+
+Mat3x3 Mat3x3::GetTranspose()
+{
+    return Mat3x3(entries[0][0], entries[1][0], entries[2][0],
+                  entries[0][1], entries[1][1], entries[2][1],
+                  entries[0][2], entries[1][2], entries[2][2]);
 }
 
 void Mat3x3::LoadIdentity()

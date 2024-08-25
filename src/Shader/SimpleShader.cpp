@@ -20,7 +20,7 @@ void SimpleShader::Destroy()
     s_shader = nullptr;
 }
 
-VertexOut SimpleShader::vertexShader(const Vertex &in)
+VertexOut SimpleShader::VertexShader(const Vertex &in)
 {
     VertexOut result;
     result.worldPos = m_uniform->m_modelMatrix * in.position;
@@ -32,7 +32,7 @@ VertexOut SimpleShader::vertexShader(const Vertex &in)
     return result;
 }
 
-Vec4 SimpleShader::fragmentShader(const VertexOut &in)
+Vec4 SimpleShader::FragmentShader(const VertexOut &in)
 {
     Vec4 litColor = in.color;
     if (m_uniform->m_mainTex)

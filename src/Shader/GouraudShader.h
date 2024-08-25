@@ -15,8 +15,8 @@ public:
     static GouraudShader *GetInstance();
     virtual void Destroy();
     ~GouraudShader() = default;
-    virtual VertexOut vertexShader(const Vertex &in);
-    virtual Vec4 fragmentShader(const VertexOut &in);
+    virtual VertexOut VertexShader(const Vertex &in);
+    virtual Vec4 FragmentShader(const VertexOut &in);
 
     Vec3 CalDirectionalLight(DirectionalLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo);
 

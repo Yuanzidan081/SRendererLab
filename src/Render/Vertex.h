@@ -3,6 +3,7 @@
 #include "Math/Vec4.h"
 #include "Math/Vec3.h"
 #include "Math/Vec2.h"
+#include "Math/Mat3x3.h"
 class Vertex
 {
 public:
@@ -26,15 +27,16 @@ public:
     Vec2 texcoord; // texture coordinates
     Vec3 normal;   // vertex normal
     Vec4 color;    // vertex color
+    Mat3x3 TBN;    // normal mapping
 
     float oneDivZ;
     VertexOut() = default;
     VertexOut(Vec4 worldPos_, Vec4 clipPos_, Vec2 tex_,
-              Vec3 normal_, Vec4 color_, float oneDivZ_) : worldPos(worldPos_), clipPos(clipPos_), texcoord(tex_),
-                                                           normal(normal_), color(color_), oneDivZ(oneDivZ_) {}
+              Vec3 normal_, Vec4 color_, float oneDivZ_, Mat3x3 TBN_) : worldPos(worldPos_), clipPos(clipPos_), texcoord(tex_),
+                                                                        normal(normal_), color(color_), oneDivZ(oneDivZ_), TBN(TBN_) {}
     VertexOut(const VertexOut &rhs) : worldPos(rhs.worldPos),
                                       clipPos(rhs.clipPos), texcoord(rhs.texcoord),
-                                      normal(rhs.normal), color(rhs.color), oneDivZ(rhs.oneDivZ)
+                                      normal(rhs.normal), color(rhs.color), oneDivZ(rhs.oneDivZ), TBN(rhs.TBN)
     {
     }
 };

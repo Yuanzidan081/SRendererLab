@@ -230,7 +230,7 @@ void MainWidget::UpdateSelectedModelProperty()
     {
         modelWidget->AddInt(QString("VertexNum"), QString(""), &(model->m_objects[m_selectedMeshIndex].m_mesh->m_vertexNum), 0, 100000000, QString("MeshInfo"));
         modelWidget->AddInt(QString("TriangleNum"), QString(""), &(model->m_objects[m_selectedMeshIndex].m_mesh->m_triangleNum), 0, 100000000, QString("MeshInfo"));
-        modelWidget->AddColorImg3(QString("Diffuse"), &(model->m_objects[m_selectedMeshIndex].m_material->m_diffuse), QString("Material"));
+        modelWidget->AddColorImg3(QString("Albedo"), &(model->m_objects[m_selectedMeshIndex].m_material->m_diffuse), QString("Material"));
     }
     else
     {

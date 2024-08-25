@@ -5,6 +5,7 @@
 #include "Shader/Shader.h"
 
 class Shader;
+class Uniform;
 class Material
 {
 public:
@@ -39,5 +40,6 @@ public:
     {
         m_normalTex = t;
     }
+    void SetupUniform(Uniform &uniform);
 };
 #endif // MATERIAL_H

@@ -18,7 +18,7 @@ public:
     ~ColorImgWidget();
 
     void SetProp(const Vec4 &val);
-    void BindData(Vec4 *bindPtr, Texture2D *texture);
+    void BindData(Vec4 *bindPtr, Texture2D *texture = nullptr);
     void OpenColorDialog();
     void SetTextureNone();
     void SetTextureFromFile();

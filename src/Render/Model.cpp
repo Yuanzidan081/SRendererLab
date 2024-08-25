@@ -155,7 +155,9 @@ void Model::AddObject(const std::string &filename)
         }
         else if (!line.compare(0, 14, "# ext.tangent "))
         {
-
+            // https://zhuanlan.zhihu.com/p/261667233
+            // https://www.zhihu.com/question/263829818/answer/2798853006
+            // https://zhuanlan.zhihu.com/p/139593847
             hasFileTangent = true;
             line = line.substr(14);
             std::istringstream iss(line);
@@ -192,12 +194,17 @@ void Model::AddObject(Object &obj)
     m_objectNum++;
 }
 
-void Model::SetScale(Vec3 &s)
+void Model::SetRelScale(Vec3 &s)
 {
     float length = fabs(m_maxPoint.x - m_minPoint.x);
     float scaleFactor = 1.0f / length;
 
     m_transform.scale = s * scaleFactor;
+}
+
+void Model::SetScale(Vec3 &s)
+{
+    m_transform.scale = s;
 }
 
 void Model::BuildTangents(std::vector<Vec4> &tangents, Mesh *mesh, bool hasFileTangent, std::vector<int> &vertID)

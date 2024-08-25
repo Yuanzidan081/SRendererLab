@@ -14,10 +14,9 @@ LightWidget::LightWidget(QWidget *parent) : TabWidget(parent),
     ui->addToolButton->setIcon(QIcon(QString("./res/icon/addIcon.png")));
     ui->removeToolButton->setIcon(QIcon(QString("./res/icon/minusIcon.png")));
 
-    // 创建QMenu
+
     QMenu *addToolButtonMenu = new QMenu(ui->addToolButton);
 
-    // 添加动作到QMenu
     QAction *addDirectionLight = new QAction("directional light", addToolButtonMenu);
     QAction *addPointLight = new QAction("point light", addToolButtonMenu);
     QAction *addSpotLight = new QAction("spot light", addToolButtonMenu);
@@ -25,7 +24,6 @@ LightWidget::LightWidget(QWidget *parent) : TabWidget(parent),
     addToolButtonMenu->addAction(addPointLight);
     addToolButtonMenu->addAction(addSpotLight);
 
-    // 设置QToolButton的属性以在点击时显示下拉菜单
     ui->addToolButton->setMenu(addToolButtonMenu);
     ui->addToolButton->setPopupMode(QToolButton::InstantPopup);
 

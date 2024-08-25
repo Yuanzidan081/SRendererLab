@@ -12,7 +12,7 @@ public:
     static SkyBoxShader *GetInstance();
     virtual ~SkyBoxShader() = default;
     virtual void SkyBoxShader::Destroy();
-    virtual VertexOut vertexShader(const Vertex &in);
-    virtual Vec4 fragmentShader(const VertexOut &in);
+    virtual VertexOut VertexShader(const Vertex &in);
+    virtual Vec4 FragmentShader(const VertexOut &in);
 };
 #endif // SKYBOXSHADER_H

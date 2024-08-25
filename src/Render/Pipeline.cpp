@@ -5,6 +5,7 @@
 #include "MathUtils.h"
 #include "Algorithm/Clip.h"
 #include "Algorithm/Common.h"
+#include "material.h"
 Pipeline::Pipeline(int width, int height)
 {
     m_config = Config::GetInstance();
@@ -96,9 +97,9 @@ void Pipeline::DrawMesh()
         // vertex shader stage
         VertexOut v1, v2, v3;
         {
-            v1 = m_config->m_shader->vertexShader(p1);
-            v2 = m_config->m_shader->vertexShader(p2);
-            v3 = m_config->m_shader->vertexShader(p3);
+            v1 = m_config->m_shader->VertexShader(p1);
+            v2 = m_config->m_shader->VertexShader(p2);
+            v3 = m_config->m_shader->VertexShader(p3);
         }
         // view culling
         // if (!ViewCulling(v1.clipPos, v2.clipPos, v3.clipPos))
@@ -192,8 +193,9 @@ void Pipeline::DrawSkyBox(Model *model)
 void Pipeline::DrawObject(const Object &obj, Uniform &u)
 {
     m_config->m_shader = obj.GetShader();
+    obj.m_material->SetupUniform(u);
     u.m_material = obj.GetMaterial();
-    u.m_mainTex = obj.GetMainTex();
+    // u.m_mainTex = obj.GetMainTex();
     SetVertexBuffer(&obj.m_mesh->m_vertices);
     SetIndexBuffer(&obj.m_mesh->m_indices);
     m_config->m_shader->SetUniform(&u);
@@ -214,6 +216,7 @@ void Pipeline::PerspectiveDivision(VertexOut &target)
     target.texcoord *= target.oneDivZ;
     target.color *= target.oneDivZ;
     target.normal *= target.oneDivZ;
+    target.TBN *= target.oneDivZ;
 }
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
@@ -254,7 +257,7 @@ void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut
                 continue; // fail to pass the depth testing
             m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.clipPos.z);
             // fragment shader
-            m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->fragmentShader(tmp));
+            m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->FragmentShader(tmp));
             sx += stepX;
             if (flag <= 0)
                 flag += d2y;
@@ -277,7 +280,7 @@ void Pipeline::BresenhamLineRasterization(const VertexOut &from, const VertexOut
             m_config->m_backBuffer->SetPixelDepth(sx, sy, tmp.clipPos.z);
 
             // fragment shader
-            m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->fragmentShader(tmp));
+            m_config->m_backBuffer->SetPixelColor(sx, sy, m_config->m_shader->FragmentShader(tmp));
             sy += stepY;
             if (flag <= 0)
                 flag += d2x;
@@ -320,8 +323,9 @@ void Pipeline::ScanLinePerRow(const VertexOut &left, const VertexOut &right)
         current.color *= w;
         current.texcoord *= w;
         current.normal *= w;
+        current.TBN *= w;
         // fragment shader
-        m_config->m_backBuffer->SetPixelColor(current.clipPos.x, current.clipPos.y, m_config->m_shader->fragmentShader(current));
+        m_config->m_backBuffer->SetPixelColor(current.clipPos.x, current.clipPos.y, m_config->m_shader->FragmentShader(current));
     }
 }
 void Pipeline::RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)

@@ -18,7 +18,7 @@ void SkyBoxShader::Destroy()
     s_shader = nullptr;
 }
 
-VertexOut SkyBoxShader::vertexShader(const Vertex &in)
+VertexOut SkyBoxShader::VertexShader(const Vertex &in)
 {
     VertexOut result;
     Mat4x4 rotView = static_cast<Mat4x4>(m_uniform->m_viewMatrix.GetMat3x3());
@@ -29,7 +29,7 @@ VertexOut SkyBoxShader::vertexShader(const Vertex &in)
     return result;
 }
 
-Vec4 SkyBoxShader::fragmentShader(const VertexOut &in)
+Vec4 SkyBoxShader::FragmentShader(const VertexOut &in)
 {
 
     // Vec3 uv = in.worldPos.GetNormalize3D();

@@ -4,10 +4,6 @@
 #include <QPainter>
 ImageWidget::ImageWidget(QWidget *parent) : m_canvas(nullptr)
 {
-    // 设置控件的焦点策略为 StrongFocus
-    // setFocusPolicy(Qt::StrongFocus);
-    // setMouseTracking(true);
-    // this->setAttribute(Qt::WA_TransparentForMouseEvents);
 }
 ImageWidget::~ImageWidget()
 {

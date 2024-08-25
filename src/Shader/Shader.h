@@ -39,8 +39,8 @@ public:
     virtual void Destroy() {}
     virtual ~Shader() = default;
     virtual void BindShaderTexture(Texture2D *tex) {}
-    virtual VertexOut vertexShader(const Vertex &in) { return VertexOut(); }
-    virtual Vec4 fragmentShader(const VertexOut &in) { return Vec4(); }
+    virtual VertexOut VertexShader(const Vertex &in) { return VertexOut(); }
+    virtual Vec4 FragmentShader(const VertexOut &in) { return Vec4(); }
 
     void SetUniform(Uniform *u)
     {

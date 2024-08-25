@@ -19,7 +19,7 @@ void PhongShader::Destroy()
     s_shader = nullptr;
 }
 
-VertexOut PhongShader::vertexShader(const Vertex &in)
+VertexOut PhongShader::VertexShader(const Vertex &in)
 {
     VertexOut result;
     result.worldPos = m_uniform->m_modelMatrix * in.position;
@@ -33,7 +33,7 @@ VertexOut PhongShader::vertexShader(const Vertex &in)
     return result;
 }
 
-Vec4 PhongShader::fragmentShader(const VertexOut &in)
+Vec4 PhongShader::FragmentShader(const VertexOut &in)
 {
     Vec3 worldNormal = Normalize(in.normal);
 

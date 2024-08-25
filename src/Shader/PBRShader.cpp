@@ -2,7 +2,7 @@
 
 PBRShader *PBRShader::s_shader = nullptr;
 
-float PBRShader::D_GGX_TR(Vec3 &nDir, Vec3 &hDir, float roughness)
+float PBRShader::D_GGX_TR(const Vec3 &nDir, const Vec3 &hDir, float roughness)
 {
 
     float roughness2 = roughness * roughness;
@@ -23,8 +23,8 @@ float PBRShader::GeometrySchlickGGX(float NdotV, float k)
     float denom = NdotV * (1.0f - k) + k;
     return nom / denom;
 }
-
-float PBRShader::GeometrySmith(Vec3 &nDir, Vec3 &vDir, Vec3 &lDir, float k)
+// dirction k = (roughness + 1)^2/8 IBL: (roughness)^2/2
+float PBRShader::GeometrySmith(const Vec3 &nDir, const Vec3 &vDir, const Vec3 &lDir, float k)
 {
 
     float NdotV = std::max(nDir.GetDotProduct(vDir), 0.0f);
@@ -37,12 +37,8 @@ float PBRShader::GeometrySmith(Vec3 &nDir, Vec3 &vDir, Vec3 &lDir, float k)
 
 Vec3 PBRShader::fresnelSchlick(float cosTheta, Vec3 &F0)
 {
-    return F0 + (-F0 + 1.0f) * pow(1.0f - cosTheta, 5.0f);
+    return F0 + (-F0 + 1.0f) * pow(Clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
 }
-
-// https://zhuanlan.zhihu.com/p/261667233
-// https://www.zhihu.com/question/263829818/answer/2798853006
-// https://zhuanlan.zhihu.com/p/139593847
 
 PBRShader *PBRShader::GetInstance()
 {
@@ -60,7 +56,7 @@ void PBRShader::Destroy()
     s_shader = nullptr;
 }
 
-VertexOut PBRShader::vertexShader(const Vertex &in)
+VertexOut PBRShader::VertexShader(const Vertex &in)
 {
     VertexOut result;
     result.worldPos = m_uniform->m_modelMatrix * in.position;
@@ -71,7 +67,7 @@ VertexOut PBRShader::vertexShader(const Vertex &in)
     return VertexOut();
 }
 
-Vec4 PBRShader::fragmentShader(const VertexOut &in)
+Vec4 PBRShader::FragmentShader(const VertexOut &in)
 {
     return Vec4();
 }

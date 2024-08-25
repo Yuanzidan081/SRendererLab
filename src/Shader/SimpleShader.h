@@ -14,7 +14,7 @@ public:
     static SimpleShader *GetInstance();
     ~SimpleShader() {};
     virtual void Destroy();
-    virtual VertexOut vertexShader(const Vertex &in);
-    virtual Vec4 fragmentShader(const VertexOut &in);
+    virtual VertexOut VertexShader(const Vertex &in);
+    virtual Vec4 FragmentShader(const VertexOut &in);
 };
 #endif // SIMPLE_SHADER_H

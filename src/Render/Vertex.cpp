@@ -13,8 +13,6 @@ Vec3 Vertex::CalTangent(const Vertex &v1, const Vertex &v2, const Vertex &v3)
     Vec3 e1 = v2.position - v1.position;
     Vec3 e2 = v3.position - v1.position;
 
-    // get tangent axis and bitangent axis
-    Vec3 t = (e1 * dv2 - e2 * dv1) / det;
-    t.Normalize();
+    Vec3 t = Normalize((e1 * dv2 - e2 * dv1) / det);
     return t;
 }

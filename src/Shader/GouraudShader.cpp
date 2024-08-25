@@ -19,7 +19,7 @@ void GouraudShader::Destroy()
     s_shader = nullptr;
 }
 
-VertexOut GouraudShader::vertexShader(const Vertex &in)
+VertexOut GouraudShader::VertexShader(const Vertex &in)
 {
     VertexOut result;
     result.worldPos = m_uniform->m_modelMatrix * in.position;
@@ -33,12 +33,6 @@ VertexOut GouraudShader::vertexShader(const Vertex &in)
         albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
     Vec3 resultColor = m_uniform->m_ambient * albedo;
     Vec3 worldViewDir = Normalize(Vec3(m_uniform->m_eyePos - result.worldPos));
-    // for (int i = 0; i < m_uniform->m_lights->directionalLightGroup.size(); ++i)
-    //     resultColor += CalDirectionalLight(m_uniform->m_lights->directionalLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, albedo);
-    // for (int i = 0; i < m_uniform->m_lights->pointLightGroup.size(); ++i)
-    //     resultColor += CalPointLight(m_uniform->m_lights->pointLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
-    // for (int i = 0; i < m_uniform->m_lights->spotLightGroup.size(); ++i)
-    //     resultColor += CalSpotLight(m_uniform->m_lights->spotLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
@@ -52,7 +46,7 @@ VertexOut GouraudShader::vertexShader(const Vertex &in)
     return result;
 }
 
-Vec4 GouraudShader::fragmentShader(const VertexOut &in)
+Vec4 GouraudShader::FragmentShader(const VertexOut &in)
 {
     Vec4 litColor = in.color;
     return litColor;

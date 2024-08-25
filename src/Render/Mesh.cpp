@@ -187,20 +187,34 @@ void Mesh::asFloor(double length, double height)
     m_indices.resize(6);
     m_vertices[0].position = Vec3(+length * 0.5f, height, -length * 0.5f);
     m_vertices[0].normal = Vec3(0.f, 1.f, 0.f);
+    // m_vertices[0].normal = Vec3(0.f, 0.f, 1.0f);
+
     m_vertices[0].color = Vec4(1.f, 0.f, 0.f, 1.f);
     m_vertices[0].texcoord = Vec2(0.f, 0.f);
+    m_vertices[0].tangent = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
     m_vertices[1].position = Vec3(-length * 0.5f, height, -length * 0.5f);
     m_vertices[1].normal = Vec3(0.f, 1.f, 0.f);
+    // m_vertices[1].normal = Vec3(0.f, 0.f, 1.0f);
+
     m_vertices[1].color = Vec4(0.f, 0.f, 0.f, 1.f);
     m_vertices[1].texcoord = Vec2(1.f, 0.f);
+    m_vertices[1].tangent = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
     m_vertices[2].position = Vec3(-length * 0.5f, height, +length * 0.5f);
     m_vertices[2].normal = Vec3(0.f, 1.f, 0.f);
     m_vertices[2].color = Vec4(0.f, 0.f, 1.f, 1.f);
     m_vertices[2].texcoord = Vec2(1.f, 1.f);
+    m_vertices[2].tangent = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    // m_vertices[2].normal = Vec3(0.f, 0.f, 1.0f);
+
     m_vertices[3].position = Vec3(+length * 0.5f, height, +length * 0.5f);
     m_vertices[3].normal = Vec3(0.f, 1.f, 0.f);
     m_vertices[3].color = Vec4(0.f, 0.f, 0.f, 1.f);
     m_vertices[3].texcoord = Vec2(0.f, 1.f);
+    m_vertices[3].tangent = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    // m_vertices[3].normal = Vec3(0.f, 0.f, 1.0f);
+
     m_indices[0] = 0;
     m_indices[1] = 1;
     m_indices[2] = 2;

@@ -45,11 +45,11 @@ Vec4 PhongShader::FragmentShader(const VertexOut &in)
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, albedo);
+            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]),  worldNormal, worldViewDir, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, in.worldPos, albedo);
+            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, in.worldPos, albedo);
+            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]),  worldNormal, worldViewDir, in.worldPos, albedo);
     }
     // tone mapping
     // result /= (result + Vec3(0.5f, 0.5f, 0.5f));
@@ -58,7 +58,7 @@ Vec4 PhongShader::FragmentShader(const VertexOut &in)
     return Vec4(result, 1.0f);
 }
 
-Vec3 PhongShader::CalDirectionalLight(DirectionalLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
+Vec3 PhongShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(-light->m_direction);
 
@@ -66,28 +66,28 @@ Vec3 PhongShader::CalDirectionalLight(DirectionalLight *light, Material *materia
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
-    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
-    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), m_uniform->m_shiness);
+    Vec3 specular = spec * (m_uniform->m_specular) * (light->m_color);
     Vec3 result = diffuse + specular;
     return result;
 }
 
-Vec3 PhongShader::CalPointLight(PointLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 PhongShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
-    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
-    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), m_uniform->m_shiness);
+    Vec3 specular = spec * (m_uniform->m_specular) * (light->m_color);
     // attenuation
     float lightDistance = (light->m_position - worldPos).GetLength();
     float attenuation = 1.0 / (light->m_attenuation.x +
@@ -97,19 +97,19 @@ Vec3 PhongShader::CalPointLight(PointLight *light, Material *material, const Vec
     return result;
 }
 
-Vec3 PhongShader::CalSpotLight(SpotLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 PhongShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
     Vec3 spotLightDir = Normalize(light->m_direction);
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
-    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
-    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), m_uniform->m_shiness);
+    Vec3 specular = spec * (m_uniform->m_specular) * (light->m_color);
 
     // spotLight
     float theta = worldLightDir.GetDotProduct(-spotLightDir);

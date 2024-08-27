@@ -25,11 +25,11 @@ public:
                  m_mainTex(nullptr), m_normalTex(nullptr), m_metallicTex(nullptr) {}
     Material(const Vec4 &color, const Vec4 &specular, const int &gloss)
         : m_diffuse(color), m_specular(specular), m_shiness(gloss), m_roughness(0.99f), m_metallic(1.0f), m_ao(1.0f),
-          m_mainTex(nullptr), m_normalTex(nullptr), m_metallicTex(nullptr)
+          m_mainTex(nullptr), m_normalTex(nullptr), m_metallicTex(nullptr), m_shader(nullptr)
     {
     }
     Material(const Material &m) : m_diffuse(m.m_diffuse), m_specular(m_specular), m_shiness(m.m_shiness), m_roughness(m.m_roughness), m_metallic(m.m_metallic), m_ao(m.m_ao),
-                                  m_mainTex(m.m_mainTex), m_normalTex(m.m_normalTex), m_metallicTex(m.m_metallicTex)
+                                  m_mainTex(m.m_mainTex), m_normalTex(m.m_normalTex), m_metallicTex(m.m_metallicTex), m_shader(m.m_shader)
     {
     }
     ~Material()

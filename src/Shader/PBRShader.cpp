@@ -107,11 +107,11 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, albedo, metallic, F0);
+            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo, metallic, F0);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, in.worldPos, albedo, metallic, F0);
+            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, F0);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, in.worldPos, albedo, metallic, F0);
+            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, F0);
     }
 
     Vec3 ambient = Vec3(0.03f) * albedo * m_uniform->m_ao;
@@ -121,7 +121,7 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     return color;
 }
 
-Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo, const float metallic, const Vec3 &F0)
+Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo, const float metallic, const Vec3 &F0)
 {
     // prepare: light property
     Vec3 worldLightDir = Normalize(-light->m_direction);
@@ -136,9 +136,6 @@ Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, Material *material,
     Vec3 numerator = NDF * G * F;
     float denominator = 4.0 * std::max(worldNormal.GetDotProduct(worldViewDir), 0.0f) * std::max(worldNormal.GetDotProduct(worldLightDir), 0.0f) + 0.0001f;
 
-    float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
-
     // specular
     Vec3 specular = numerator / denominator;
     Vec3 ks = F;
@@ -151,7 +148,7 @@ Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, Material *material,
     return result;
 }
 
-Vec3 PBRShader::CalPointLight(PointLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir,
+Vec3 PBRShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir,
                               const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const Vec3 &F0)
 {
     // prepare: light property
@@ -183,7 +180,7 @@ Vec3 PBRShader::CalPointLight(PointLight *light, Material *material, const Vec3 
     return result;
 }
 
-Vec3 PBRShader::CalSpotLight(SpotLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const Vec3 &F0)
+Vec3 PBRShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const Vec3 &F0)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);

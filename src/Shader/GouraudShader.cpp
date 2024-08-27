@@ -36,11 +36,11 @@ VertexOut GouraudShader::VertexShader(const Vertex &in)
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            resultColor += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, albedo);
+            resultColor += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            resultColor += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
+            resultColor += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, result.worldPos, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            resultColor += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), m_uniform->m_material, worldNormal, worldViewDir, result.worldPos, albedo);
+            resultColor += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, result.worldPos, albedo);
     }
     result.color = Vec4(resultColor, 1.0f);
     return result;
@@ -52,7 +52,7 @@ Vec4 GouraudShader::FragmentShader(const VertexOut &in)
     return litColor;
 }
 
-Vec3 GouraudShader::CalDirectionalLight(DirectionalLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
+Vec3 GouraudShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(-light->m_direction);
 
@@ -60,17 +60,17 @@ Vec3 GouraudShader::CalDirectionalLight(DirectionalLight *light, Material *mater
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
-    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
-    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), m_uniform->m_shiness);
+    Vec3 specular = spec * (m_uniform->m_specular) * (light->m_color);
     Vec3 result = diffuse + specular;
     return result;
 }
 
-Vec3 GouraudShader::CalPointLight(PointLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 GouraudShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 
@@ -79,12 +79,12 @@ Vec3 GouraudShader::CalPointLight(PointLight *light, Material *material, const V
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
-    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
-    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), m_uniform->m_shiness);
+    Vec3 specular = spec * (m_uniform->m_specular) * (light->m_color);
     // attenuation
     float lightDistance = (light->m_position - worldPos).GetLength();
     float attenuation = 1.0 / (light->m_attenuation.x +
@@ -94,7 +94,7 @@ Vec3 GouraudShader::CalPointLight(PointLight *light, Material *material, const V
     return result;
 }
 
-Vec3 GouraudShader::CalSpotLight(SpotLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 GouraudShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 
@@ -103,12 +103,12 @@ Vec3 GouraudShader::CalSpotLight(SpotLight *light, Material *material, const Vec
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
-    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), material->m_shiness);
-    Vec3 specular = spec * (material->m_specular) * (light->m_color);
+    float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), m_uniform->m_shiness);
+    Vec3 specular = spec * (m_uniform->m_specular) * (light->m_color);
 
     // spotLight
     float theta = worldLightDir.GetDotProduct(-light->m_direction);

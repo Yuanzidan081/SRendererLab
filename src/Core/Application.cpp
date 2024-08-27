@@ -44,10 +44,10 @@ void Application::Run()
     // cubeMdl.SetTranslate(Vec3(1.0f, -1.0f, -1.0f));
     // m_pipeline->m_config->AddModel(&cubeMdl);
 
-    // Model floorMdl(Mesh::CreateFloor(15.3, -1.0), "floor");
-    // floorMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/floor/floor.jpg"));
-    // floorMdl.SetShader(shaderPhong);
-    // m_pipeline->m_config->AddModel(&floorMdl);
+    Model floorMdl(Mesh::CreateFloor(15.3, -1.0), "floor");
+    floorMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/floor/floor.jpg"));
+    floorMdl.SetShader(shaderPhong);
+    m_pipeline->m_config->AddModel(&floorMdl);
 
     Model WallMdl(Mesh::CreateFloor(3, 0), "wall1");
     WallMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/wall/brickwall.jpg"));
@@ -60,7 +60,7 @@ void Application::Run()
 
     Model sphereMdl(curPath + "obj/sphere/sphere.obj", "sphere1");
     sphereMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/sphere/sphere_diffuse.png"));
-    sphereMdl.SetShader(shaderPhong);
+    sphereMdl.SetShader(shaderPBR);
     sphereMdl.SetTranslate(Vec3(-2.0f, 0.0f, 0.0f));
     sphereMdl.m_objects[0].m_material->m_roughness = 0.5f;
     sphereMdl.SetRelScale(Vec3(0.8f, 0.8f, 0.8f));
@@ -68,6 +68,7 @@ void Application::Run()
 
     Model sphereMdl2(sphereMdl, "sphere2");
     sphereMdl2.SetTranslate(Vec3(-2.0f, 1.0f, 0.0f));
+    sphereMdl2.m_objects[0].m_material->m_roughness = 1.0f;
     m_pipeline->m_config->AddModel(&sphereMdl2);
 
     Model sphereMdl3(sphereMdl, "sphere2");

@@ -22,7 +22,12 @@ public:
     float m_roughness;
     float m_metallic;
     float m_ao;
-    Material *m_material;
+
+    Vec4 m_diffuse;
+    Vec4 m_specular;
+    float m_shiness;
+
+    // Material *m_material;
     std::vector<Light *> *m_lights;
     // LightGroup *m_lights;
     Texture2D *m_mainTex;

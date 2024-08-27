@@ -194,7 +194,7 @@ void Pipeline::DrawObject(const Object &obj, Uniform &u)
 {
     m_config->m_shader = obj.GetShader();
     obj.m_material->SetupUniform(u);
-    u.m_material = obj.GetMaterial();
+    //u.m_material = obj.GetMaterial();
     // u.m_mainTex = obj.GetMainTex();
     SetVertexBuffer(&obj.m_mesh->m_vertices);
     SetIndexBuffer(&obj.m_mesh->m_indices);

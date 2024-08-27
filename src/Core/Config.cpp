@@ -71,6 +71,10 @@ void Config::Destroy()
     shader->Destroy();
     shader = SimpleShader::GetInstance();
     shader->Destroy();
+    shader = NormalShader::GetInstance();
+    shader->Destroy();
+    shader = PBRShader::GetInstance();
+    shader->Destroy();
     shader = SkyBoxShader::GetInstance();
     shader->Destroy();
     m_backBuffer = nullptr;

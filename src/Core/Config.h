@@ -4,6 +4,7 @@
 #include <vector>
 #include "Math/MathGroup.h"
 #include <QObject>
+#include "Render/ResourceManager.h"
 class Model;
 class Vertex;
 class FrameBuffer;
@@ -51,7 +52,7 @@ public:
     std::vector<Model *> m_models;
     std::vector<Light *> m_lights;
     EulerFPSCamera *m_fpsCamera;
-
+    ResourceManager *m_resourceManager;
     // LightGroup *m_lightGroup;
 
     // cubeMap

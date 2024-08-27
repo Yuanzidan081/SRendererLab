@@ -25,7 +25,7 @@ Config::Config() : m_depthTesting(true),
                    m_models(),
                    m_lights(),
                    m_fpsCamera(nullptr),
-
+                   m_resourceManager(ResourceManager::GetInstance()),
                    //    m_lightGroup(nullptr),
                    m_skyBox(nullptr),
                    m_cubeMap(nullptr),

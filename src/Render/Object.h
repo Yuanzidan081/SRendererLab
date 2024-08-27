@@ -17,7 +17,7 @@ public:
     }
     // Object(Mesh *m, Material *mat) : m_mesh(std::make_shared<Mesh>(*m)),
     //                                  m_material(std::make_shared<Material>(*mat)) {}
-    Object(const Object &obj) : m_mesh(obj.m_mesh), m_material(std::make_shared<Material>(*obj.m_material)) // m_material(obj.m_material)
+    Object(const Object &obj) : m_mesh(obj.m_mesh), m_material(obj.m_material) // m_material(obj.m_material)
     {
     }
     Object &operator()(const Object &obj)
@@ -28,14 +28,7 @@ public:
         m_material = obj.m_material;
         return *this;
     }
-    Material *GetMaterial() const
-    {
-        return m_material.get();
-    }
-    Texture2D *GetMainTex() const
-    {
-        return m_material->m_mainTex.get();
-    }
+
     Shader *GetShader() const
     {
         return m_material->m_shader;

@@ -17,12 +17,17 @@ public:
     Mat3x3 m_normalMatrix;
     Mat4x4 m_viewMatrix;
     Mat4x4 m_projectMatrix;
+    // material
     Vec4 m_ambient;
+    float m_roughness;
+    float m_metallic;
+    float m_ao;
     Material *m_material;
     std::vector<Light *> *m_lights;
     // LightGroup *m_lights;
     Texture2D *m_mainTex;
     Texture2D *m_normalTex;
+    Texture2D *m_metallicTex;
     CubeMap *m_cubeMap;
     Uniform();
     Uniform(const Mat4x4 m,

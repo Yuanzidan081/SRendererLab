@@ -29,69 +29,59 @@ void Application::Run()
 {
 
     std::string curPath = "E:/Computer Graphics/MyProject/SRendererLab/";
-    Shader *shader = PhongShader::GetInstance();
-    Shader *shader2 = NormalShader::GetInstance();
+    Shader *shaderPhong = PhongShader::GetInstance();
+    Shader *shaderNormal = NormalShader::GetInstance();
+    Shader *shaderPBR = PBRShader::GetInstance();
     // Model helmetMdl(curPath + "obj/helmet/helmet.obj");
     // helmetMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/helmet/helmet_basecolor.tga"));
-    // helmetMdl.SetShader(shader);
+    // helmetMdl.SetShader(shaderPhong);
     // helmetMdl.SetTranslate(Vec3(3.0, 2.0f, 0.0f));
     // m_pipeline->m_config->AddModel(&helmetMdl);
 
     // Model cubeMdl(Mesh::CreateBox(1.0, 1.0, 1.0), "cube");
     // cubeMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/cube/container.jpg"));
-    // cubeMdl.SetShader(shader);
+    // cubeMdl.SetShader(shaderPhong);
     // cubeMdl.SetTranslate(Vec3(1.0f, -1.0f, -1.0f));
     // m_pipeline->m_config->AddModel(&cubeMdl);
 
     // Model floorMdl(Mesh::CreateFloor(15.3, -1.0), "floor");
     // floorMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/floor/floor.jpg"));
-    // floorMdl.SetShader(shader);
+    // floorMdl.SetShader(shaderPhong);
     // m_pipeline->m_config->AddModel(&floorMdl);
 
     Model WallMdl(Mesh::CreateFloor(3, 0), "wall1");
     WallMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/wall/brickwall.jpg"));
     WallMdl.m_objects[0].m_material->SetNormalTexture(std::make_shared<Texture2D>(curPath + "obj/wall/wall_normal.png"));
-    WallMdl.SetShader(shader2);
+    WallMdl.SetShader(shaderNormal);
     WallMdl.SetRotation(Vec3(90.0f, 0.0f, 0.0f));
     WallMdl.SetTranslate(Vec3(0.0f, 0.5f, -0.5f));
     WallMdl.SetScale(Vec3(2.0f, 1.0f, 1.0f));
     m_pipeline->m_config->AddModel(&WallMdl);
 
-    Model WallMd2(Mesh::CreateFloor(3, 0), "wall2");
-    WallMd2.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/wall/brickwall.jpg"));
-    WallMd2.m_objects[0].m_material->SetNormalTexture(std::make_shared<Texture2D>(curPath + "obj/wall/wall_normal.png"));
-    WallMd2.SetShader(shader2);
-    WallMd2.SetRotation(Vec3(90.0f, 90.0f, 0.0f));
-    WallMd2.SetTranslate(Vec3(-2.9f, 0.5f, 1.2f));
-    WallMd2.SetScale(Vec3(1.0f, 1.0f, 1.0f));
-    m_pipeline->m_config->AddModel(&WallMd2);
+    Model sphereMdl(curPath + "obj/sphere/sphere.obj", "sphere1");
+    sphereMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/sphere/sphere_diffuse.png"));
+    sphereMdl.SetShader(shaderPhong);
+    sphereMdl.SetTranslate(Vec3(-2.0f, 0.0f, 0.0f));
+    sphereMdl.m_objects[0].m_material->m_roughness = 0.5f;
+    sphereMdl.SetRelScale(Vec3(0.8f, 0.8f, 0.8f));
+    m_pipeline->m_config->AddModel(&sphereMdl);
 
-    Model WallMd3(Mesh::CreateFloor(3, 0), "wall3");
-    WallMd3.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/wall/brickwall.jpg"));
-    WallMd3.m_objects[0].m_material->SetNormalTexture(std::make_shared<Texture2D>(curPath + "obj/wall/wall_normal.png"));
-    WallMd3.SetShader(shader2);
-    WallMd3.SetRotation(Vec3(90.0f, -90.0f, 0.0f));
-    WallMd3.SetTranslate(Vec3(2.9f, 0.5f, 1.2f));
-    WallMd3.SetScale(Vec3(1.0f, 1.0f, 1.0f));
-    m_pipeline->m_config->AddModel(&WallMd3);
+    Model sphereMdl2(sphereMdl, "sphere2");
+    sphereMdl2.SetTranslate(Vec3(-2.0f, 1.0f, 0.0f));
+    m_pipeline->m_config->AddModel(&sphereMdl2);
 
-    // Model sphereMdl(curPath + "obj/sphere/sphere.obj", "sphere1");
-    // sphereMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/sphere/sphere_diffuse.png"));
-    // sphereMdl.SetShader(shader);
-    // sphereMdl.SetTranslate(Vec3(-2.0f, 0.0f, 0.0f));
-    // sphereMdl.SetRelScale(Vec3(0.8f, 0.8f, 0.8f));
-    // m_pipeline->m_config->AddModel(&sphereMdl);
-
-    // Model sphereMdl2(sphereMdl, "sphere2");
-    // sphereMdl2.SetTranslate(Vec3(-2.0f, 1.0f, 0.0f));
-    // m_pipeline->m_config->AddModel(&sphereMdl2);
+    Model sphereMdl3(sphereMdl, "sphere2");
+    sphereMdl3.SetTranslate(Vec3(2.0f, 1.0f, 0.0f));
+    sphereMdl3.m_objects[0].m_material->m_roughness = 0.1f;
+    sphereMdl3.SetShader(shaderPBR);
+    m_pipeline->m_config->AddModel(&sphereMdl3);
 
     // Model neptune(curPath + "obj/neptune/neptune.obj");
     // neptune.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_mouse.jpg"));
     // neptune.m_objects[1].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex002f_body01.jpg"));
     // neptune.m_objects[2].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Texf_body02.jpg"));
     // neptune.m_objects[3].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/neptune/Tex001f_eye.jpg"));
-    // neptune.SetShader(shader);
+    // neptune.SetShader(shaderPhong);
     // neptune.SetRelScale(Vec3(2.0f, 2.0f, 2.0f));
     // neptune.SetTranslate(Vec3(0.0f, 0.2f, 0.0f));
     // m_pipeline->m_config->AddModel(&neptune);

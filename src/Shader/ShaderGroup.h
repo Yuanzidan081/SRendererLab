@@ -5,5 +5,6 @@
 #include "SimpleShader.h"
 #include "SkyBoxShader.h"
 #include "NormalShader.h"
+#include "PBRShader.h"
 #include "Shader.h"
 #endif // SHADERGROUP_H

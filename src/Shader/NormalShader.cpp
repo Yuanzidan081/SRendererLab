@@ -27,11 +27,7 @@ VertexOut NormalShader::VertexShader(const Vertex &in)
     result.texcoord = in.texcoord;
     result.normal = Normalize(m_uniform->m_normalMatrix * in.normal);
     Vec3 tangent = Normalize(m_uniform->m_modelMatrix.GetMat3x3() * in.tangent);
-    // if (tangent != Vec3(0.0f, 0.0f, 0.0f))
-    //     tangent = Normalize(tangent);
     Vec3 binormal = Normalize(result.normal.GetCrossProduct(tangent));
-    // if (binormal != Vec3(0.0f, 0.0f, 0.0f))
-    //     binormal = Normalize(binormal);
     result.TBN = Mat3x3(tangent, binormal, result.normal);
     return result;
 }
@@ -70,8 +66,6 @@ Vec3 NormalShader::CalDirectionalLight(DirectionalLight *light, Material *materi
 {
     Vec3 worldLightDir = Normalize(-light->m_direction);
 
-    // ambient
-
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
     Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
@@ -87,9 +81,6 @@ Vec3 NormalShader::CalDirectionalLight(DirectionalLight *light, Material *materi
 Vec3 NormalShader::CalPointLight(PointLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
-
-    // ambient
-    Vec4 ambient = m_uniform->m_ambient;
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
@@ -111,9 +102,6 @@ Vec3 NormalShader::CalPointLight(PointLight *light, Material *material, const Ve
 Vec3 NormalShader::CalSpotLight(SpotLight *light, Material *material, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
-
-    // ambient
-    Vec4 ambient = m_uniform->m_ambient;
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));

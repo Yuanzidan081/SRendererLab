@@ -40,6 +40,8 @@ Vec3 Normalize(const Vec3 &v)
     float length;
     float scalefactor;
     length = v.GetLength();
+    if (Equal(length, 1.0) || Equal(length, 0))
+        return v;
     scalefactor = 1.0f / length;
     Vec3 result = v;
     result.x *= scalefactor;
@@ -51,4 +53,14 @@ Vec3 Normalize(const Vec3 &v)
 Vec3 operator*(const float rhs, const Vec3 &v)
 {
     return Vec3(v.x * rhs, v.y * rhs, v.z * rhs);
+}
+
+Vec3 Pow(const Vec3 &v1, const Vec3 &v2)
+{
+    return Vec3(std::pow(v1.x, v2.x), std::pow(v1.y, v2.y), std::pow(v1.z, v2.z));
+}
+
+Vec3 operator/(const Vec3 &v1, const Vec3 &v2)
+{
+    return Vec3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
 }

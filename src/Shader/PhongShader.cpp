@@ -40,15 +40,8 @@ Vec4 PhongShader::FragmentShader(const VertexOut &in)
     Vec4 albedo = in.color;
     if (m_uniform->m_mainTex)
         albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
-    // Vec3 amb, diff, spec;
     Vec3 result = m_uniform->m_ambient * albedo;
     Vec3 worldViewDir = Normalize(Vec3(m_uniform->m_eyePos - in.worldPos));
-    // for (int i = 0; i < m_uniform->m_lights->directionalLightGroup.size(); ++i)
-    //     result += CalDirectionalLight(m_uniform->m_lights->directionalLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, albedo);
-    // for (int i = 0; i < m_uniform->m_lights->pointLightGroup.size(); ++i)
-    //     result += CalPointLight(m_uniform->m_lights->pointLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, in.worldPos, albedo);
-    // for (int i = 0; i < m_uniform->m_lights->spotLightGroup.size(); ++i)
-    //     result += CalSpotLight(m_uniform->m_lights->spotLightGroup[i], m_uniform->m_material, worldNormal, worldViewDir, in.worldPos, albedo);
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
@@ -87,9 +80,6 @@ Vec3 PhongShader::CalPointLight(PointLight *light, Material *material, const Vec
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 
-    // ambient
-    Vec4 ambient = m_uniform->m_ambient;
-
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
     Vec3 diffuse = diff * (material->m_diffuse * albedo) * (light->m_color);
@@ -111,8 +101,6 @@ Vec3 PhongShader::CalSpotLight(SpotLight *light, Material *material, const Vec3 
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
     Vec3 spotLightDir = Normalize(light->m_direction);
-    // ambient
-    Vec4 ambient = m_uniform->m_ambient;
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));

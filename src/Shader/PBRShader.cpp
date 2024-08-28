@@ -81,7 +81,7 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     // worldNormal
     Vec3 worldNormal;
     if (m_uniform->m_normalTex)
-        worldNormal = m_uniform->m_normalTex->SampleTexture(in.texcoord);
+        worldNormal = in.TBN * m_uniform->m_normalTex->SampleTexture(in.texcoord);
     else
         worldNormal = Normalize(in.normal);
     // worldViewDir
@@ -96,7 +96,12 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     float metallic = m_uniform->m_metallic;
     if (m_uniform->m_metallicTex)
         metallic = m_uniform->m_metallicTex->SampleTexture(in.texcoord).r;
-
+    float roughness = m_uniform->m_roughness;
+    if (m_uniform->m_roughnessTex)
+        roughness = m_uniform->m_roughnessTex->SampleTexture(in.texcoord).r;
+    float ao = m_uniform->m_ao;
+    if (m_uniform->m_aoTex)
+        ao = m_uniform->m_aoTex->SampleTexture(in.texcoord).r;
     // Fo for frenel function
     Vec3 F0 = Vec3(0.04f);
     F0 = F0 * (1 - metallic) + albedo * metallic;
@@ -107,21 +112,22 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo, metallic, F0);
+            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo, metallic, roughness, F0);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, F0);
+            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, roughness, F0);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, F0);
+            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, roughness, F0);
     }
 
-    Vec3 ambient = Vec3(0.03f) * albedo * m_uniform->m_ao;
+    Vec3 ambient = Vec3(0.03f) * albedo * ao;
     Vec3 color = ambient + result;
     color = color / (color + Vec3(1.0f));
     color = Pow(color, Vec3(1.0f / 2.2f));
     return color;
 }
 
-Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo, const float metallic, const Vec3 &F0)
+Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo,
+                                    const float metallic, const float roughness, const Vec3 &F0)
 {
     // prepare: light property
     Vec3 worldLightDir = Normalize(-light->m_direction);
@@ -129,8 +135,8 @@ Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNo
     Vec3 radiance = light->m_color;
 
     // Cook-Torrance BRDF
-    float NDF = D_GGX_TR(worldNormal, halfwayDir, m_uniform->m_roughness);
-    float G = GeometrySmith(worldNormal, worldViewDir, worldLightDir, m_uniform->m_roughness);
+    float NDF = D_GGX_TR(worldNormal, halfwayDir, roughness);
+    float G = GeometrySmith(worldNormal, worldViewDir, worldLightDir, roughness);
     Vec3 F = fresnelSchlick(Clamp(halfwayDir.GetDotProduct(worldViewDir), 0.0f, 1.0f), F0);
 
     Vec3 numerator = NDF * G * F;
@@ -149,7 +155,7 @@ Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNo
 }
 
 Vec3 PBRShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir,
-                              const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const Vec3 &F0)
+                              const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const float roughness, const Vec3 &F0)
 {
     // prepare: light property
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
@@ -161,8 +167,8 @@ Vec3 PBRShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const 
     Vec3 radiance = light->m_color * attenuation;
 
     // Cook-Torrance BRDF
-    float NDF = D_GGX_TR(worldNormal, halfwayDir, m_uniform->m_roughness);
-    float G = GeometrySmith(worldNormal, worldViewDir, worldLightDir, m_uniform->m_roughness);
+    float NDF = D_GGX_TR(worldNormal, halfwayDir, roughness);
+    float G = GeometrySmith(worldNormal, worldViewDir, worldLightDir, roughness);
     Vec3 F = fresnelSchlick(Clamp(halfwayDir.GetDotProduct(worldViewDir), 0.0f, 1.0f), F0);
 
     Vec3 numerator = NDF * G * F;
@@ -180,7 +186,8 @@ Vec3 PBRShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const 
     return result;
 }
 
-Vec3 PBRShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const Vec3 &F0)
+Vec3 PBRShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo,
+                             const float metallic, const float roughness, const Vec3 &F0)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
@@ -197,8 +204,8 @@ Vec3 PBRShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Ve
     Vec3 radiance = light->m_color * attenuation * intensity;
 
     // Cook-Torrance BRDF
-    float NDF = D_GGX_TR(worldNormal, halfwayDir, m_uniform->m_roughness);
-    float G = GeometrySmith(worldNormal, worldViewDir, worldLightDir, m_uniform->m_roughness);
+    float NDF = D_GGX_TR(worldNormal, halfwayDir, roughness);
+    float G = GeometrySmith(worldNormal, worldViewDir, worldLightDir, roughness);
     Vec3 F = fresnelSchlick(Clamp(halfwayDir.GetDotProduct(worldViewDir), 0.0f, 1.0f), F0);
 
     Vec3 numerator = NDF * G * F;

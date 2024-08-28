@@ -23,10 +23,10 @@ public:
     ~PBRShader() = default;
     virtual VertexOut VertexShader(const Vertex &in);
     virtual Vec4 FragmentShader(const VertexOut &in);
-    Vec3 CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo, const float metallic, const Vec3 &F0);
+    Vec3 CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo, const float metallic, const float roughness, const Vec3 &F0);
 
-    Vec3 CalPointLight(PointLight *light,  const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const Vec3 &F0);
+    Vec3 CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const float roughness, const Vec3 &F0);
 
-    Vec3 CalSpotLight(SpotLight *light,  const Vec3 &worldNormal, const Vec3 &worldViewDirs, const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const Vec3 &F0);
+    Vec3 CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDirs, const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const float roughness, const Vec3 &F0);
 };
 #endif // PBRSHADER_H

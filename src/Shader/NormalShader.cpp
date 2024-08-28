@@ -52,12 +52,13 @@ Vec4 NormalShader::FragmentShader(const VertexOut &in)
     Vec3 result = albedo;
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
-        if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
-        else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
+        // if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
+        //     result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
+        // else
+        if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
             result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
-        else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
+        // else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
+        // result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
     }
     return Vec4(result, 1.0f);
 }

@@ -33,6 +33,9 @@ public:
     Texture2D *m_mainTex;
     Texture2D *m_normalTex;
     Texture2D *m_metallicTex;
+    Texture2D *m_roughnessTex;
+    Texture2D *m_aoTex;
+
     CubeMap *m_cubeMap;
     Uniform();
     Uniform(const Mat4x4 m,

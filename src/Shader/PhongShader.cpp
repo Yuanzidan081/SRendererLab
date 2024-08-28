@@ -45,16 +45,17 @@ Vec4 PhongShader::FragmentShader(const VertexOut &in)
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]),  worldNormal, worldViewDir, albedo);
+            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
             result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]),  worldNormal, worldViewDir, in.worldPos, albedo);
+            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
     }
     // tone mapping
     // result /= (result + Vec3(0.5f, 0.5f, 0.5f));
     // result = Vec3(1.0f) - Vec3(std::exp(-result.x * 1.0f), std::exp(-result.y * 1.0f), std::exp(-result.z * 1.0f));
-
+    result = result / (result + Vec3(1.0f));
+    result = Pow(result, Vec3(1.0f / 2.2f));
     return Vec4(result, 1.0f);
 }
 

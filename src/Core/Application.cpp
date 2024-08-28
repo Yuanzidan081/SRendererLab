@@ -60,18 +60,27 @@ void Application::Run()
 
     Model sphereMdl(curPath + "obj/sphere/sphere.obj", "sphere1");
     sphereMdl.m_objects[0].m_material->SetMainTexturePath(curPath + "obj/sphere/sphere_diffuse.png");
-    sphereMdl.SetShader(shaderPBR);
+    sphereMdl.m_objects[0].m_material->SetNormalTexturePath(curPath + "obj/sphere/sphere_normal.jpg");
+    sphereMdl.m_objects[0].m_material->SetMatallicTexPath(curPath + "obj/sphere/sphere_metalness.jpg");
+    sphereMdl.m_objects[0].m_material->SetRoughnessTexPath(curPath + "obj/sphere/sphere_roughness.png");
+    sphereMdl.m_objects[0].m_material->SetAOTexturePath(curPath + "obj/sphere/sphere_occlusion.jpg");
+    sphereMdl.SetShader(shaderPhong);
     sphereMdl.SetTranslate(Vec3(-2.0f, 0.0f, 0.0f));
     sphereMdl.m_objects[0].m_material->m_roughness = 0.5f;
     sphereMdl.SetRelScale(Vec3(0.8f, 0.8f, 0.8f));
     m_pipeline->m_config->AddModel(&sphereMdl);
 
     Model sphereMdl2(sphereMdl, "sphere2");
+    sphereMdl2.m_objects[0].m_material->SetMainTexturePath(curPath + "obj/sphere/rustediron/rustediron2_basecolor.png");
+    sphereMdl2.m_objects[0].m_material->SetMatallicTexPath(curPath + "obj/sphere/rustediron/rustediron2_metallic.png");
+    sphereMdl2.m_objects[0].m_material->SetNormalTexturePath(curPath + "obj/sphere/rustediron/rustediron2_normal.png");
+    sphereMdl2.m_objects[0].m_material->SetRoughnessTexPath(curPath + "obj/sphere/rustediron/rustediron2_roughness.png");
+    sphereMdl.SetShader(shaderPBR);
     sphereMdl2.SetTranslate(Vec3(-2.0f, 1.0f, 0.0f));
     sphereMdl2.m_objects[0].m_material->m_roughness = 1.0f;
     m_pipeline->m_config->AddModel(&sphereMdl2);
 
-    Model sphereMdl3(sphereMdl, "sphere2");
+    Model sphereMdl3(sphereMdl, "sphere3");
     sphereMdl3.SetTranslate(Vec3(2.0f, 1.0f, 0.0f));
     sphereMdl3.m_objects[0].m_material->m_roughness = 0.1f;
     sphereMdl3.SetShader(shaderPBR);

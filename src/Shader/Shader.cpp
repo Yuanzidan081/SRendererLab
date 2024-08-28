@@ -16,6 +16,9 @@ Uniform::Uniform() : m_eyePos(Vec3(0.0f, 0.0f, 0.0f)),
                      m_lights(nullptr),
                      m_mainTex(nullptr),
                      m_normalTex(nullptr),
+                     m_metallicTex(nullptr),
+                     m_roughnessTex(nullptr),
+                     m_aoTex(nullptr),
                      m_cubeMap(nullptr)
 {
 }
@@ -36,6 +39,9 @@ Uniform::Uniform(const Mat4x4 m, const Mat4x4 v, const Mat4x4 p) : m_eyePos(Vec3
                                                                    m_lights(nullptr),
                                                                    m_mainTex(nullptr),
                                                                    m_normalTex(nullptr),
+                                                                   m_metallicTex(nullptr),
+                                                                   m_roughnessTex(nullptr),
+                                                                   m_aoTex(nullptr),
                                                                    m_cubeMap(nullptr)
 
 {

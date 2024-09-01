@@ -22,6 +22,7 @@ public:
     float m_roughness;
     float m_metallic;
     float m_ao;
+    Vec3 m_emission;
 
     Vec4 m_diffuse;
     Vec4 m_specular;
@@ -35,6 +36,7 @@ public:
     Texture2D *m_metallicTex;
     Texture2D *m_roughnessTex;
     Texture2D *m_aoTex;
+    Texture2D *m_emissionTex;
 
     CubeMap *m_cubeMap;
     Uniform();

@@ -1,6 +1,7 @@
 #include "PBRShader.h"
 #include "Render/Material.h"
 #include "Render/Light.h"
+#include "Algorithm/ToneMapping.h"
 PBRShader *PBRShader::s_shader = nullptr;
 
 float PBRShader::D_GGX_TR(const Vec3 &nDir, const Vec3 &hDir, float roughness)
@@ -81,7 +82,9 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     // worldNormal
     Vec3 worldNormal;
     if (m_uniform->m_normalTex)
-        worldNormal = in.TBN * m_uniform->m_normalTex->SampleTexture(in.texcoord);
+    {
+        worldNormal = Normalize(in.TBN * (m_uniform->m_normalTex->SampleTexture(in.texcoord) * 2.0f - 1.0f));
+    }
     else
         worldNormal = Normalize(in.normal);
     // worldViewDir
@@ -106,6 +109,9 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     Vec3 F0 = Vec3(0.04f);
     F0 = F0 * (1 - metallic) + albedo * metallic;
 
+    Vec3 emission = m_uniform->m_emission;
+    if (m_uniform->m_emissionTex)
+        emission = m_uniform->m_emissionTex->SampleTexture(in.texcoord);
     // result color
     Vec3 result(0.0f);
 
@@ -120,9 +126,15 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     }
 
     Vec3 ambient = Vec3(0.03f) * albedo * ao;
-    Vec3 color = ambient + result;
+    Vec3 color = ambient + result + emission;
     color = color / (color + Vec3(1.0f));
     color = Pow(color, Vec3(1.0f / 2.2f));
+    // for (size_t i = 0; i < 3; ++i)
+    // {
+    //     color[i] = ACES_TONEMapping(color[i]);
+    //     color[i] = std::pow(color[i], 1.0 / 2.2);
+    // }
+
     return color;
 }
 

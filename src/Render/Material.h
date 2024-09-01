@@ -14,6 +14,7 @@ public:
     float m_roughness;
     float m_metallic;
     float m_ao;
+    Vec3 m_emission;
     // std::shared_ptr<Texture2D> m_mainTex;
     // std::shared_ptr<Texture2D> m_normalTex;
     // std::shared_ptr<Texture2D> m_metallicTex;
@@ -23,21 +24,22 @@ public:
     std::string m_metallicTexPath;
     std::string m_roughnessTexPath;
     std::string m_aoTexPath;
+    std::string m_emissionTexPath;
 
     Shader *m_shader;
 
     Material() : m_diffuse(Vec4(1.0, 1.0, 1.0, 1.0)),
                  m_specular(Vec4(1.0, 1.0, 1.0, 1.0)),
-                 m_shiness(16), m_roughness(0.99f), m_metallic(1.0f), m_ao(1.0f),
-                 m_mainTexPath(), m_normalTexPath(), m_metallicTexPath(), m_shader(nullptr) {}
+                 m_shiness(16), m_roughness(0.99f), m_metallic(1.0f), m_ao(1.0f), m_emission(Vec3(0.0f)),
+                 m_mainTexPath(), m_normalTexPath(), m_metallicTexPath(), m_emissionTexPath(), m_shader(nullptr) {}
     Material(const Vec4 &color, const Vec4 &specular, const int &gloss)
-        : m_diffuse(color), m_specular(specular), m_shiness(gloss), m_roughness(0.99f), m_metallic(1.0f), m_ao(1.0f),
-          m_mainTexPath(), m_normalTexPath(), m_metallicTexPath(), m_roughnessTexPath(), m_shader(nullptr)
+        : m_diffuse(color), m_specular(specular), m_shiness(gloss), m_roughness(0.99f), m_metallic(1.0f), m_ao(1.0f), m_emission(Vec3(0.0f)),
+          m_mainTexPath(), m_normalTexPath(), m_metallicTexPath(), m_roughnessTexPath(), m_emissionTexPath(), m_shader(nullptr)
     {
     }
     Material(const Material &m) : m_diffuse(m.m_diffuse), m_specular(m.m_specular), m_shiness(m.m_shiness), m_roughness(m.m_roughness), m_metallic(m.m_metallic), m_ao(m.m_ao),
                                   m_mainTexPath(m.m_mainTexPath), m_normalTexPath(m.m_normalTexPath), m_metallicTexPath(m.m_metallicTexPath), m_roughnessTexPath(m.m_roughnessTexPath),
-                                  m_shader(m.m_shader)
+                                  m_emissionTexPath(m.m_emissionTexPath), m_shader(m.m_shader)
     {
     }
     ~Material();
@@ -65,6 +67,10 @@ public:
     void SetAOTexturePath(const std::string &t)
     {
         m_aoTexPath = t;
+    }
+    void SetEmissionTexturePath(const std::string &t)
+    {
+        m_emissionTexPath = t;
     }
     void SetupUniform(Uniform &uniform);
 };

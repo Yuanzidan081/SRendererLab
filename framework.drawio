@@ -1,0 +1,369 @@
+<mxfile host="65bd71144e">
+    <diagram id="0IJ92mYvu78yD-s9BBEv" name="第 1 页">
+        <mxGraphModel dx="3004" dy="2409" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="147" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;Detail&lt;/b&gt;&lt;/span&gt;&lt;b style=&quot;font-size: 72px; background-color: initial;&quot;&gt;s&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 72px; background-color: initial;&quot;&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="-648" y="-280" width="2164.5" height="1304" as="geometry"/>
+                </mxCell>
+                <mxCell id="146" value="&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;Overview&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 72px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="-652" y="-981" width="1678" height="668" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="View" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="-27.5" y="152.98275862068965" width="358.4486187845303" height="338.5344827586207" as="geometry"/>
+                </mxCell>
+                <mxCell id="135" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#000000;endArrow=classic;endFill=1;" parent="1" source="7" target="15" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="&lt;b&gt;view.slotFunc&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="0.5" y="198.13" width="293.62" height="41.13" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="ViewModel" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="431.5" y="152.98" width="463.95" height="336.02" as="geometry"/>
+                </mxCell>
+                <mxCell id="134" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#000000;endArrow=classic;endFill=1;" parent="1" source="9" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&lt;b&gt;user input&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="14.5" y="527" width="154.01" height="53.78" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Model" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="1047.85" y="149" width="366.41" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="&lt;b&gt;Command pointer&lt;/b&gt;&lt;br&gt;command.setparameter(parameter)&lt;br&gt;&lt;font color=&quot;#ff0000&quot;&gt;command.exec()&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="117.5" y="413" width="207" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="app" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="188.5" y="538" width="396.41" height="418" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="&lt;b&gt;view&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="288.5" y="548" width="287" height="81" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="22" target="15" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="&lt;b&gt;view.setCommand&lt;br&gt;(viewModel.GetCommand)&lt;br&gt;view.setdata(modelView.GetData())&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="321.5" y="556.88" width="237" height="51" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="24" target="22" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.346;entryY=0.409;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="24" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="267.5" y="464" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="&lt;b&gt;Command pointer&lt;/b&gt;(init here with viewModel)&lt;br&gt;&lt;font color=&quot;#ff0000&quot;&gt;command.exec():&lt;/font&gt;&lt;br&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;{viewModel.execCommand(decoded Parameter):{&lt;font color=&quot;#ff0000&quot;&gt;model.func()&lt;/font&gt;};&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;viewModel.fire_OnCommandComplete(&quot;command&quot;, true);}&lt;/span&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="541.25" y="398" width="342" height="80.66" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#000000;exitX=0.246;exitY=0.875;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="24" target="68" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="541.5" y="469"/>
+                            <mxPoint x="541.5" y="518"/>
+                            <mxPoint x="24.5" y="518"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" value="&lt;b&gt;Model pointer&lt;br&gt;&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="643.5" y="179" width="172" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="&lt;font style=&quot;font-weight: bold;&quot; color=&quot;#ff0000&quot;&gt;func&lt;/font&gt;&lt;br&gt;&lt;b&gt;{&lt;/b&gt;model data logic...&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Fire_OnPropertyChanged&lt;/span&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;}&lt;/b&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1140.5" y="406" width="236" height="41.13" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=orthogonalEdgeStyle;html=1;fontColor=#FF0000;exitX=0.878;exitY=0.669;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.429;entryY=0.34;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="24" target="38" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="&lt;b&gt;viewModel&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="263.5" y="678" width="303" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FF0000;" parent="1" source="42" target="92" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="472.5" y="660"/>
+                            <mxPoint x="948.5" y="660"/>
+                            <mxPoint x="948.5" y="263"/>
+                            <mxPoint x="875.5" y="263"/>
+                            <mxPoint x="875.5" y="358"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" value="&lt;b&gt;viewModel.setModel(model)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="387.5" y="693" width="169" height="51" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FF0000;" parent="1" source="12" target="42" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;span style=&quot;font-weight: 600;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Helvetica&quot;&gt;Proxy_CommandNotification&amp;lt;T&amp;gt;&lt;/font&gt;&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot; face=&quot;Helvetica&quot;&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;border-color: var(--border-color); background-color: initial;&quot;&gt;+ &lt;/span&gt;&lt;/font&gt;&lt;/span&gt;AddCommandNotification&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot; face=&quot;Helvetica&quot;&gt;+ Fire_OnCommandComplete&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="255.5" y="-26" width="425" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="4" target="48" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="705.5" y="127" as="sourcePoint"/>
+                        <mxPoint x="714.5" y="71" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="53" value="&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot; face=&quot;Helvetica&quot;&gt;&lt;b&gt;NotificationImpl&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;ICommandNotification&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot;&gt;&lt;b&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ &lt;/span&gt;&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;Clear&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;+ AddNotification&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="255.5" y="-136" width="425" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="&lt;div style=&quot;font-size: 16px; line-height: 22px;&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;&quot;&gt;&lt;b&gt;command change notification and receiving&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#e1d5e7;" parent="1" vertex="1">
+                    <mxGeometry x="304.5" y="-175" width="348.46" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="&lt;div style=&quot;font-size: 16px; line-height: 22px;&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;div style=&quot;line-height: 22px;&quot;&gt;&lt;b style=&quot;&quot;&gt;property change notification and receiving&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#e1d5e7;" parent="1" vertex="1">
+                    <mxGeometry x="785.27" y="-175" width="334.46" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;&lt;b&gt;NotificationImpl&amp;lt;IPropertyNotification&amp;gt;&lt;/b&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font style=&quot;background-color: initial; font-family: Helvetica; white-space: normal; border-color: var(--border-color);&quot;&gt;&lt;b&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ &lt;/span&gt;&lt;/b&gt;&lt;/font&gt;&lt;span style=&quot;background-color: initial; white-space: normal; font-family: Helvetica;&quot;&gt;Clear&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;+ AddNotification&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="715.5" y="-136" width="425" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;&lt;b&gt;Proxy_PropertyNotification&lt;/b&gt;&lt;/font&gt;&lt;span style=&quot;font-weight: 600;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Helvetica&quot;&gt;&amp;lt;T&amp;gt;&lt;/font&gt;&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;border-color: var(--border-color); background-color: initial;&quot;&gt;+ &lt;/span&gt;&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;AddPropertyNotification&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font style=&quot;border-color: var(--border-color);&quot; face=&quot;Helvetica&quot;&gt;+ &lt;/font&gt;&lt;font face=&quot;Helvetica&quot;&gt;Fire_OnPropertyChanged&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="715.5" y="-29" width="425" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="60" target="59" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="477.9999999999998" y="-16" as="sourcePoint"/>
+                        <mxPoint x="477.9999999999998" y="-58" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="64" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="4" target="60" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="707.5" y="130" as="sourcePoint"/>
+                        <mxPoint x="478" y="52" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="66" value="&lt;b&gt;viewModel.addNotification(view.getsink)&lt;br&gt;(viewModel can notify view)&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="308.5" y="776" width="247" height="51" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#000000;" parent="1" source="68" target="66" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-51.5" y="448"/>
+                            <mxPoint x="-51.5" y="802"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="73" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#000000;dashed=1;dashPattern=8 8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="68" target="72" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-247.5" y="73" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="-288.5" y="395"/>
+                            <mxPoint x="-288.5" y="12"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="68" value="&lt;b&gt;view sink&lt;br&gt;(property&lt;br&gt;command)&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="-14.5" y="395" width="79" height="73.56" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="&lt;b&gt;Command pointer(ui switch)&lt;/b&gt;&lt;br&gt;command.setparameter(parameter)&lt;br&gt;- command.exec(): just change ui,&lt;br&gt;don't notify the property change or command change" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="263.5" y="869" width="209" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="&lt;b&gt;sink(property sink)&lt;/b&gt;&lt;br&gt;use string to notify the target sink" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="-164.5" y="-24" width="289" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="48" target="53" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="935" y="-19" as="sourcePoint"/>
+                        <mxPoint x="935" y="-58" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="76" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="72" target="77" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="478" y="-16" as="sourcePoint"/>
+                        <mxPoint x="-19.5" y="-73" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="77" value="&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Helvetica&quot;&gt;&lt;b&gt;IPropertyNotification&lt;/b&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Helvetica&quot;&gt;+ OnPropertyChanged = 0&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="-164.5" y="-141" width="288" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="&lt;b&gt;sink(command sink)&lt;br&gt;&lt;/b&gt;use string to notify the target sink&lt;b&gt;&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="-634.5" y="-24" width="289" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="78" target="80" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="8" y="-16" as="sourcePoint"/>
+                        <mxPoint x="-489.5" y="-73" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="80" value="&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;border-color: var(--border-color); margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;&lt;b&gt;ICommandNotification&lt;/b&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Helvetica&quot;&gt;+ &lt;/font&gt;&lt;font face=&quot;Helvetica&quot;&gt;OnCommandComplete = 0&lt;/font&gt;&lt;br&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="-634.5" y="-141" width="288" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#000000;dashed=1;dashPattern=8 8;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="68" target="78" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="35" y="405" as="sourcePoint"/>
+                        <mxPoint x="-154.5" y="22" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="24.5" y="357"/>
+                            <mxPoint x="-313.5" y="357"/>
+                            <mxPoint x="-313.5" y="11"/>
+                            <mxPoint x="-345.5" y="11"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="86" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="12" target="48" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="722.2450000000003" y="162.98000000000002" as="sourcePoint"/>
+                        <mxPoint x="478" y="52" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="87" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="12" target="60" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="722.2450000000003" y="162.98000000000002" as="sourcePoint"/>
+                        <mxPoint x="938" y="48.99999999999977" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="91" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontColor=#FF0000;endArrow=none;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="730.4999999999998" y="197" as="sourcePoint"/>
+                        <mxPoint x="839.5" y="447" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="92" value="&lt;b style=&quot;border-color: var(--border-color);&quot;&gt;viewModel.setModel(model):&lt;br&gt;&lt;/b&gt;{set modelpointer,&lt;br&gt;model.&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;addNotification(viewModelsink)&lt;/span&gt;}&lt;br&gt;（model can notify viewModel）" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="597.5" y="314" width="235" height="70.49" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" style="edgeStyle=orthogonalEdgeStyle;html=1;fontFamily=Helvetica;fontColor=#000000;entryX=0.553;entryY=0.434;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="715.5" y="201" as="sourcePoint"/>
+                        <mxPoint x="727.4549999999999" y="339.59266" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="716.5" y="202"/>
+                            <mxPoint x="727.5" y="202"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="94" value="&lt;b&gt;viewModel sink&lt;br&gt;(property):&lt;br&gt;{viewModel.&lt;/b&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Fire_OnPropertyChanged}&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="438.50000000000006" y="234" width="227.54" height="69.69" as="geometry"/>
+                </mxCell>
+                <mxCell id="98" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=72;fontColor=#000000;" parent="1" target="96" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                        <mxPoint x="-174" y="-442.75" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="131" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-292" y="-484" as="targetPoint"/>
+                        <mxPoint x="-174" y="-442.75" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="-164" y="-443"/>
+                            <mxPoint x="-164" y="-532"/>
+                            <mxPoint x="-192" y="-532"/>
+                            <mxPoint x="-249" y="-531"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="95" value="&lt;font style=&quot;font-size: 72px;&quot;&gt;View&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=center;labelBackgroundColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="-627" y="-478" width="454" height="141" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=72;fontColor=#000000;" parent="1" source="96" target="97" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=72;fontColor=#000000;" parent="1" source="96" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-174" y="-372.25" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="96" value="&lt;font style=&quot;font-size: 72px;&quot;&gt;ViewModel&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=center;labelBackgroundColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="-30" y="-478" width="454" height="141" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=72;fontColor=#000000;" parent="1" source="97" target="96" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="&lt;font style=&quot;font-size: 72px;&quot;&gt;Model&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=center;labelBackgroundColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="545" y="-478" width="454" height="141" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;commands(defined in viewModel)&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="-149" y="-478" width="103" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;use notify(notification added&amp;nbsp; in the modelView.setModel)&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="425" y="-428" width="120" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;notify(use viewmodel real commands)&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;fontColor=#000000;fillColor=none;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="425" y="-486" width="118" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" value="&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 72px;&quot;&gt;Note&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;1. if view trigger a callback function which should change the model data, the command should be defined in the modelView. and the view gets the command from the modelView and use the command exec function to use the modelView to change the model data.&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;2. if the ui want to change to the next ui, the commands should be defined in the app, app organizes all the view switch commands&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;MVVM data stream&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;3. view notify the viewModel: use commands gotten from viewModel (viewModel should initialized in the viewModel first in the constructor)&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;4. viewModel notify the model: commands exec(called by view) calls the real command function in the viewModel to change modelData&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font size=&quot;3&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;5. model notify the viewModel: use notification(since the model only changes the property(sink defined in the viewModel), so use the &quot;Fire_OnPropertyChanged&quot; to notify the viewModel, so the model should addNotification of viewModel(model addNotification should be defined in the viewModel(viewModel.setModel) )&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;)&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;6. viewModel notify the view: use notification(since the viewModel can change the property and command(sink defined in the view))command is delivered from the viewModel to the view by app layer&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;7. the commands defined in the app will use the app pointer to operate the view switch(view can also use the command exec to switch to another view like it notify the viewModel, since the app manages all the view, so the commands should own the app pointer)&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font size=&quot;3&quot;&gt;8. the commands defined in the&amp;nbsp; viewModel will be used to change the data(see 4)&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="1045.5" y="-984" width="471" height="672" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;use notify(notification added&amp;nbsp; in the app construction)&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="-157.5" y="-423" width="120" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#000000;" parent="1" source="120" target="95" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="122" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#000000;" parent="1" source="120" target="96" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="123" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#000000;" parent="1" source="120" target="97" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="&lt;font style=&quot;font-size: 72px;&quot;&gt;App&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;align=center;labelBackgroundColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="-24" y="-862" width="454" height="141" as="geometry"/>
+                </mxCell>
+                <mxCell id="124" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;manage&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="-209" y="-605" width="103" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="125" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;manage&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="144.45" y="-605" width="103" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="126" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;manage&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="441" y="-605" width="103" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="132" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;commands(defined in app)&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#F8CECC;" parent="1" vertex="1">
+                    <mxGeometry x="-273" y="-526" width="103" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="136" value="&lt;b&gt;Command(init here)&lt;/b&gt;&lt;br&gt;command.setParameter(parameter)&lt;br&gt;command.exec()&lt;br&gt;{viewModel.execCommand(decoded Parameter);&lt;br&gt;viewModel.fire_OnCommandComplete(&quot;command&quot;, true);}" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="715.5" y="843" width="426" height="165" as="geometry"/>
+                </mxCell>
+                <mxCell id="137" value="&lt;pre style=&quot;border-color: var(--border-color); text-align: left; margin-top: 0px; margin-bottom: 0px;&quot;&gt;&lt;span style=&quot;border-color: var(--border-color); font-weight: 600;&quot;&gt;&lt;font style=&quot;&quot; face=&quot;Helvetica&quot;&gt;ICommandBase&lt;/font&gt;&lt;/span&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="715.5" y="776" width="426" height="37" as="geometry"/>
+                </mxCell>
+                <mxCell id="138" value="" style="endArrow=block;endFill=0;endSize=12;html=1;fontFamily=Helvetica;fontColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="136" target="137" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="928.5" y="230" as="sourcePoint"/>
+                        <mxPoint x="937.5" y="838" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="139" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#000000;dashed=1;dashPattern=8 8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="24" target="136" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-154.5" y="22" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="797.5" y="541"/>
+                            <mxPoint x="657.5" y="541"/>
+                            <mxPoint x="657.5" y="926"/>
+                        </Array>
+                        <mxPoint x="35" y="405" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="141" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#000000;dashed=1;dashPattern=8 8;entryX=0;entryY=0.75;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="71" target="136" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="725.5" y="935.5" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="601.5" y="908"/>
+                            <mxPoint x="601.5" y="967"/>
+                        </Array>
+                        <mxPoint x="807.75" y="488.6600000000003" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="143" value="&lt;b&gt;view data(display)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="0.5" y="163" width="150" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="144" value="&lt;b&gt;model data&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1170.5" y="341" width="150" height="28" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="ApUNyKRye34Rwkex7md1" name="第 2 页">
+        <mxGraphModel dx="762" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="hSwqIjDixRSAT9WFMSgH-1" value="pipeline" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="200" width="110" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hSwqIjDixRSAT9WFMSgH-2" value="config" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="310" y="200" width="110" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

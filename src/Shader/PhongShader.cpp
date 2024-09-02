@@ -2,6 +2,7 @@
 #include "Render/Material.h"
 #include "Render/Light.h"
 #include <iostream>
+#include "Algorithm/ToneMapping.h"
 PhongShader *PhongShader::s_shader = nullptr;
 PhongShader *PhongShader::GetInstance()
 {
@@ -45,21 +46,26 @@ Vec4 PhongShader::FragmentShader(const VertexOut &in)
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
+            result += CalDirectionalLight(std::dynamic_pointer_cast<DirectionalLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
+            result += CalPointLight(std::dynamic_pointer_cast<PointLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
+            result += CalSpotLight(std::dynamic_pointer_cast<SpotLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
     }
     // tone mapping
     // result /= (result + Vec3(0.5f, 0.5f, 0.5f));
     // result = Vec3(1.0f) - Vec3(std::exp(-result.x * 1.0f), std::exp(-result.y * 1.0f), std::exp(-result.z * 1.0f));
-    result = result / (result + Vec3(1.0f));
-    result = Pow(result, Vec3(1.0f / 2.2f));
+    // result = result / (result + Vec3(1.0f));
+    // result = Pow(result, Vec3(1.0f / 2.2f));
+    for (size_t i = 0; i < 3; ++i)
+    {
+        result[i] = ACES_TONEMapping(result[i]);
+        result[i] = std::pow(result[i], 1.0 / 2.2);
+    }
     return Vec4(result, 1.0f);
 }
 
-Vec3 PhongShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
+Vec3 PhongShader::CalDirectionalLight(const std::shared_ptr<DirectionalLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(-light->m_direction);
 
@@ -77,7 +83,7 @@ Vec3 PhongShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &world
     return result;
 }
 
-Vec3 PhongShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 PhongShader::CalPointLight(const std::shared_ptr<PointLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 
@@ -98,7 +104,7 @@ Vec3 PhongShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, cons
     return result;
 }
 
-Vec3 PhongShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 PhongShader::CalSpotLight(const std::shared_ptr<SpotLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
     Vec3 spotLightDir = Normalize(light->m_direction);

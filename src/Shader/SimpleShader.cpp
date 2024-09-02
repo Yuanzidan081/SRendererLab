@@ -34,7 +34,7 @@ VertexOut SimpleShader::VertexShader(const Vertex &in)
 
 Vec4 SimpleShader::FragmentShader(const VertexOut &in)
 {
-    Vec4 litColor = in.color;
+    Vec4 litColor = m_uniform->m_diffuse;
     if (m_uniform->m_mainTex)
     {
         litColor = m_uniform->m_mainTex->SampleTexture(in.texcoord);

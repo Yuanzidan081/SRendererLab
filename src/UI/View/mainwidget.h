@@ -21,7 +21,7 @@ class MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MainWidget(QWidget *parent = nullptr);
+    explicit MainWidget(std::shared_ptr<Light> &light, QWidget *parent = nullptr);
     ~MainWidget();
     void DisplayFps();
 
@@ -37,6 +37,9 @@ public:
     // response to mouse click
     void OnChangeSelectedModel(int index);
     void OnChangeSelectedLight(int index);
+
+    // set command
+    void SetNewLightPropertyCommand(std::shared_ptr<ICommandBase> command);
 
 protected:
     // system callbacks
@@ -54,7 +57,7 @@ private:
     Application *m_app;
     QThread *m_appThread;
     QTimer *m_timer;
-    Config *m_config;
+    std::shared_ptr<Config> m_config;
     QStandardItemModel *m_itemMdl;
     QStandardItemModel *m_itemLight;
 
@@ -76,5 +79,10 @@ private:
     // mousePress and mouseRelease
     QTimer *m_inputTimer;
     QVector<Qt::Key> m_pressedKeys;
+
+    // command
+    std::shared_ptr<ICommandBase> m_newLightPropertyCommand;
+
+    std::shared_ptr<Light> &m_currentLight;
 };
 #endif // MAINWIDGET_H

@@ -13,22 +13,13 @@ set(CORE_DIR ${SRC_PATH}/Core)
 set(RENDER_DIR ${SRC_PATH}/Render)
 set(ALGORITHM_DIR ${SRC_PATH}/Algorithm)
 set(SHADER_DIR ${SRC_PATH}/Shader)
-set(COMMAND_DIR ${SRC_PATH}/UI/Commands)
-set(VIEWMODEL_DIR ${SRC_PATH}/UI/ViewModels)
-set(VIEW_DIR ${SRC_PATH}/UI/View)
-set(APP_DIR ${SRC_PATH}/UI/App)
 
 file(GLOB MATH_FILES "${MATH_DIR}/*.cpp" "${MATH_DIR}/*.h")
-file(GLOB UI_FILES "${UI_DIR}/*.cpp" "${UI_DIR}/*.h" "${UI_DIR}/*.ui") 
+file(GLOB_RECURSE UI_FILES "${UI_DIR}/*.cpp" "${UI_DIR}/*.h" "${UI_DIR}/*.ui") 
 file(GLOB CORE_FILES "${CORE_DIR}/*.cpp" "${CORE_DIR}/*.h")
 file(GLOB RENDER_FILES "${RENDER_DIR}/*.cpp" "${RENDER_DIR}/*.h")
 file(GLOB ALGORITHM_FILES "${ALGORITHM_DIR}/*.cpp" "${ALGORITHM_DIR}/*.h")
 file(GLOB SHADER_FILES "${SHADER_DIR}/*.cpp" "${SHADER_DIR}/*.h")
-file(GLOB COMMAND_FILES "${COMMAND_DIR}/*.cpp" "${COMMAND_DIR}/*.h")
-file(GLOB VIEWMODEL_FILES "${VIEWMODEL_DIR}/*.cpp" "${VIEWMODEL_DIR}/*.h")
-file(GLOB VIEW_FILES "${VIEW_DIR}/*.cpp" "${VIEW_DIR}/*.h")
-file(GLOB APP_FILES "${APP_DIR}/*.cpp" "${APP_DIR}/*.h")
-
 
 set(SRC_PATH
 ${SRC_PATH} 
@@ -38,10 +29,6 @@ ${CORE_DIR}
 ${RENDER_DIR} 
 ${ALGORITHM_DIR}
 ${SHADER_DIR}
-${COMMAND_DIR}
-${VIEWMODEL_DIR}
-${VIEW_DIR}
-${APP_DIR}
 )
 
 set(SRC_FILES
@@ -53,10 +40,6 @@ ${CORE_FILES}
 ${RENDER_FILES}
 ${ALGORITHM_FILES}
 ${SHADER_FILES}
-${COMMAND_FILES}
-${VIEWMODEL_FILES}
-${VIEW_FILES}
-${APP_FILES}
 )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})

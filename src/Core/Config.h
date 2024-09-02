@@ -5,6 +5,8 @@
 #include "Math/MathGroup.h"
 #include <QObject>
 #include "Render/ResourceManager.h"
+#include <memory>
+#include "UI/Common/CommandBase.h"
 class Model;
 class Vertex;
 class FrameBuffer;
@@ -14,11 +16,12 @@ class EulerFPSCamera;
 class CubeMap;
 class LightGroup;
 
-class Config : public QObject
+class Config : public QObject, public Proxy_PropertyNotification<Config>, public Proxy_CommandNotification<Config>
 {
     Q_OBJECT
 private:
-    static Config *localInstance;
+    static std::shared_ptr<Config> localInstance;
+
     Config();
 
 public:
@@ -50,7 +53,7 @@ public:
     const std::vector<Vertex> *m_vertices;
 
     std::vector<Model *> m_models;
-    std::vector<Light *> m_lights;
+    std::vector<std::shared_ptr<Light>> m_lights;
     EulerFPSCamera *m_fpsCamera;
     ResourceManager *m_resourceManager;
     // LightGroup *m_lightGroup;
@@ -62,7 +65,11 @@ public:
     // eveironment Light
     Vec4 m_ambient;
 
-    static Config *GetInstance();
+    // provide for view
+    std::shared_ptr<Light> m_currentLight;
+
+    // static Config *GetInstance();
+    static std::shared_ptr<Config> GetInstance();
     void Initialize(int width, int height);
     void NotifyTreeNodeChanged()
     {
@@ -72,9 +79,13 @@ public:
     {
         emit LightChanged();
     }
+    void NewLightProperty(int lightIndex);
+
+    std::shared_ptr<Light> &GetCurrentLight();
 signals:
     void TreeNodeChanged();
     void LightChanged();
 };
 
+void deleter(Config *ptr);
 #endif // CONFIG_H

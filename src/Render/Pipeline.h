@@ -47,7 +47,7 @@ public:
     void DrawModel(Model *model);
     void DrawSkyBox(Model *model);
     void DrawObject(const Object &obj, Uniform &u);
-    Config *m_config;
+    std::shared_ptr<Config> m_config;
 
 private:
     // perspectiveDivision

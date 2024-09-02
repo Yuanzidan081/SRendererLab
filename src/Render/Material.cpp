@@ -1,9 +1,10 @@
 #include "Material.h"
 #include "Shader/Shader.h"
 #include "Core/Config.h"
+#include <memory>
 Material::~Material()
 {
-    Config *config = Config::GetInstance();
+    std::shared_ptr<Config> config = Config::GetInstance();
     config->m_resourceManager->ReleaseFile(m_mainTexPath);
     config->m_resourceManager->ReleaseFile(m_normalTexPath);
     config->m_resourceManager->ReleaseFile(m_metallicTexPath);
@@ -13,7 +14,7 @@ Material::~Material()
 }
 void Material::SetupUniform(Uniform &uniform)
 {
-    Config *config = Config::GetInstance();
+    std::shared_ptr<Config> config = Config::GetInstance();
     uniform.m_mainTex = config->m_resourceManager->LoadFromFile(m_mainTexPath).get();
     uniform.m_normalTex = config->m_resourceManager->LoadFromFile(m_normalTexPath).get();
     uniform.m_metallicTex = config->m_resourceManager->LoadFromFile(m_metallicTexPath).get();

@@ -162,8 +162,8 @@ void EulerFPSCamera::Zoom(float delta)
     m_fov += delta;
     if (m_fov < 1.0f)
         m_fov = 1.0f;
-    if (m_fov > 60.0f)
-        m_fov = 60.0f;
+    if (m_fov > 90.0f)
+        m_fov = 90.0f;
 }
 
 void EulerFPSCamera::UpdateCameraVectors()

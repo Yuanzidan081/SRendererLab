@@ -1,11 +1,15 @@
 #include "RenderApp.h"
 
+RenderApp::RenderApp() : m_config(Config::GetInstance()), m_mainWidget(m_config->GetCurrentLight())
+{
+}
+
 void RenderApp::Run()
 {
-    m_model.reset(Config::GetInstance());
     m_viewmodel = std::make_shared<ViewModel>();
+    m_viewmodel->SetModel(m_config); // 绑定viewmodel和model
 
-    m_viewmodel->SetModel(m_model); // 绑定viewmodel和model
+    m_mainWidget.SetNewLightPropertyCommand(m_viewmodel->GetNewLightPropertyCommand());
     // _gameWindow.setGameAgainCommand(viewmodel->getLayoutCommand());                  // 绑定gamewindow，打开一个新游戏窗口
     // _formWindow.setNewGameCommand(viewmodel->getLayoutCommand());                    // 绑定form弹窗，回到游戏窗口
     // _levelPageWindow.set_ptrCommand(viewmodel->getLayoutCommand());                  // 绑定levelpage

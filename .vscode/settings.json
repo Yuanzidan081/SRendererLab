@@ -84,6 +84,7 @@
         "qdoublespinbox": "cpp",
         "qvboxlayout": "cpp",
         "stack": "cpp",
-        "qapplication": "cpp"
+        "qapplication": "cpp",
+        "qvector": "cpp"
     }
 }

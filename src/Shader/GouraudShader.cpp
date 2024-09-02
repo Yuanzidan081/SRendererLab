@@ -36,11 +36,11 @@ VertexOut GouraudShader::VertexShader(const Vertex &in)
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            resultColor += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
+            resultColor += CalDirectionalLight(std::dynamic_pointer_cast<DirectionalLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            resultColor += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, result.worldPos, albedo);
+            resultColor += CalPointLight(std::dynamic_pointer_cast<PointLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, result.worldPos, albedo);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            resultColor += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, result.worldPos, albedo);
+            resultColor += CalSpotLight(std::dynamic_pointer_cast<SpotLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, result.worldPos, albedo);
     }
     result.color = Vec4(resultColor, 1.0f);
     return result;
@@ -52,7 +52,7 @@ Vec4 GouraudShader::FragmentShader(const VertexOut &in)
     return litColor;
 }
 
-Vec3 GouraudShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
+Vec3 GouraudShader::CalDirectionalLight(const std::shared_ptr<DirectionalLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(-light->m_direction);
 
@@ -70,7 +70,7 @@ Vec3 GouraudShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &wor
     return result;
 }
 
-Vec3 GouraudShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 GouraudShader::CalPointLight(const std::shared_ptr<PointLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 
@@ -94,7 +94,7 @@ Vec3 GouraudShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, co
     return result;
 }
 
-Vec3 GouraudShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 GouraudShader::CalSpotLight(const std::shared_ptr<SpotLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 

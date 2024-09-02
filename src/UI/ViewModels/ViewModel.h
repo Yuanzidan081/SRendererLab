@@ -1,8 +1,10 @@
 #ifndef VIEWMODEL_H
 #define VIEWMODEL_H
 
-#include "Commands/Command.h"
+#include "UI/Common/CommandBase.h"
 #include "Core/Config.h"
+#include "UI/ViewModels/Commands/NewLightPropertyCommand.h"
+#include <memory>
 // #include "sinks/swviewmodelsink.h"
 // #include "commands/layoutcommand.h"
 // #include "commands/mousemovecommand.h"
@@ -14,14 +16,18 @@ public:
     ViewModel();
     ~ViewModel() {}
     void SetModel(std::shared_ptr<Config> Model);
+
+    void Exec_newLightPropertyCommand(int lightIndex);
     // std::shared_ptr<SWMatrix> getSWMatrix();
     // std::shared_ptr<ICommandBase> getLayoutCommand();
     // std::shared_ptr<ICommandBase> getMouseMoveCommand();
-    // void Exec_layout_command(int level);
-    // void Exec_mouseMove_command(int row, int col);
+
+    std::shared_ptr<ICommandBase> GetNewLightPropertyCommand();
 
 private:
     std::shared_ptr<Config> m_config;
+    std::shared_ptr<NewLightPropertyCommand> m_newLightPropertyCommand;
+
     // std::shared_ptr<SWViewModelSink> sp_SWViewModelSink_;
     // std::shared_ptr<layoutCommand> sp_layoutCommand_;
     // std::shared_ptr<mouseMoveCommand> sp_mouseMoveCommand_;

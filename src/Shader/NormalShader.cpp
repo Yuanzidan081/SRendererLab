@@ -52,18 +52,17 @@ Vec4 NormalShader::FragmentShader(const VertexOut &in)
     Vec3 result = albedo;
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
-        // if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-        //     result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
-        // else
-        if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
-        // else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-        // result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
+        if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
+            result += CalDirectionalLight(std::dynamic_pointer_cast<DirectionalLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo);
+        else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
+            result += CalPointLight(std::dynamic_pointer_cast<PointLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
+        else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
+            result += CalSpotLight(std::dynamic_pointer_cast<SpotLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo);
     }
     return Vec4(result, 1.0f);
 }
 
-Vec3 NormalShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
+Vec3 NormalShader::CalDirectionalLight(const std::shared_ptr<DirectionalLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(-light->m_direction);
 
@@ -79,7 +78,7 @@ Vec3 NormalShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worl
     return result;
 }
 
-Vec3 NormalShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 NormalShader::CalPointLight(const std::shared_ptr<PointLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 
@@ -100,7 +99,7 @@ Vec3 NormalShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, con
     return result;
 }
 
-Vec3 NormalShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
+Vec3 NormalShader::CalSpotLight(const std::shared_ptr<SpotLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);
 

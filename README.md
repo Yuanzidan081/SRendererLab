@@ -22,6 +22,7 @@
 + Gouraud光照模型
 + 基于微表面理论的PBR光照模型
 + 常规光源：点光源、方向光、聚光灯
++ ACES ToneMapping
 
 ![Spot Light](image/screenshots/SpotLight.png)
 
@@ -33,9 +34,9 @@
 
 
 # 相机控制
-+ 按住鼠标左键并拖动以实现旋转
-+ 滚动鼠标滚轮切换Zoom大小
-+ WASDQE：相机前后左右和上下移动
++ 按住鼠标左键并拖动改变相机的Pitch和Raw以实现旋转
++ 滚动鼠标滚轮切换相机Zoom大小
++ WASDQE：相机位置的前后左右和上下移动
 
 # 参考
 

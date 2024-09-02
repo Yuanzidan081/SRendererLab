@@ -1,5 +1,5 @@
 # 项目介绍
-本项目是一个基于c++编写的软光栅化渲染器，除了使用stb_image进行贴图加载和qt进行界面展示无其他任何依赖，使用MVVM框架，通过数据绑定机制，将view和model部分对应关联的数据同步起来，的地方有效分离UI层和逻辑层。本项目的MVVM的基本结构图为：
+本项目是一个基于c++编写的软光栅化渲染器，除了使用stb_image进行贴图加载和qt进行界面展示无其他任何依赖，使用MVVM框架，通过数据绑定机制，将view和model部分相互关联的数据同步起来，有效分离UI层和逻辑层。本项目的MVVM的基本结构图为：
 
 ![MVVMframework](MVVMframework.svg)。
 
@@ -20,8 +20,6 @@
 + 常规光源：点光源、方向光、聚光灯
 
 ![Spot Light](image/screenshots/SpotLight.png)
-
-
 
 ![Directional Light](image/screenshots/DirectionalLight.png)
 

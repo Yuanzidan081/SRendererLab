@@ -30,7 +30,10 @@
 
 线框模式：
 
-![Wire Frame](image/screenshots/WireFrame.png)
+
+<div align="center">
+	<img src="image/screenshots/WireFrame.png" align="middle" width="200" />
+</div>
 
 天空盒测试：
 

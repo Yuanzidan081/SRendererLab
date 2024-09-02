@@ -24,15 +24,17 @@
 + 常规光源：点光源、方向光、聚光灯
 + ACES ToneMapping
 
-![Spot Light](image/screenshots/SpotLight.png)
+三种光源（点光源、方向光、聚光灯）【使用Blinn-Phong模型和切线空间的法线贴图】：
 
-![Directional Light](image/screenshots/DirectionalLight.png)
+![LightTest](image/screenshots/LightTest.png)
 
-![Point Light](image/screenshots/PointLight.png)
+线框模式：
 
 ![Wire Frame](image/screenshots/WireFrame.png)
 
+天空盒测试：
 
+![SkyBoxTest](image/screenshots/SkyBoxTest.png)
 # 相机控制
 + 按住鼠标左键并拖动改变相机的Pitch和Raw以实现旋转
 + 滚动鼠标滚轮切换相机Zoom大小

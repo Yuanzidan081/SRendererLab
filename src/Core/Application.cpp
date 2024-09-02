@@ -59,14 +59,14 @@ void Application::Run()
     floorMdl.SetScale(Vec3(3.0f, 1.0f, 3.0f));
     m_pipeline->m_config->AddModel(&floorMdl);
 
-    Model WallMdl(Mesh::CreateFloor(15, 0), "wall1");
-    WallMdl.m_objects[0].m_material->SetMainTexturePath(curPath + "obj/wall/brickwall.jpg");
-    WallMdl.m_objects[0].m_material->SetNormalTexturePath(curPath + "obj/wall/wall_normal.png");
-    WallMdl.SetShader(shaderPhong);
-    WallMdl.SetRotation(Vec3(90.0f, 0.0f, 0.0f));
-    WallMdl.SetTranslate(Vec3(0.0f, 0.5f, -4.5f));
-    WallMdl.SetScale(Vec3(3.0f, 1.0f, 3.0f));
-    m_pipeline->m_config->AddModel(&WallMdl);
+    // Model WallMdl(Mesh::CreateFloor(15, 0), "wall1");
+    // WallMdl.m_objects[0].m_material->SetMainTexturePath(curPath + "obj/wall/brickwall.jpg");
+    // WallMdl.m_objects[0].m_material->SetNormalTexturePath(curPath + "obj/wall/wall_normal.png");
+    // WallMdl.SetShader(shaderPhong);
+    // WallMdl.SetRotation(Vec3(90.0f, 0.0f, 0.0f));
+    // WallMdl.SetTranslate(Vec3(0.0f, 0.5f, -4.5f));
+    // WallMdl.SetScale(Vec3(3.0f, 1.0f, 3.0f));
+    // m_pipeline->m_config->AddModel(&WallMdl);
 
     // Model sphereMdl(curPath + "obj/sphere/sphere.obj", "sphere1");
     // sphereMdl.m_objects[0].m_material->SetMainTexturePath(curPath + "obj/sphere/sphere_diffuse.png");
@@ -116,20 +116,20 @@ void Application::Run()
     neptune.SetTranslate(Vec3(0.0f, 0.2f, 0.0f));
     m_pipeline->m_config->AddModel(&neptune);
 
-    // // m_pipeline->m_config->m_cubeMap = new CubeMap(
-    // //     new Texture2D(curPath + "res/skybox_sea/right.jpg"),
-    // //     new Texture2D(curPath + "res/skybox_sea/left.jpg"),
-    // //     new Texture2D(curPath + "res/skybox_sea/top.jpg"),
-    // //     new Texture2D(curPath + "res/skybox_sea/bottom.jpg"),
-    // //     new Texture2D(curPath + "res/skybox_sea/back.jpg"),
-    // //     new Texture2D(curPath + "res/skybox_sea/front.jpg"));
     m_pipeline->m_config->m_cubeMap = new CubeMap(
-        new Texture2D(curPath + "res/skybox_room/m0_px.jpg"),
-        new Texture2D(curPath + "res/skybox_room/m0_nx.jpg"),
-        new Texture2D(curPath + "res/skybox_room/m0_py.jpg"),
-        new Texture2D(curPath + "res/skybox_room/m0_ny.jpg"),
-        new Texture2D(curPath + "res/skybox_room/m0_nz.jpg"),
-        new Texture2D(curPath + "res/skybox_room/m0_pz.jpg"));
+        new Texture2D(curPath + "res/skybox_sea/right.jpg"),
+        new Texture2D(curPath + "res/skybox_sea/left.jpg"),
+        new Texture2D(curPath + "res/skybox_sea/top.jpg"),
+        new Texture2D(curPath + "res/skybox_sea/bottom.jpg"),
+        new Texture2D(curPath + "res/skybox_sea/back.jpg"),
+        new Texture2D(curPath + "res/skybox_sea/front.jpg"));
+    // m_pipeline->m_config->m_cubeMap = new CubeMap(
+    //     new Texture2D(curPath + "res/skybox_room/m0_px.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_nx.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_py.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_ny.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_nz.jpg"),
+    //     new Texture2D(curPath + "res/skybox_room/m0_pz.jpg"));
     // m_pipeline->m_config->m_cubeMap = new CubeMap(
     //     new Texture2D(curPath + "res/skybox_avenue/posx.bmp"),
     //     new Texture2D(curPath + "res/skybox_avenue/negx.bmp"),
@@ -139,20 +139,20 @@ void Application::Run()
     //     new Texture2D(curPath + "res/skybox_avenue/posz.bmp"));
     m_pipeline->m_config->m_useSkyBox = false;
 
-    m_pipeline->SetPolygonMode(PolygonMode::Fill);
-    // m_pipeline->AddDirectionLight(
-    // Vec3(1.5, -1, -1), Vec4(0.6f, 0.6f, 0.6f, 1.0f));
+    m_pipeline->SetPolygonMode(PolygonMode::Wire);
+    m_pipeline->AddDirectionLight(
+        Vec3(1.5, -1, -1), Vec4(0.6f, 0.6f, 0.6f, 1.0f));
     // m_pipeline->AddPointLight(Vec3(8.6, -13.5, -1.0),
     //                           Vec3(1.0f, 0.07f, 0.017f), Vec4(1.0f, 0.0f, 0.0f, 1.0f));
     // m_pipeline->AddPointLight(Vec3(-17.6, 1.5, 8.8),
     //                           Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 1.0f, 0.0f, 1.0f));
     // m_pipeline->AddPointLight(Vec3(19.7, 6.4, 10.0),
     //                           Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-    m_pipeline->AddSpotLight(
-        60.0f,
-        Vec3(0.0, 3.6, 2.4),
-        Vec3(0.0, -5.0, -5.0),
-        Vec3(1.0f, 0.07f, 0.017f), Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    // m_pipeline->AddSpotLight(
+    //     60.0f,
+    //     Vec3(0.0, 3.6, 2.4),
+    //     Vec3(0.0, -5.0, -5.0),
+    //     Vec3(1.0f, 0.07f, 0.017f), Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
     m_pipeline->m_config->NotifyTreeNodeChanged();
     m_pipeline->m_config->NotifyLightChanged();

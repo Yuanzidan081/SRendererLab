@@ -82,6 +82,9 @@
         "qkeyevent": "cpp",
         "qwidget": "cpp",
         "qdoublespinbox": "cpp",
-        "qvboxlayout": "cpp"
+        "qvboxlayout": "cpp",
+        "stack": "cpp",
+        "qapplication": "cpp",
+        "qvector": "cpp"
     }
 }

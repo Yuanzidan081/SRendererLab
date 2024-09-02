@@ -5,7 +5,14 @@
 #include "Shader/ShaderGroup.h"
 #include "Render/Light.h"
 #include "Render/FPSCamera.h"
-Config *Config::localInstance = nullptr;
+std::shared_ptr<Config> Config::localInstance = nullptr;
+
+void deleter(Config *ptr)
+{
+    ptr->Destroy();
+    delete ptr;
+    ptr = nullptr;
+}
 
 Config::Config() : m_depthTesting(true),
                    m_backFaceCulling(true),
@@ -29,7 +36,9 @@ Config::Config() : m_depthTesting(true),
                    //    m_lightGroup(nullptr),
                    m_skyBox(nullptr),
                    m_cubeMap(nullptr),
-                   m_ambient(Vec4(0.1f, 0.1f, 0.1f, 1.0f))
+                   m_ambient(Vec4(0.1f, 0.1f, 0.1f, 1.0f)),
+                   m_currentLight()
+
 {
 }
 Config::~Config()
@@ -52,18 +61,6 @@ void Config::Destroy()
         delete m_skyBox;
     if (m_cubeMap)
         delete m_cubeMap;
-    for (size_t i = 0; i < m_lights.size(); ++i)
-    {
-        if (m_lights[i])
-            delete m_lights[i];
-        m_lights[i] = nullptr;
-    }
-
-    /* for (size_t i = 0; i < m_models.size(); ++i)
-    {
-        delete m_models[i];
-        m_models[i] = nullptr;
-    } */
 
     Shader *shader = PhongShader::GetInstance();
     shader->Destroy();
@@ -82,16 +79,13 @@ void Config::Destroy()
     m_fpsCamera = nullptr;
     m_skyBox = nullptr;
     m_cubeMap = nullptr;
-    if (localInstance)
-        delete localInstance;
-
-    localInstance = nullptr;
 }
-Config *Config::GetInstance()
+// Config *Config::GetInstance()
+std::shared_ptr<Config> Config::GetInstance()
 {
     if (localInstance == nullptr)
     {
-        localInstance = new Config();
+        localInstance.reset(new Config());
     }
     return localInstance;
 }
@@ -104,8 +98,30 @@ void Config::Initialize(int width, int height)
     m_backBuffer = new FrameBuffer(m_width, m_height);
     m_frontBuffer = new FrameBuffer(m_width, m_height);
     m_shader = SimpleShader::GetInstance();
-    m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 5.0f));
+    m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 75.0f));
     m_skyBox = new Model(Mesh::CreateBox(2.0f, 2.0f, 2.0f), "skybox");
     m_skyBox->SetShader(SkyBoxShader::GetInstance());
-    // m_lightGroup = new LightGroup();
+}
+
+void Config::NewLightProperty(int lightIndex)
+{
+    if (lightIndex < 0 || lightIndex >= m_lights.size())
+    {
+        std::cout << "invalid light index";
+        return;
+    }
+    if (m_lights.size() == 0)
+    {
+        m_currentLight = nullptr;
+    }
+    else
+    {
+        m_currentLight = m_lights[lightIndex];
+    }
+    Fire_OnPropertyChanged("NewLightProperty");
+}
+
+std::shared_ptr<Light> &Config::GetCurrentLight()
+{
+    return m_currentLight;
 }

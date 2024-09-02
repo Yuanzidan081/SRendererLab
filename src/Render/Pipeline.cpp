@@ -1,5 +1,5 @@
 #include "Pipeline.h"
-// #include "UI/window.h"
+
 #include <cmath>
 #include <iostream>
 #include "MathUtils.h"
@@ -14,7 +14,7 @@ Pipeline::Pipeline(int width, int height)
 
 Pipeline::~Pipeline()
 {
-    m_config->Destroy();
+    // m_config->Destroy();
 }
 
 void Pipeline::ClearFrameBuffer(const Vec4 &color)
@@ -36,32 +36,26 @@ void Pipeline::SwapFrameBuffer()
 
 void Pipeline::AddDirectionLight(const Vec3 &dir, const Vec4 &color)
 {
-    DirectionalLight *light = new DirectionalLight();
+    std::shared_ptr<DirectionalLight> light = std::make_shared<DirectionalLight>();
     light->SetDirectionalLight(dir, color);
-    Light *m_light = light;
+    std::shared_ptr<Light> m_light = light;
     m_config->m_lights.push_back(m_light);
-
-    // m_config->m_lightGroup->directionalLightGroup.push_back(light);
 }
 
 void Pipeline::AddPointLight(Vec3 pos, Vec3 atte, const Vec4 &color)
 {
-    PointLight *light = new PointLight();
+    std::shared_ptr<PointLight> light = std::make_shared<PointLight>();
     light->SetPointLight(pos, atte, color);
-    Light *m_light = reinterpret_cast<Light *>(light);
+    std::shared_ptr<Light> m_light = light;
     m_config->m_lights.push_back(m_light);
-
-    // m_config->m_lightGroup->pointLightGroup.push_back(light);
 }
 
 void Pipeline::AddSpotLight(double cutoff, Vec3 pos, Vec3 dir, Vec3 atte, const Vec4 &color)
 {
-    SpotLight *light = new SpotLight();
+    std::shared_ptr<SpotLight> light = std::make_shared<SpotLight>();
     light->SetSpotLight(pos, dir, atte, cutoff, color);
-    Light *m_light = reinterpret_cast<Light *>(light);
+    std::shared_ptr<Light> m_light = light;
     m_config->m_lights.push_back(m_light);
-
-    // m_config->m_lightGroup->spotLightGroup.push_back(light);
 }
 
 void Pipeline::DrawScene()

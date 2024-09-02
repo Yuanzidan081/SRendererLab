@@ -15,7 +15,7 @@ set(ALGORITHM_DIR ${SRC_PATH}/Algorithm)
 set(SHADER_DIR ${SRC_PATH}/Shader)
 
 file(GLOB MATH_FILES "${MATH_DIR}/*.cpp" "${MATH_DIR}/*.h")
-file(GLOB UI_FILES "${UI_DIR}/*.cpp" "${UI_DIR}/*.h" "${UI_DIR}/*.ui") 
+file(GLOB_RECURSE UI_FILES "${UI_DIR}/*.cpp" "${UI_DIR}/*.h" "${UI_DIR}/*.ui") 
 file(GLOB CORE_FILES "${CORE_DIR}/*.cpp" "${CORE_DIR}/*.h")
 file(GLOB RENDER_FILES "${RENDER_DIR}/*.cpp" "${RENDER_DIR}/*.h")
 file(GLOB ALGORITHM_FILES "${ALGORITHM_DIR}/*.cpp" "${ALGORITHM_DIR}/*.h")

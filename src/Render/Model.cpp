@@ -181,8 +181,8 @@ void Model::AddObject(const std::string &filename)
     }
     for (size_t i = 0; i < m_objectNum; ++i)
     {
-        m_triangleNum += m_objects[m_objectNum - 1].m_mesh->m_triangleNum;
-        m_vertexNum += m_objects[m_objectNum - 1].m_mesh->m_vertexNum;
+        m_triangleNum += m_objects[i].m_mesh->m_triangleNum;
+        m_vertexNum += m_objects[i].m_mesh->m_vertexNum;
     }
     file.close();
     return;

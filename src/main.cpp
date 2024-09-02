@@ -1,7 +1,8 @@
 // test main.cpp
 #include <iostream>
 #include <QtWidgets/QApplication>
-#include "UI/mainwidget.h"
+// #include "UI/View/mainwidget.h"
+#include "UI/App/RenderApp.h"
 #include "main.h"
 int main(int argc, char *argv[])
 {
@@ -9,7 +10,10 @@ int main(int argc, char *argv[])
     // config the global variables
 
     QApplication a(argc, argv);
-    MainWidget m;
-    m.show();
+    RenderApp app;
+    app.Run();
+    // MainWidget m;
+    // m.show();
+
     return a.exec();
 }

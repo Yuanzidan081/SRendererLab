@@ -5,7 +5,7 @@
 #include "Render/Vertex.h"
 #include "Render/Texture2D.h"
 #include <vector>
-
+#include <memory>
 class Light;
 class Material;
 class LightGroup;
@@ -22,19 +22,21 @@ public:
     float m_roughness;
     float m_metallic;
     float m_ao;
+    Vec3 m_emission;
 
     Vec4 m_diffuse;
     Vec4 m_specular;
     float m_shiness;
 
     // Material *m_material;
-    std::vector<Light *> *m_lights;
+    std::vector<std::shared_ptr<Light>> *m_lights;
     // LightGroup *m_lights;
     Texture2D *m_mainTex;
     Texture2D *m_normalTex;
     Texture2D *m_metallicTex;
     Texture2D *m_roughnessTex;
     Texture2D *m_aoTex;
+    Texture2D *m_emissionTex;
 
     CubeMap *m_cubeMap;
     Uniform();

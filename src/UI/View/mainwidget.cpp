@@ -4,9 +4,9 @@
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include <QKeyEvent>
-MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
-                                          ui(new Ui::MainWidget), m_itemMdl(nullptr), m_itemLight(nullptr),
-                                          m_selectedLightIndex(-1), m_selectedModelIndex(-1)
+MainWidget::MainWidget(std::shared_ptr<Light> &light, QWidget *parent) : QWidget(parent),
+                                                                         ui(new Ui::MainWidget), m_itemMdl(nullptr), m_itemLight(nullptr),
+                                                                         m_selectedLightIndex(-1), m_selectedModelIndex(-1), m_currentLight(light)
 
 {
     m_config = Config::GetInstance();
@@ -24,8 +24,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent),
 
     connect(m_appThread, &QThread::started, m_app, &Application::Run);
     connect(m_appThread, &QThread::finished, m_app, &QObject::deleteLater);
-    connect(m_config, &Config::TreeNodeChanged, this, &MainWidget::UpdateModelHierachyListView);
-    connect(m_config, &Config::LightChanged, this, &MainWidget::UpdateLightWidget);
+    connect(m_config.get(), &Config::TreeNodeChanged, this, &MainWidget::UpdateModelHierachyListView);
+    connect(m_config.get(), &Config::LightChanged, this, &MainWidget::UpdateLightWidget);
 
     m_app->moveToThread(m_appThread);
 
@@ -72,6 +72,11 @@ void MainWidget::OnChangeSelectedLight(int index)
         m_selectedLightIndex = index;
         UpdateSelectedLightProperty();
     }
+}
+
+void MainWidget::SetNewLightPropertyCommand(std::shared_ptr<ICommandBase> command)
+{
+    m_newLightPropertyCommand = command;
 }
 
 void MainWidget::keyPressEvent(QKeyEvent *event)
@@ -184,7 +189,7 @@ void MainWidget::UpdateSelectedLightProperty()
 {
     if (m_selectedLightIndex != -1)
     {
-        Light *&light = m_config->m_lights[m_selectedLightIndex];
+        Light *light = m_config->m_lights[m_selectedLightIndex].get();
         QString tag = static_cast<QString>(light->m_tag.c_str());
         lightWidget->Clear();
         if (tag == "DirectionalLight")

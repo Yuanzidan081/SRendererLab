@@ -1,6 +1,7 @@
 #include "PBRShader.h"
 #include "Render/Material.h"
 #include "Render/Light.h"
+#include "Algorithm/ToneMapping.h"
 PBRShader *PBRShader::s_shader = nullptr;
 
 float PBRShader::D_GGX_TR(const Vec3 &nDir, const Vec3 &hDir, float roughness)
@@ -81,7 +82,9 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     // worldNormal
     Vec3 worldNormal;
     if (m_uniform->m_normalTex)
-        worldNormal = in.TBN * m_uniform->m_normalTex->SampleTexture(in.texcoord);
+    {
+        worldNormal = Normalize(in.TBN * (m_uniform->m_normalTex->SampleTexture(in.texcoord) * 2.0f - 1.0f));
+    }
     else
         worldNormal = Normalize(in.normal);
     // worldViewDir
@@ -106,27 +109,36 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
     Vec3 F0 = Vec3(0.04f);
     F0 = F0 * (1 - metallic) + albedo * metallic;
 
+    Vec3 emission = m_uniform->m_emission;
+    if (m_uniform->m_emissionTex)
+        emission = m_uniform->m_emissionTex->SampleTexture(in.texcoord);
     // result color
     Vec3 result(0.0f);
 
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)
     {
         if ((*(m_uniform->m_lights))[i]->m_tag == "DirectionalLight")
-            result += CalDirectionalLight(static_cast<DirectionalLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo, metallic, roughness, F0);
+            result += CalDirectionalLight(std::dynamic_pointer_cast<DirectionalLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, albedo, metallic, roughness, F0);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "PointLight")
-            result += CalPointLight(static_cast<PointLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, roughness, F0);
+            result += CalPointLight(std::dynamic_pointer_cast<PointLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, roughness, F0);
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
-            result += CalSpotLight(static_cast<SpotLight *>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, roughness, F0);
+            result += CalSpotLight(std::dynamic_pointer_cast<SpotLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, in.worldPos, albedo, metallic, roughness, F0);
     }
 
     Vec3 ambient = Vec3(0.03f) * albedo * ao;
-    Vec3 color = ambient + result;
-    color = color / (color + Vec3(1.0f));
-    color = Pow(color, Vec3(1.0f / 2.2f));
+    Vec3 color = ambient + result + emission;
+    // color = color / (color + Vec3(1.0f));
+    // color = Pow(color, Vec3(1.0f / 2.2f));
+    for (size_t i = 0; i < 3; ++i)
+    {
+        color[i] = ACES_TONEMapping(color[i]);
+        color[i] = std::pow(color[i], 1.0 / 2.2);
+    }
+
     return color;
 }
 
-Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo,
+Vec3 PBRShader::CalDirectionalLight(const std::shared_ptr<DirectionalLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec3 &albedo,
                                     const float metallic, const float roughness, const Vec3 &F0)
 {
     // prepare: light property
@@ -154,7 +166,7 @@ Vec3 PBRShader::CalDirectionalLight(DirectionalLight *light, const Vec3 &worldNo
     return result;
 }
 
-Vec3 PBRShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir,
+Vec3 PBRShader::CalPointLight(const std::shared_ptr<PointLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir,
                               const Vec4 &worldPos, const Vec3 &albedo, const float metallic, const float roughness, const Vec3 &F0)
 {
     // prepare: light property
@@ -186,7 +198,7 @@ Vec3 PBRShader::CalPointLight(PointLight *light, const Vec3 &worldNormal, const 
     return result;
 }
 
-Vec3 PBRShader::CalSpotLight(SpotLight *light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo,
+Vec3 PBRShader::CalSpotLight(const std::shared_ptr<SpotLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo,
                              const float metallic, const float roughness, const Vec3 &F0)
 {
     Vec3 worldLightDir = Normalize(light->m_position - worldPos);

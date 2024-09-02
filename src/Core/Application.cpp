@@ -139,7 +139,7 @@ void Application::Run()
     //     new Texture2D(curPath + "res/skybox_avenue/posz.bmp"));
     m_pipeline->m_config->m_useSkyBox = false;
 
-    m_pipeline->SetPolygonMode(PolygonMode::Wire);
+    m_pipeline->SetPolygonMode(PolygonMode::Fill);
     // m_pipeline->AddDirectionLight(
     // Vec3(1.5, -1, -1), Vec4(0.6f, 0.6f, 0.6f, 1.0f));
     // m_pipeline->AddPointLight(Vec3(8.6, -13.5, -1.0),

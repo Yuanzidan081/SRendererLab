@@ -3,6 +3,10 @@
 
 ![MVVMframework](MVVMframework.svg)。
 
+基本的UI布局
+
+![BasicUILayout](image/screenshots/basicUILayout.png)
+
 # 主要特性
 
 + 透视插值校正

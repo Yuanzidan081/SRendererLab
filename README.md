@@ -42,7 +42,7 @@
 PBR材质
 
 <div align="center">
-	<img src="image/screenshots/PBR.png" align="middle" width="250" />
+	<img src="image/screenshots/pbr.png" align="middle" width="250" />
 </div>
 
 

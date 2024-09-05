@@ -32,12 +32,20 @@
 
 
 <div align="center">
-	<img src="image/screenshots/WireFrame.png" align="middle" width="200" />
+	<img src="image/screenshots/WireFrame.png" align="middle" width="250" />
 </div>
 
 天空盒测试：
 
 ![SkyBoxTest](image/screenshots/SkyBoxTest.png)
+
+PBR材质
+
+<div align="center">
+	<img src="image/screenshots/PBR.png" align="middle" width="250" />
+</div>
+
+
 # 相机控制
 + 按住鼠标左键并拖动改变相机的Pitch和Raw以实现旋转
 + 滚动鼠标滚轮切换相机Zoom大小

@@ -61,7 +61,11 @@ void Config::Destroy()
         delete m_skyBox;
     if (m_cubeMap)
         delete m_cubeMap;
-
+    for (size_t i = 0; i < m_models.size(); ++i)
+    {
+        delete m_models[i];
+        m_models[i] = nullptr;
+    }
     Shader *shader = PhongShader::GetInstance();
     shader->Destroy();
     shader = GouraudShader::GetInstance();
@@ -98,7 +102,7 @@ void Config::Initialize(int width, int height)
     m_backBuffer = new FrameBuffer(m_width, m_height);
     m_frontBuffer = new FrameBuffer(m_width, m_height);
     m_shader = SimpleShader::GetInstance();
-    m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 75.0f));
+    m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 8.0f));
     m_skyBox = new Model(Mesh::CreateBox(2.0f, 2.0f, 2.0f), "skybox");
     m_skyBox->SetShader(SkyBoxShader::GetInstance());
 }
@@ -107,12 +111,13 @@ void Config::NewLightProperty(int lightIndex)
 {
     if (lightIndex < 0 || lightIndex >= m_lights.size())
     {
+        m_currentLight.reset();
         std::cout << "invalid light index";
         return;
     }
     if (m_lights.size() == 0)
     {
-        m_currentLight = nullptr;
+        m_currentLight.reset();
     }
     else
     {

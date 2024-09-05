@@ -20,7 +20,7 @@ class RenderApp
 private:
     std::shared_ptr<Config> m_config;
     MainWidget m_mainWidget;
-    std::shared_ptr<ViewModel> m_viewmodel;
+    std::shared_ptr<ViewModel> m_viewModel;
     // std::shared_ptr<gameAgainCommand> _spGameAgainCommand;
     // std::shared_ptr<gamecompletecommand> _spGameCompleteCommand;
     // std::shared_ptr<StartButtonCommand> _spStartButtonCommand;

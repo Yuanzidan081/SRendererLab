@@ -6,10 +6,13 @@ RenderApp::RenderApp() : m_config(Config::GetInstance()), m_mainWidget(m_config-
 
 void RenderApp::Run()
 {
-    m_viewmodel = std::make_shared<ViewModel>();
-    m_viewmodel->SetModel(m_config); // 绑定viewmodel和model
+    m_viewModel = std::make_shared<ViewModel>();
+    m_viewModel->SetModel(m_config); // 绑定viewmodel和model
 
-    m_mainWidget.SetNewLightPropertyCommand(m_viewmodel->GetNewLightPropertyCommand());
+    m_mainWidget.SetNewLightPropertyCommand(m_viewModel->GetNewLightPropertyCommand());
+
+    // m_viewModel->AddPropertyNotification();
+
     // _gameWindow.setGameAgainCommand(viewmodel->getLayoutCommand());                  // 绑定gamewindow，打开一个新游戏窗口
     // _formWindow.setNewGameCommand(viewmodel->getLayoutCommand());                    // 绑定form弹窗，回到游戏窗口
     // _levelPageWindow.set_ptrCommand(viewmodel->getLayoutCommand());                  // 绑定levelpage
@@ -18,10 +21,10 @@ void RenderApp::Run()
     // _formWindow.setMartix(viewmodel->getSWMatrix()); // formwindow得到matrix
 
     // 接收器接收消息
-    // m_viewmodel->AddPropertyNotification(_gameWindow.getPtrWindowProSink());
-    // m_viewmodel->AddCommandNotification(_gameWindow.getPtrNewLayoutSink());
-    // m_viewmodel->AddCommandNotification(_gameWindow.getPtrPointChangeTrackingSink());
-    // m_viewmodel->AddPropertyNotification(_gameWindow.getPtrGameCompleteSink());
+    // m_viewModel->AddPropertyNotification(_gameWindow.getPtrWindowProSink());
+    // m_viewModel->AddCommandNotification(_gameWindow.getPtrNewLayoutSink());
+    // m_viewModel->AddCommandNotification(_gameWindow.getPtrPointChangeTrackingSink());
+    // m_viewModel->AddPropertyNotification(_gameWindow.getPtrGameCompleteSink());
 
     // 智能指针赋值
     // _spStartButtonCommand = std::make_shared<StartButtonCommand>(this);

@@ -5,7 +5,8 @@
 #include "Core/Config.h"
 #include "UI/ViewModels/Commands/NewLightPropertyCommand.h"
 #include <memory>
-// #include "sinks/swviewmodelsink.h"
+#include "UI/ViewModels/Sinks/VIewModelSink.h"
+
 // #include "commands/layoutcommand.h"
 // #include "commands/mousemovecommand.h"
 
@@ -19,13 +20,13 @@ public:
 
     void Exec_newLightPropertyCommand(int lightIndex);
     // std::shared_ptr<SWMatrix> getSWMatrix();
-    // std::shared_ptr<ICommandBase> getLayoutCommand();
     // std::shared_ptr<ICommandBase> getMouseMoveCommand();
 
     std::shared_ptr<ICommandBase> GetNewLightPropertyCommand();
 
 private:
     std::shared_ptr<Config> m_config;
+    std::shared_ptr<ViewModelSink> m_viewModelSink;
     std::shared_ptr<NewLightPropertyCommand> m_newLightPropertyCommand;
 
     // std::shared_ptr<SWViewModelSink> sp_SWViewModelSink_;

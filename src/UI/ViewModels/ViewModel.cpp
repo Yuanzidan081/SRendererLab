@@ -8,6 +8,7 @@ void ViewModel::SetModel(std::shared_ptr<Config> config)
 {
     m_config = config;
     m_newLightPropertyCommand = std::make_shared<NewLightPropertyCommand>(this);
+    m_viewModelSink = std::make_shared<ViewModelSink>(this);
 }
 
 void ViewModel::Exec_newLightPropertyCommand(int lightIndex)

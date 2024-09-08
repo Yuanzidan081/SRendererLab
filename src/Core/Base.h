@@ -60,7 +60,7 @@ enum FaceCullMode
     BackFaceCull,
     FrontFaceCull
 };
-
+#define EPSILON 1e-5f
 const int screenWidth = 500;
 const int screenHeight = 500;
 

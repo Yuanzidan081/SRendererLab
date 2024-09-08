@@ -64,3 +64,11 @@ Vec3 operator/(const Vec3 &v1, const Vec3 &v2)
 {
     return Vec3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
 }
+
+Vec3 Lerp3(const Vec3 &v1, const Vec3 &v2, const Vec3 &v3, const Vec3 &weight)
+{
+    return Vec3(
+        v1.x * weight.x + v2.x * weight.y + v3.x * weight.z,
+        v1.y * weight.x + v2.y * weight.y + v3.y * weight.z,
+        v1.z * weight.x + v2.z * weight.y + v3.z * weight.z);
+}

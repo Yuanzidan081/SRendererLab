@@ -43,7 +43,7 @@ Model::Model(Mesh *meshPtr, const std::string &name) : m_objectNum(0), m_minPoin
     m_objects[0].m_mesh.reset(meshPtr);
     m_vertexNum = m_objects[0].m_mesh->m_vertexNum;
     m_triangleNum = m_objects[0].m_mesh->m_triangleNum;
-    m_objects[0].m_mesh->m_name = name + "-element" + std::to_string(m_objectNum);
+    m_objects[0].m_mesh->m_name = /*name + */ "submesh" + std::to_string(m_objectNum);
     m_transform = {Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(1.0f, 1.0f, 1.0f)};
 }
 
@@ -133,7 +133,7 @@ void Model::AddObject(const std::string &filename)
             if (flag)
             {
                 flag = false;
-                m_objects[m_objectNum - 1].m_mesh->m_name = m_name + "-element" + std::to_string(m_objectNum);
+                m_objects[m_objectNum - 1].m_mesh->m_name = /*m_name +*/ "submesh" + std::to_string(m_objectNum);
             }
             buf >> trash; // trash: filter "f"
             int index[3];

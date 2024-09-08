@@ -196,3 +196,8 @@ Vec3 Mat3x3::operator*(const Vec3 rhs) const
         entries[1][0] * rhs.x + entries[1][1] * rhs.y + entries[1][2] * rhs.z,
         entries[2][0] * rhs.x + entries[2][1] * rhs.y + entries[2][2] * rhs.z);
 }
+
+Mat3x3 Lerp3(const Mat3x3 &v1, const Mat3x3 &v2, const Mat3x3 &v3, const Vec3 &weight)
+{
+    return v1 * weight.x + v2 * weight.y + v3 * weight.z;
+}

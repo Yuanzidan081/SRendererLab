@@ -14,7 +14,7 @@ Pipeline::Pipeline(int width, int height)
 
 Pipeline::~Pipeline()
 {
-    // m_config->Destroy();
+    m_config->Destroy();
 }
 
 void Pipeline::ClearFrameBuffer(const Vec4 &color)
@@ -82,80 +82,89 @@ void Pipeline::DrawMesh()
     {
         // assemble to a triangle primitive
         Vertex p1, p2, p3;
-        {
-            p1 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 0]];
-            p2 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 1]];
-            p3 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 2]];
-        }
+        p1 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 0]];
+        p2 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 1]];
+        p3 = (*m_config->m_vertices)[(*m_config->m_indices)[i + 2]];
+        DrawTriangle(p1, p2, p3);
+    }
+}
 
-        // vertex shader stage
-        VertexOut v1, v2, v3;
-        {
-            v1 = m_config->m_shader->VertexShader(p1);
-            v2 = m_config->m_shader->VertexShader(p2);
-            v3 = m_config->m_shader->VertexShader(p3);
-        }
-        // view culling
-        // if (!ViewCulling(v1.clipPos, v2.clipPos, v3.clipPos))
-        // {
-        //     continue;
-        // }
+void Pipeline::DrawTriangle(Vertex &p1, Vertex &p2, Vertex &p3)
+{
+    // vertex shader stage
+    VertexOut v1, v2, v3;
+    {
+        v1 = m_config->m_shader->VertexShader(p1);
+        v2 = m_config->m_shader->VertexShader(p2);
+        v3 = m_config->m_shader->VertexShader(p3);
+    }
+    // view culling
+    // if (!ViewCulling(v1.clipPos, v2.clipPos, v3.clipPos))
+    // {
+    //     continue;
+    // }
 
-        if (m_config->m_viewCull && !ClipSpaceCull(v1.clipPos, v2.clipPos, v3.clipPos))
-        {
-            continue;
-        }
+    if (m_config->m_viewCull && !ClipSpaceCull(v1.clipPos, v2.clipPos, v3.clipPos))
+    {
+        return;
+    }
 
-        // https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/
-        //  v.x, v.y, v.z \in [-w, w], not be assigned to 1(only in the step PerspectiveDivision doing so)
-        //  lerp are done in the projection space
-        //  if the point are not transformed to the viewport space, the clip can be linear, shouldn't use the correction
-        std::vector<VertexOut> clippingVertexs = SutherlandHodgeman(v1, v2, v3);
+    // https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/
+    //  v.x, v.y, v.z \in [-w, w], not be assigned to 1(only in the step PerspectiveDivision doing so)
+    //  lerp are done in the projection space
+    //  if the point are not transformed to the viewport space, the clip can be linear, shouldn't use the correction
+    std::vector<VertexOut> clippingVertexs = SutherlandHodgeman(v1, v2, v3);
 
-        for (int i = 0; i < clippingVertexs.size(); ++i)
+    for (int i = 0; i < clippingVertexs.size(); ++i)
+    {
+        PerspectiveDivision(clippingVertexs[i]);
+    }
+    int n = clippingVertexs.size() - 3 + 1; // the number of the clipping triangles
+    for (int i = 0; i < n; ++i)
+    {
+        VertexOut v1 = clippingVertexs[0];
+        VertexOut v2 = clippingVertexs[i + 1];
+        VertexOut v3 = clippingVertexs[i + 2];
+        // back face culling
         {
-            PerspectiveDivision(clippingVertexs[i]);
-        }
-        int n = clippingVertexs.size() - 3 + 1; // the number of the clipping triangles
-        for (int i = 0; i < n; ++i)
-        {
-            VertexOut v1 = clippingVertexs[0];
-            VertexOut v2 = clippingVertexs[i + 1];
-            VertexOut v3 = clippingVertexs[i + 2];
-            // back face culling
+            if (m_config->m_polygonMode == PolygonMode::Fill && m_config->m_backFaceCulling)
             {
-                if (m_config->m_polygonMode == PolygonMode::Fill && m_config->m_backFaceCulling)
-                {
-                    if (!BackFaceClipping(v1.clipPos, v2.clipPos, v3.clipPos, m_config->m_faceCullMode))
-                        continue;
-                }
+                if (!BackFaceClipping(v1.clipPos, v2.clipPos, v3.clipPos, m_config->m_faceCullMode))
+                    continue;
             }
-            // view port transformation
-            {
-                // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
-                v1.clipPos = m_config->m_viewPortMat * v1.clipPos;
-                v2.clipPos = m_config->m_viewPortMat * v2.clipPos;
-                v3.clipPos = m_config->m_viewPortMat * v3.clipPos;
-            }
+        }
+        // view port transformation
+        {
+            // 如果m_viewPortMat的(2,2)元素反转了，那么Texture和depthBuffer的元素不用反转
+            v1.clipPos = m_config->m_viewPortMat * v1.clipPos;
+            v2.clipPos = m_config->m_viewPortMat * v2.clipPos;
+            v3.clipPos = m_config->m_viewPortMat * v3.clipPos;
+        }
 
-            // rasterization and fragment shader stage
+        // rasterization and fragment shader stage
+        {
+            if (m_config->m_polygonMode == PolygonMode::Wire)
             {
-                if (m_config->m_polygonMode == PolygonMode::Wire)
-                {
-                    BresenhamLineRasterization(v1, v2);
-                    BresenhamLineRasterization(v2, v3);
-                    BresenhamLineRasterization(v3, v1);
-                }
-                else if (m_config->m_polygonMode == PolygonMode::Fill)
-                {
-                    EdgeWalkingFillRasterization(v1, v2, v3);
-                }
+                BresenhamLineRasterization(v1, v2);
+                BresenhamLineRasterization(v2, v3);
+                BresenhamLineRasterization(v3, v1);
+            }
+            else if (m_config->m_polygonMode == PolygonMode::Fill)
+            {
+                // if (m_config->m_faceCullMode == FaceCullMode::BackFaceCull)
+                //     EdgeWalkingFillRasterization(v1, v2, v3);
+                // else
+                //     EdgeWalkingFillRasterization(v1, v3, v2);
+                if (m_config->m_faceCullMode == FaceCullMode::BackFaceCull)
+                    RasterTriangle(v1, v2, v3);
+                else
+                    RasterTriangle(v1, v3, v2);
             }
         }
     }
 }
 
-void Pipeline::DrawModel(Model *model)
+void Pipeline::DrawModel(const std::shared_ptr<Model> &model)
 {
 
     for (size_t i = 0; i < model->m_objectNum; ++i)
@@ -195,12 +204,51 @@ void Pipeline::DrawObject(const Object &obj, Uniform &u)
     DrawMesh();
 }
 
+void Pipeline::RasterTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
+{
+    int fxPtX[3], fxPtY[3];
+    fxPtX[0] = (int)(v1.clipPos.x + 0.5);
+    fxPtY[0] = (int)(v1.clipPos.y + 0.5);
+    fxPtX[1] = (int)(v2.clipPos.x + 0.5);
+    fxPtY[1] = (int)(v2.clipPos.y + 0.5);
+    fxPtX[2] = (int)(v3.clipPos.x + 0.5);
+    fxPtY[2] = (int)(v3.clipPos.y + 0.5);
+    int startX = max(min(min(fxPtX[0], fxPtX[1]), fxPtX[2]), 0);
+    int endX = min(max(max(fxPtX[0], fxPtX[1]), fxPtX[2]), m_config->m_width - 1);
+
+    int startY = max(min(min(fxPtY[0], fxPtY[1]), fxPtY[2]), 0);
+    int endY = min(max(max(fxPtY[0], fxPtY[1]), fxPtY[2]), m_config->m_height - 1);
+
+    // rasterization
+    for (int x = startX; x <= endX; x++)
+    {
+        for (int y = startY; y <= endY; y++)
+        {
+            Vec3 weight = Barycentric2D((float)(x + 0.5), (float)(y + 0.5), v1.clipPos, v2.clipPos, v3.clipPos);
+
+            if (IsInsideTriangle(weight.x, weight.y, weight.z))
+            {
+                VertexOut current = Lerp(v1, v2, v3, weight);
+                if (m_config->m_depthTesting)
+                {
+                    float pixelDepth = m_config->m_backBuffer->GetPixelDepth(x, y);
+                    if (current.clipPos.z > pixelDepth)
+                        continue;
+                    m_config->m_backBuffer->SetPixelDepth(x, y, current.clipPos.z);
+                }
+                PerspectiveRestore(current);
+                m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(current));
+            }
+        }
+    }
+}
+
 void Pipeline::PerspectiveDivision(VertexOut &target)
 {
     // oneDivzZ to correct lerp
     target.oneDivZ = 1.0f / target.clipPos.w;
 
-    target.clipPos /= target.clipPos.w;
+    target.clipPos *= target.oneDivZ;
     target.clipPos.w = 1.0f;
     // map from [-1, 1] to [0, 1]
     target.clipPos.z = (target.clipPos.z + 1.0f) * 0.5f;
@@ -311,15 +359,19 @@ void Pipeline::ScanLinePerRow(const VertexOut &left, const VertexOut &right)
             continue;
         if (current.clipPos.x >= m_config->m_width || current.clipPos.y >= m_config->m_height)
             break;
-        float w = 1.0f / current.oneDivZ;
-        current.worldPos *= w;
-        current.color *= w;
-        current.texcoord *= w;
-        current.normal *= w;
-        current.TBN *= w;
+        PerspectiveRestore(current);
         // fragment shader
         m_config->m_backBuffer->SetPixelColor(current.clipPos.x, current.clipPos.y, m_config->m_shader->FragmentShader(current));
     }
+}
+void Pipeline::PerspectiveRestore(VertexOut &current)
+{
+    float w = 1.0f / current.oneDivZ;
+    current.worldPos *= w;
+    current.color *= w;
+    current.texcoord *= w;
+    current.normal *= w;
+    current.TBN *= w;
 }
 void Pipeline::RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
 {

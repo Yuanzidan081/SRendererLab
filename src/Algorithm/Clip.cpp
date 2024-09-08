@@ -16,8 +16,8 @@ static std::vector<Vec4> m_viewLineParameters = {
     // bottom
     Vec4(0, 1, 0, 1)};
 
-float Clip::s_near = 0.01f;
-float Clip::s_far = 100.0f;
+float Clip::s_near = 0.1f;
+float Clip::s_far = 1000.0f;
 bool BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3, FaceCullMode faceCullMode)
 {
 
@@ -25,6 +25,7 @@ bool BackFaceClipping(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3, FaceCullMo
     Vec3 edge2(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z);
     Vec3 viewRay(0, 0, 1);
     Vec3 normal = edge1.GetCrossProduct(edge2);
+    // return true;
     return (faceCullMode == BackFaceCull) ? (viewRay.GetDotProduct(normal) > 0) : (viewRay.GetDotProduct(normal) < 0);
 }
 bool ViewCulling(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3)

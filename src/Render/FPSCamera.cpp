@@ -178,3 +178,9 @@ void EulerFPSCamera::UpdateCameraVectors()
     m_right = m_worldUp.GetCrossProduct(m_front).GetNormalize();
     m_up = m_front.GetCrossProduct(m_right).GetNormalize();
 }
+
+void EulerFPSCamera::SetPosition(const Vec3 &v)
+{
+    m_position = v;
+    m_updateViewFlag = true;
+}

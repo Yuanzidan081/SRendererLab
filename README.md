@@ -42,6 +42,10 @@
 PBR材质
 
 <div align="center">
+	<img src="image/screenshots/PBR_helmet.png" align="middle" width="250" />
+</div>
+
+<div align="center">
 	<img src="image/screenshots/pbr.png" align="middle" width="250" />
 </div>
 

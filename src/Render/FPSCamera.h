@@ -41,8 +41,8 @@ public:
                    float fov = 45.0f,
                    int w = 500,
                    int h = 500,
-                   float near = 0.01f,
-                   float far = 100.0f);
+                   float near = 0.1f,
+                   float far = 1000.0f);
     ~EulerFPSCamera() = default;
 
     virtual Mat4x4 GetViewMatrix();
@@ -64,6 +64,8 @@ public:
     void Zoom(float delta);
 
     void UpdateCameraVectors();
+
+    void SetPosition(const Vec3 &v);
 
     float m_pitch;
     float m_yaw;

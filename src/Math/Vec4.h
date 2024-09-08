@@ -104,5 +104,5 @@ public:
     Vec3 GetNormalize3D() const;
 };
 std::ostream &operator<<(std::ostream &os, Vec4 &m);
-
+Vec4 Lerp3(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3, const Vec3 &weight);
 #endif // Vec_4_H

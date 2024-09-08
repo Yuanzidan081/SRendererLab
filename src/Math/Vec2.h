@@ -3,6 +3,7 @@
 #include <cmath>
 #include "MathUtils.h"
 #include <iostream>
+class Vec3;
 class Vec2
 {
 public:
@@ -93,5 +94,6 @@ public:
     }
 };
 std::ostream &operator<<(std::ostream &os, Vec2 &m);
+Vec2 Lerp3(const Vec2 &v1, const Vec2 &v2, const Vec2 &v3, const Vec3 &weight);
 
 #endif // VEC_2_H

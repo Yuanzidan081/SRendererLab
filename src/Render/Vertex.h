@@ -39,5 +39,9 @@ public:
                                       normal(rhs.normal), color(rhs.color), oneDivZ(rhs.oneDivZ), TBN(rhs.TBN)
     {
     }
+    VertexOut operator-(const VertexOut &rhs);
+    VertexOut operator+(const VertexOut &rhs);
+    void operator+=(const VertexOut &rhs);
+    VertexOut operator*(float val);
 };
 #endif // VERTEX_H

@@ -56,5 +56,5 @@ public:
     Mat3x3 GetLerp(const Mat3x3 &v2, const float factor) const { return (*this) * (1.0f - factor) + v2 * factor; }
 };
 std::ostream &operator<<(std::ostream &os, Mat3x3 &m);
-
+Mat3x3 Lerp3(const Mat3x3 &v1, const Mat3x3 &v2, const Mat3x3 &v3, const Vec3 &weight);
 #endif // Mat3x3_H

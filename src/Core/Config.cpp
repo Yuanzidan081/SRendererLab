@@ -44,7 +44,7 @@ Config::Config() : m_depthTesting(true),
 Config::~Config()
 {
 }
-void Config::AddModel(Model *model)
+void Config::AddModel(const std::shared_ptr<Model> &model)
 {
     m_models.push_back(model);
 }
@@ -63,9 +63,9 @@ void Config::Destroy()
         delete m_cubeMap;
     for (size_t i = 0; i < m_models.size(); ++i)
     {
-        delete m_models[i];
-        m_models[i] = nullptr;
+        m_models[i].reset();
     }
+    m_models.clear();
     Shader *shader = PhongShader::GetInstance();
     shader->Destroy();
     shader = GouraudShader::GetInstance();
@@ -129,4 +129,9 @@ void Config::NewLightProperty(int lightIndex)
 std::shared_ptr<Light> &Config::GetCurrentLight()
 {
     return m_currentLight;
+}
+
+void Config::AddLight(const std::shared_ptr<Light> light)
+{
+    m_lights.push_back(light);
 }

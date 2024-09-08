@@ -44,9 +44,12 @@ public:
     // start the rendering pipeline
     void DrawScene();
     void DrawMesh();
-    void DrawModel(Model *model);
+    void DrawTriangle(Vertex &p1, Vertex &p2, Vertex &p3);
+    void DrawModel(const std::shared_ptr<Model> &model);
     void DrawSkyBox(Model *model);
     void DrawObject(const Object &obj, Uniform &u);
+
+    void RasterTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
     std::shared_ptr<Config> m_config;
 
 private:
@@ -56,6 +59,7 @@ private:
     // rasterization
     void BresenhamLineRasterization(const VertexOut &from, const VertexOut &to);
     void ScanLinePerRow(const VertexOut &left, const VertexOut &right);
+    void PerspectiveRestore(VertexOut &current);
     void RasterTopTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
     void RasterBottomTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3);
     void EdgeWalkingFillRasterization(const VertexOut &v1, const VertexOut &v2, const VertexOut &v3);

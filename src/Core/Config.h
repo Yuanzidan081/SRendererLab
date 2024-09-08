@@ -29,7 +29,6 @@ public:
     Config(const Config &) = delete;
     Config &operator=(const Config &) = delete;
 
-    void AddModel(Model *model);
     void Destroy();
     // state settings
     bool m_depthTesting;
@@ -52,7 +51,7 @@ public:
     const std::vector<unsigned int> *m_indices;
     const std::vector<Vertex> *m_vertices;
 
-    std::vector<Model *> m_models;
+    std::vector<std::shared_ptr<Model>> m_models;
     std::vector<std::shared_ptr<Light>> m_lights;
     EulerFPSCamera *m_fpsCamera;
     ResourceManager *m_resourceManager;
@@ -82,6 +81,10 @@ public:
     void NewLightProperty(int lightIndex);
 
     std::shared_ptr<Light> &GetCurrentLight();
+
+    void AddModel(const std::shared_ptr<Model> &model);
+
+    void AddLight(const std::shared_ptr<Light> light);
 signals:
     void TreeNodeChanged();
     void LightChanged();

@@ -224,7 +224,9 @@ void MainWidget::UpdateSelectedModelProperty()
     // m_config->m_models[m_selectedModelIndex]
     // model
 
-    Model *&model = m_config->m_models[m_selectedModelIndex];
+    // std::shared_ptr<Model> &model = m_config->m_models[m_selectedModelIndex];
+    Model *model = m_config->m_models[m_selectedModelIndex].get();
+
     modelWidget->Clear();
     modelWidget->AddFloat3(QString("Translate"), QString("x"), QString("y"), QString("z"), &(model->m_transform.position), -1000.0, 1000.0, QString("Transform"));
     modelWidget->AddFloat3(QString("Rotation"), QString("x"), QString("y"), QString("z"), &(model->m_transform.rotation), -1000.0, 1000.0, QString("Transform"));

@@ -15,6 +15,7 @@ Material::~Material()
 void Material::SetupUniform(Uniform &uniform)
 {
     std::shared_ptr<Config> config = Config::GetInstance();
+
     uniform.m_mainTex = config->m_resourceManager->LoadFromFile(m_mainTexPath).get();
     uniform.m_normalTex = config->m_resourceManager->LoadFromFile(m_normalTexPath).get();
     uniform.m_metallicTex = config->m_resourceManager->LoadFromFile(m_metallicTexPath).get();

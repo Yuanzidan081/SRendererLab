@@ -92,7 +92,9 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
 
     // Vec3 albedo = in.color;
     // albedo
-    Vec3 albedo = Vec3(0.5f, 0.0f, 0.0f);
+    // Vec3 albedo = Vec3(0.5f, 0.0f, 0.0f);
+    Vec4 albedo = m_uniform->m_diffuse;
+
     if (m_uniform->m_mainTex)
         albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
     // metallic

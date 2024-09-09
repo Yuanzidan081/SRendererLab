@@ -65,13 +65,30 @@ void ModelWidget::AddInt(QString &mainPropName, QString &prop1Name, int *val, in
     propWidget->BindData(val);
 }
 
-void ModelWidget::AddColorImg3(QString &mainPropName, Vec4 *color, const QString &tag)
+void ModelWidget::AddColorImg3(QString &mainPropName, Vec4 *color, const QString &tag,
+                               std::string *texturePath)
 {
     ColorImgWidget *propWidget = new ColorImgWidget(mainPropName);
     propWidget->SetProp(*color);
     propMap.propColorTexture.insert(QString(mainPropName), propWidget);
     GetTargetVBoxLayout(tag)->addWidget(propWidget);
-    propWidget->BindData(color);
+    propWidget->BindData(color, texturePath);
 }
 
+void ModelWidget::AddImagePanel(QString &mainPropName, const QString &tag, std::string *texturePath)
+{
+    ImagePanel *propWidget = new ImagePanel(mainPropName);
+    propMap.propImage.insert(QString(mainPropName), propWidget);
+    GetTargetVBoxLayout(tag)->addWidget(propWidget);
+    propWidget->BindData(texturePath);
+}
 
+void ModelWidget::AddImageSlider(QString &mainPropName, float *factor, const QString &tag,
+                                 std::string *texturePath)
+{
+    ImageSlider *propWidget = new ImageSlider(mainPropName);
+    propWidget->SetProp(*factor);
+    propMap.propImageFactor.insert(QString(mainPropName), propWidget);
+    GetTargetVBoxLayout(tag)->addWidget(propWidget);
+    propWidget->BindData(factor, texturePath);
+}

@@ -217,7 +217,7 @@ void MainWidget::UpdateSelectedLightProperty()
 
 void MainWidget::UpdateSelectedModelProperty()
 {
-    std::cout << m_selectedModelIndex << " " << m_selectedMeshIndex << std::endl;
+    // std::cout << m_selectedModelIndex << " " << m_selectedMeshIndex << std::endl;
     if (m_selectedModelIndex == -1 && m_selectedMeshIndex == -1)
         return;
 
@@ -237,7 +237,19 @@ void MainWidget::UpdateSelectedModelProperty()
     {
         modelWidget->AddInt(QString("VertexNum"), QString(""), &(model->m_objects[m_selectedMeshIndex].m_mesh->m_vertexNum), 0, 100000000, QString("MeshInfo"));
         modelWidget->AddInt(QString("TriangleNum"), QString(""), &(model->m_objects[m_selectedMeshIndex].m_mesh->m_triangleNum), 0, 100000000, QString("MeshInfo"));
-        modelWidget->AddColorImg3(QString("Albedo"), &(model->m_objects[m_selectedMeshIndex].m_material->m_diffuse), QString("Material"));
+        modelWidget->AddColorImg3(QString("Albedo"), &(model->m_objects[m_selectedMeshIndex].m_material->m_diffuse), QString("Material"),
+                                  &(model->m_objects[m_selectedMeshIndex].m_material->m_mainTexPath));
+        modelWidget->AddImagePanel(QString("Normal"), QString("Material"),
+                                   &(model->m_objects[m_selectedMeshIndex].m_material->m_normalTexPath));
+
+        modelWidget->AddImageSlider(QString("Metallic"), &(model->m_objects[m_selectedMeshIndex].m_material->m_metallic), QString("Material"),
+                                    &(model->m_objects[m_selectedMeshIndex].m_material->m_metallicTexPath));
+        modelWidget->AddImageSlider(QString("Roughness"), &(model->m_objects[m_selectedMeshIndex].m_material->m_roughness), QString("Material"),
+                                    &(model->m_objects[m_selectedMeshIndex].m_material->m_roughnessTexPath));
+        modelWidget->AddImageSlider(QString("AO"), &(model->m_objects[m_selectedMeshIndex].m_material->m_ao), QString("Material"),
+                                    &(model->m_objects[m_selectedMeshIndex].m_material->m_aoTexPath));
+        modelWidget->AddImagePanel(QString("Emission"), QString("Material"),
+                                   &(model->m_objects[m_selectedMeshIndex].m_material->m_emissionTexPath));
     }
     else
     {

@@ -41,6 +41,10 @@ bool Texture2D::LoadTexture(const std::string &filename)
     }
     return m_texelBuffer != nullptr;
 }
+unsigned char *Texture2D::GetTextureData()
+{
+    return m_texelBuffer;
+}
 const Vec4 Texture2D::SampleTexture(const Vec2 &texCoords) const
 {
 

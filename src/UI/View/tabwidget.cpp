@@ -14,7 +14,6 @@ TabWidget::~TabWidget()
 
 void TabWidget::Clear()
 {
-
     for (auto it = propMap.PropVec3.begin(); it != propMap.PropVec3.end(); ++it)
     {
         delete it.value();
@@ -35,8 +34,20 @@ void TabWidget::Clear()
         delete it.value();
         it.value() = nullptr;
     }
+    for (auto it = propMap.propImageFactor.begin(); it != propMap.propImageFactor.end(); ++it)
+    {
+        delete it.value();
+        it.value() = nullptr;
+    }
+    for (auto it = propMap.propImage.begin(); it != propMap.propImage.end(); ++it)
+    {
+        delete it.value();
+        it.value() = nullptr;
+    }
     propMap.PropVec3.clear();
     propMap.PropFloat.clear();
     propMap.propColorTexture.clear();
     propMap.propColor.clear();
+    propMap.propImageFactor.clear();
+    propMap.propImage.clear();
 }

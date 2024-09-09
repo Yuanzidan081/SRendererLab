@@ -241,6 +241,112 @@ void Pipeline::RasterTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
             }
         }
     }
+    // int fxPtX[3], fxPtY[3];
+    // fxPtX[0] = (int)(v1.clipPos.x + 0.5);
+    // fxPtY[0] = (int)(v1.clipPos.y + 0.5);
+    // fxPtX[1] = (int)(v2.clipPos.x + 0.5);
+    // fxPtY[1] = (int)(v2.clipPos.y + 0.5);
+    // fxPtX[2] = (int)(v3.clipPos.x + 0.5);
+    // fxPtY[2] = (int)(v3.clipPos.y + 0.5);
+
+    // // float Z[3] = {v1.clipPos.z, v2.clipPos.z, v3.clipPos.z};
+
+    // int startX = max(min(min(fxPtX[0], fxPtX[1]), fxPtX[2]), 0);
+    // int endX = min(max(max(fxPtX[0], fxPtX[1]), fxPtX[2]), m_config->m_width - 1);
+
+    // int startY = max(min(min(fxPtY[0], fxPtY[1]), fxPtY[2]), 0);
+    // int endY = min(max(max(fxPtY[0], fxPtY[1]), fxPtY[2]), m_config->m_height - 1);
+
+    // // I Ay - By
+    // int I01 = fxPtY[0] - fxPtY[1];
+    // int I02 = fxPtY[1] - fxPtY[2];
+    // int I03 = fxPtY[2] - fxPtY[0];
+
+    // // J Bx - Ax
+    // int J01 = fxPtX[1] - fxPtX[0];
+    // int J02 = fxPtX[2] - fxPtX[1];
+    // int J03 = fxPtX[0] - fxPtX[2];
+
+    // // K AxBy - AyBx
+    // int K01 = fxPtX[0] * fxPtY[1] - fxPtX[1] * fxPtY[0];
+    // int K02 = fxPtX[1] * fxPtY[2] - fxPtX[2] * fxPtY[1];
+    // int K03 = fxPtX[2] * fxPtY[0] - fxPtX[0] * fxPtY[2];
+
+    // // F01 = I01 * Px + J01 * Py + K01
+    // // Cy
+    // int F01 = (I01 * startX) + (J01 * startY) + K01;
+    // int F02 = (I02 * startX) + (J02 * startY) + K02;
+    // int F03 = (I03 * startX) + (J03 * startY) + K03;
+
+    // // int delta = F01 + F02 + F03;
+    // // float OneDivideDelta = 1.0f / (float)delta;
+    // // // 面积
+    // // // float Delta = (v2.windowPos.x - v1.windowPos.x) * (v3.windowPos.y - v1.windowPos.y) - (v1.windowPos.x - v3.windowPos.x) * (v1.windowPos.y - v2.windowPos.y);
+    // int Delta = (fxPtX[1] - fxPtX[0]) * (fxPtY[2] - fxPtY[0]) - (fxPtX[0] - fxPtX[2]) * (fxPtY[0] - fxPtY[1]);
+    // float OneDivideDelta = 1 / (float)Delta;
+
+    // // Z[1] = (Z[1] - Z[0]) * OneDivideDelta;
+    // // Z[2] = (Z[2] - Z[0]) * OneDivideDelta;
+
+    // VertexOut V1 = v1;
+    // VertexOut V2 = v2;
+    // VertexOut V3 = v3;
+
+    // V2 = (V2 - V1) * OneDivideDelta;
+    // V3 = (V3 - V1) * OneDivideDelta;
+
+    // // // float zx = I03 * Z[1] + I01 * Z[2];
+    // // // float zy = J03 * Z[1] + J01 * Z[2];
+
+    // VertexOut vx = V2 * I03 + V3 * I01;
+    // VertexOut vy = V2 * J03 + V3 * J01;
+
+    // int Cy1 = F01, Cy2 = F02, Cy3 = F03;
+    // VertexOut v0 = V1 + V2 * Cy3 + V3 * Cy1; // +0.5f * vx + 0.5f * vy;
+
+    // for (int y = startY; y <= endY; y++)
+    // {
+    //     // Cx
+    //     int Cx1 = Cy1;
+    //     int Cx2 = Cy2;
+    //     int Cx3 = Cy3;
+    //     VertexOut v1X = v0;
+    //     //     // float depth = Z[0] + Cx3 * Z[1] + Cx1 * Z[2];
+    //     //     // VertexOut vf = V1 + V2 * Cx3 + V3 * Cx1 + 0.5f * vx;
+    //     for (int x = startX; x <= endX; x++)
+    //     {
+    //         if (((Cx1 <= 0) && (Cx2 <= 0) && (Cx3 <= 0)) || ((Cx1 >= 0) && (Cx2 >= 0) && (Cx3 >= 0)))
+    //         {
+    //             if (m_config->m_depthTesting)
+    //             {
+    //                 float pixelDepth = m_config->m_backBuffer->GetPixelDepth(x, y);
+    //                 if (v1X.clipPos.z > pixelDepth)
+    //                     continue;
+    //                 m_config->m_backBuffer->SetPixelDepth(x, y, v1X.clipPos.z);
+    //             }
+    //             VertexOut current = v1X;
+    //             // Vec3 weights = Vec3(Cx2 * OneDivideDelta, Cx3 * OneDivideDelta, Cx1 * OneDivideDelta);
+    //             // VertexOut current = Lerp(v1, v2, v3, weights);
+
+    //             PerspectiveRestore(current);
+    //             m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(current));
+    //         }
+    //         // }
+    //         // Cx += I
+    //         Cx1 += I01;
+    //         Cx2 += I02;
+    //         Cx3 += I03;
+    //         // depth += zx;
+    //         v1X += vx;
+    //         // z0 += zx;
+    //     }
+    //     // Cy += J
+    //     Cy1 += J01;
+    //     Cy2 += J02;
+    //     Cy3 += J03;
+    //     // z0 += zy;
+    //     v0 += vy;
+    // }
 }
 
 void Pipeline::PerspectiveDivision(VertexOut &target)

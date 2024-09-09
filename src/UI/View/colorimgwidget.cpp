@@ -6,14 +6,14 @@
 #include <QMenu>
 #include <QAction>
 ColorImgWidget::ColorImgWidget(QWidget *parent) : QWidget(parent),
-                                                  ui(new Ui::ColorImgWidget), m_color(nullptr), m_texture(nullptr)
+                                                  ui(new Ui::ColorImgWidget), m_color(nullptr), m_texture(nullptr), m_textureDisplay(nullptr)
 
 {
     ui->setupUi(this);
 }
 
 ColorImgWidget::ColorImgWidget(QString &name, QWidget *parent) : QWidget(parent),
-                                                                 ui(new Ui::ColorImgWidget)
+                                                                 ui(new Ui::ColorImgWidget), m_color(nullptr), m_texture(nullptr), m_textureDisplay(nullptr)
 {
     ui->setupUi(this);
     ui->mainprop->setText(name);
@@ -26,7 +26,7 @@ ColorImgWidget::ColorImgWidget(QString &name, QWidget *parent) : QWidget(parent)
     connect(addTextureNone, &QAction::triggered, this, &ColorImgWidget::SetTextureNone);
 
     QAction *addTextureFromFile = new QAction("From File", addTextureMenu);
-    connect(addTextureNone, &QAction::triggered, this, &ColorImgWidget::SetTextureFromFile);
+    connect(addTextureFromFile, &QAction::triggered, this, &ColorImgWidget::SetTextureFromFile);
     addTextureMenu->addAction(addTextureNone);
     addTextureMenu->addAction(addTextureFromFile);
 
@@ -37,6 +37,10 @@ ColorImgWidget::ColorImgWidget(QString &name, QWidget *parent) : QWidget(parent)
 
 ColorImgWidget::~ColorImgWidget()
 {
+
+    if (m_textureDisplay)
+        delete m_textureDisplay;
+    m_textureDisplay = nullptr;
     delete ui;
 }
 
@@ -63,11 +67,12 @@ void ColorImgWidget::SetProp(const Vec4 &val)
     ui->colorButton->setStyleSheet(styleSheetColor);
 }
 
-void ColorImgWidget::BindData(Vec4 *bindPtr, Texture2D *texture)
+void ColorImgWidget::BindData(Vec4 *bindPtr, std::string *texturePath)
 {
     m_color = bindPtr;
     connect(ui->colorButton, &QToolButton::clicked, this, &ColorImgWidget::OpenColorDialog);
-    m_texture = texture;
+    m_texture = texturePath;
+    ShowTexture();
 }
 
 void ColorImgWidget::OpenColorDialog()
@@ -87,18 +92,32 @@ void ColorImgWidget::OpenColorDialog()
 void ColorImgWidget::SetTextureNone()
 {
     // TODO: concurrency
-    // if (m_texture)
-    // {
-    //     m_texture = nullptr;
-    //     using std::swap;
-    //     swap(m_texture, )
-    //     delete m_texture;
 
-    //     }
+    *m_texture = "";
+    ShowTexture();
 }
 
 void ColorImgWidget::SetTextureFromFile()
 {
+    // sys->mutex.lock();
+    QFileDialog *fileDialog = new QFileDialog(this, QString::fromLocal8Bit("打开纹理"), "./obj", "*Texture File(*.bmp *.jpg *.jpeg *.png *.tga *.hdr)");
+    // fileDialog->setWindowTitle(QStringLiteral("打开纹理"));
+    // fileDialog->setDirectory(".");
+    // fileDialog->setNameFilter(tr("Texture File(*.bmp *.jpg *.jpeg *.png *.tga *.hdr)"));
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
+    fileDialog->setViewMode(QFileDialog::Detail);
+    QStringList fileNames;
+    if (fileDialog->exec())
+    {
+        fileNames = fileDialog->selectedFiles();
+        *m_texture = fileNames[0].toStdString();
+        // Texture2D *tex = new Texture2D(fileNames[0].toStdString());
+        // material->SetTexture(tex, 0);
+        // ShowTexture(tex, ui.mCav);
+        ShowTexture();
+        // delete tex;
+    }
+    // sys->mutex.unlock();
 }
 
 QColor ColorImgWidget::Vec4ToQColor(const Vec4 &color)
@@ -116,4 +135,26 @@ Vec4 ColorImgWidget::QColorToVec4(const QColor &color)
     result.b = color.blueF();
     result.a = color.alphaF();
     return result;
+}
+
+void ColorImgWidget::ShowTexture()
+{
+    if (*m_texture == "")
+    {
+        ui->imageLabel->setPixmap(QPixmap());
+        return;
+    }
+    if (m_textureDisplay)
+        delete m_textureDisplay;
+    m_textureDisplay = new Texture2D(*m_texture);
+
+    QImage *tmp;
+    if (m_textureDisplay->GetChannels() == 3)
+        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGB888);
+    else if (m_textureDisplay->GetChannels() == 4)
+        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGBA8888);
+    else if (m_textureDisplay->GetChannels() == 1)
+        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_Grayscale8);
+    QImage image = tmp->scaled(100, 100);
+    ui->imageLabel->setPixmap(QPixmap::fromImage(image));
 }

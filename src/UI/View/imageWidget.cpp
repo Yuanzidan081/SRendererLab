@@ -5,6 +5,7 @@
 ImageWidget::ImageWidget(QWidget *parent) : m_canvas(nullptr)
 {
 }
+
 ImageWidget::~ImageWidget()
 {
 }
@@ -18,8 +19,6 @@ void ImageWidget::paintEvent(QPaintEvent *event)
     }
     QWidget::paintEvent(event);
 }
-
-
 
 void ImageWidget::reveiveFrame(unsigned char *image)
 {

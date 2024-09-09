@@ -28,6 +28,9 @@ VertexOut PhongShader::VertexShader(const Vertex &in)
 
     result.color = in.color;
     result.normal = m_uniform->m_normalMatrix * in.normal;
+    Vec3 tangent = Normalize(m_uniform->m_modelMatrix.GetMat3x3() * in.tangent);
+    Vec3 binormal = Normalize(result.normal.GetCrossProduct(tangent));
+    result.TBN = Mat3x3(tangent, binormal, result.normal);
 
     result.texcoord = in.texcoord;
 
@@ -37,8 +40,14 @@ VertexOut PhongShader::VertexShader(const Vertex &in)
 Vec4 PhongShader::FragmentShader(const VertexOut &in)
 {
     Vec3 worldNormal = Normalize(in.normal);
+    if (m_uniform->m_normalTex)
+    {
+        worldNormal = Normalize(in.TBN * (m_uniform->m_normalTex->SampleTexture(in.texcoord) * 2.0f - 1.0f));
+    }
 
-    Vec4 albedo = in.color;
+    // Vec4 albedo = in.color;
+    Vec4 albedo = m_uniform->m_diffuse;
+
     if (m_uniform->m_mainTex)
         albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
     Vec3 result = m_uniform->m_ambient * albedo;
@@ -73,7 +82,7 @@ Vec3 PhongShader::CalDirectionalLight(const std::shared_ptr<DirectionalLight> &l
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);

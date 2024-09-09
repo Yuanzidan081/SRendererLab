@@ -6,6 +6,8 @@
 #include "FloatWidget.h"
 #include "colorimgwidget.h"
 #include "colorwidget.h"
+#include "ImageSlider.h"
+#include "imagepanel.h"
 #include <QMap>
 #include <QString>
 namespace Ui
@@ -36,6 +38,8 @@ protected:
         QMap<QString, Float3Widget *> PropVec3;           // 三维矢量 varying 列表
         QMap<QString, ColorImgWidget *> propColorTexture; // 颜色贴图
         QMap<QString, ColorWidget *> propColor;           // 颜色 varying 列表
+        QMap<QString, ImageSlider *> propImageFactor;
+        QMap<QString, ImagePanel *> propImage;
     };
     Property propMap;
 };

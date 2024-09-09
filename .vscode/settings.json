@@ -85,6 +85,9 @@
         "qvboxlayout": "cpp",
         "stack": "cpp",
         "qapplication": "cpp",
-        "qvector": "cpp"
+        "qvector": "cpp",
+        "qcolordialog": "cpp",
+        "qmenu": "cpp",
+        "qaction": "cpp"
     }
 }

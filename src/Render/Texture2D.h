@@ -22,7 +22,7 @@ public:
     int GetChannels() { return m_Channels; }
 
     bool LoadTexture(const std::string &filename);
-
+    unsigned char *GetTextureData();
     const Vec4 SampleTexture(const Vec2 &texCoords) const;
     friend std::ostream &operator<<(std::ostream &out, const Texture2D &texture);
 

@@ -12,7 +12,7 @@
 #include <direct.h>
 #include <memory>
 #include "Transformation.h"
-#include "Render/Sence.h"
+#include "Render/Scene.h"
 Application::Application(int width, int height) : m_stopped(false), m_fps(0), m_width(width), m_height(height)
 {
     m_pipeline = new Pipeline(width, height);

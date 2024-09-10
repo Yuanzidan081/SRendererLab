@@ -2,7 +2,7 @@
 #include <QDebug>
 
 #include "Render/Model.h"
-#include "Render/Texture2D.h"
+#include "Render/Texture.h"
 #include "Base.h"
 #include "Shader/ShaderGroup.h"
 #include "time.h"
@@ -15,7 +15,7 @@
 #include "Render/Scene.h"
 Application::Application(int width, int height) : m_stopped(false), m_fps(0), m_width(width), m_height(height)
 {
-    m_pipeline = new Pipeline(width, height);
+    m_pipeline = new CorePipeline(width, height);
 }
 
 Application::~Application()

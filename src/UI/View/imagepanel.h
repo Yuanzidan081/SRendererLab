@@ -8,7 +8,7 @@ namespace Ui
     class ImagePanel;
 }
 
-class Texture2D;
+class Texture;
 class ImagePanel : public QWidget
 {
     Q_OBJECT
@@ -27,7 +27,7 @@ public:
 private:
     Ui::ImagePanel *ui;
     std::string *m_texture;
-    Texture2D *m_textureDisplay;
+    Texture *m_textureDisplay;
     void ShowTexture();
 };
 

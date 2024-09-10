@@ -9,7 +9,7 @@ namespace Ui
 {
     class ColorImgWidget;
 }
-class Texture2D;
+class Texture;
 class ColorImgWidget : public QWidget
 {
     Q_OBJECT
@@ -32,7 +32,7 @@ private:
     Ui::ColorImgWidget *ui;
     Vec4 *m_color;
     std::string *m_texture;
-    Texture2D *m_textureDisplay;
+    Texture *m_textureDisplay;
 };
 
 #endif // COLORIMGWIDGET_H

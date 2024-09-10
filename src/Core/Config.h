@@ -7,6 +7,7 @@
 #include "Render/ResourceManager.h"
 #include <memory>
 #include "UI/Common/CommandBase.h"
+#include <memory>
 class Model;
 class Vertex;
 class FrameBuffer;
@@ -58,7 +59,7 @@ public:
     // LightGroup *m_lightGroup;
 
     // cubeMap
-    CubeMap *m_cubeMap;
+    std::shared_ptr<CubeMap> m_cubeMap;
     Model *m_skyBox; // skybox
 
     // eveironment Light

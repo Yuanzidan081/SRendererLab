@@ -3,7 +3,7 @@
 #include "Math/MathGroup.h"
 #include <vector>
 #include <string>
-#include "Texture2D.h"
+#include "Texture.h"
 #include "Object.h"
 #include <initializer_list>
 #include "Core/Transformation.h"

@@ -1,5 +1,5 @@
 #include "Scene.h"
-#include "Pipeline.h"
+#include "CorePipeline.h"
 
 void SetTestScenePBRSphere(const std::shared_ptr<Config> &config)
 {
@@ -106,7 +106,7 @@ void SetTestSceneBlinnPhong(const std::shared_ptr<Config> &config)
     config->AddModel(helmetMdl2);
 
     // Model cubeMdl(Mesh::CreateBox(1.0, 1.0, 1.0), "cube");
-    // cubeMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture2D>(curPath + "obj/cube/container.jpg"));
+    // cubeMdl.m_objects[0].m_material->SetMainTexture(std::make_shared<Texture>(curPath + "obj/cube/container.jpg"));
     // cubeMdl.SetShader(shaderPhong);
     // cubeMdl.SetTranslate(Vec3(1.0f, -1.0f, -1.0f));
     // config->AddModel(&cubeMdl);
@@ -184,27 +184,27 @@ void SetTestSceneBlinnPhong(const std::shared_ptr<Config> &config)
     neptune->SetTranslate(Vec3(0.0f, 0.2f, 0.0f));
     config->AddModel(neptune);
 
-    config->m_cubeMap = new CubeMap(
-        new Texture2D(curPath + "res/skybox_sea/right.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/left.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/top.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/bottom.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/back.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/front.jpg"));
+    config->m_cubeMap = std::make_shared<CubeMap>(
+        new Texture(curPath + "res/skybox_sea/right.jpg"),
+        new Texture(curPath + "res/skybox_sea/left.jpg"),
+        new Texture(curPath + "res/skybox_sea/top.jpg"),
+        new Texture(curPath + "res/skybox_sea/bottom.jpg"),
+        new Texture(curPath + "res/skybox_sea/back.jpg"),
+        new Texture(curPath + "res/skybox_sea/front.jpg"));
     // config->m_cubeMap = new CubeMap(
-    //     new Texture2D(curPath + "res/skybox_room/m0_px.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_nx.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_py.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_ny.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_nz.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_pz.jpg"));
+    //     new Texture(curPath + "res/skybox_room/m0_px.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_nx.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_py.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_ny.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_nz.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_pz.jpg"));
     // config->m_cubeMap = new CubeMap(
-    //     new Texture2D(curPath + "res/skybox_avenue/posx.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/negx.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/posy.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/negy.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/negz.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/posz.bmp"));
+    //     new Texture(curPath + "res/skybox_avenue/posx.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/negx.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/posy.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/negy.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/negz.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/posz.bmp"));
     config->m_useSkyBox = false;
 
     config->m_polygonMode = PolygonMode::Fill;
@@ -289,8 +289,8 @@ void SetTestSceneSkyBox(const std::shared_ptr<Config> &config)
     sphereMdl->m_objects[0].m_material->SetNormalTexturePath(curPath + "obj/sphere/sphere_normal.jpg");
     // sphereMdl->m_objects[0].m_material->SetNormalTexturePath(curPath + "obj/wall/wall_normal.png");
 
-    sphereMdl->m_objects[0].m_material->SetMatallicTexPath(curPath + "obj/sphere/sphere_metalness.jpg");
-    sphereMdl->m_objects[0].m_material->SetRoughnessTexPath(curPath + "obj/sphere/sphere_roughness.png");
+    // sphereMdl->m_objects[0].m_material->SetMatallicTexPath(curPath + "obj/sphere/sphere_metalness.jpg");
+    // sphereMdl->m_objects[0].m_material->SetRoughnessTexPath(curPath + "obj/sphere/sphere_roughness.png");
     sphereMdl->m_objects[0].m_material->SetAOTexturePath(curPath + "obj/sphere/sphere_occlusion.jpg");
     sphereMdl->SetShader(shaderPBR);
     sphereMdl->SetTranslate(Vec3(-21.4f, -5.1f, 0.8f));
@@ -347,27 +347,27 @@ void SetTestSceneSkyBox(const std::shared_ptr<Config> &config)
 
     config->AddModel(ponycar);
 
-    config->m_cubeMap = new CubeMap(
-        new Texture2D(curPath + "res/skybox_sea/right.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/left.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/top.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/bottom.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/back.jpg"),
-        new Texture2D(curPath + "res/skybox_sea/front.jpg"));
+    config->m_cubeMap = std::make_shared<CubeMap>(
+        new Texture(curPath + "res/skybox_sea/right.jpg"),
+        new Texture(curPath + "res/skybox_sea/left.jpg"),
+        new Texture(curPath + "res/skybox_sea/top.jpg"),
+        new Texture(curPath + "res/skybox_sea/bottom.jpg"),
+        new Texture(curPath + "res/skybox_sea/back.jpg"),
+        new Texture(curPath + "res/skybox_sea/front.jpg"));
     // config->m_cubeMap = new CubeMap(
-    //     new Texture2D(curPath + "res/skybox_room/m0_px.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_nx.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_py.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_ny.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_nz.jpg"),
-    //     new Texture2D(curPath + "res/skybox_room/m0_pz.jpg"));
+    //     new Texture(curPath + "res/skybox_room/m0_px.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_nx.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_py.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_ny.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_nz.jpg"),
+    //     new Texture(curPath + "res/skybox_room/m0_pz.jpg"));
     // config->m_cubeMap = new CubeMap(
-    //     new Texture2D(curPath + "res/skybox_avenue/posx.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/negx.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/posy.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/negy.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/negz.bmp"),
-    //     new Texture2D(curPath + "res/skybox_avenue/posz.bmp"));
+    //     new Texture(curPath + "res/skybox_avenue/posx.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/negx.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/posy.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/negy.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/negz.bmp"),
+    //     new Texture(curPath + "res/skybox_avenue/posz.bmp"));
     config->m_useSkyBox = true;
 
     config->m_polygonMode = PolygonMode::Fill;

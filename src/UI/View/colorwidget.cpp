@@ -2,7 +2,7 @@
 #include "ui_colorwidget.h"
 
 #include <QColorDialog>
-#include "Render/Texture2D.h"
+#include "Render/Texture.h"
 #include <QMenu>
 #include <QAction>
 

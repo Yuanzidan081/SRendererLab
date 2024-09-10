@@ -2,7 +2,7 @@
 #include "ui_colorimgwidget.h"
 #include <QDebug>
 #include <QColorDialog>
-#include "Render/Texture2D.h"
+#include "Render/Texture.h"
 #include <QMenu>
 #include <QAction>
 ColorImgWidget::ColorImgWidget(QWidget *parent) : QWidget(parent),
@@ -101,9 +101,6 @@ void ColorImgWidget::SetTextureFromFile()
 {
     // sys->mutex.lock();
     QFileDialog *fileDialog = new QFileDialog(this, QString::fromLocal8Bit("打开纹理"), "./obj", "*Texture File(*.bmp *.jpg *.jpeg *.png *.tga *.hdr)");
-    // fileDialog->setWindowTitle(QStringLiteral("打开纹理"));
-    // fileDialog->setDirectory(".");
-    // fileDialog->setNameFilter(tr("Texture File(*.bmp *.jpg *.jpeg *.png *.tga *.hdr)"));
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
     fileDialog->setViewMode(QFileDialog::Detail);
     QStringList fileNames;
@@ -111,7 +108,7 @@ void ColorImgWidget::SetTextureFromFile()
     {
         fileNames = fileDialog->selectedFiles();
         *m_texture = fileNames[0].toStdString();
-        // Texture2D *tex = new Texture2D(fileNames[0].toStdString());
+        // Texture *tex = new Texture(fileNames[0].toStdString());
         // material->SetTexture(tex, 0);
         // ShowTexture(tex, ui.mCav);
         ShowTexture();
@@ -146,15 +143,17 @@ void ColorImgWidget::ShowTexture()
     }
     if (m_textureDisplay)
         delete m_textureDisplay;
-    m_textureDisplay = new Texture2D(*m_texture);
+    m_textureDisplay = new Texture(*m_texture);
 
     QImage *tmp;
     if (m_textureDisplay->GetChannels() == 3)
-        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGB888);
+        tmp = new QImage(m_textureDisplay->GetTextureDataLDR(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGB888);
     else if (m_textureDisplay->GetChannels() == 4)
-        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGBA8888);
+        tmp = new QImage(m_textureDisplay->GetTextureDataLDR(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGBA8888);
     else if (m_textureDisplay->GetChannels() == 1)
-        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_Grayscale8);
-    QImage image = tmp->scaled(100, 100);
-    ui->imageLabel->setPixmap(QPixmap::fromImage(image));
+        tmp = new QImage(m_textureDisplay->GetTextureDataLDR(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_Grayscale8);
+    // QImage image = tmp->scaled(100, 100);
+    QImage image = tmp->scaled(ui->imageLabel->geometry().width(), ui->imageLabel->geometry().height());
+    QImage mirroredImage = image.mirrored(false, true);
+    ui->imageLabel->setPixmap(QPixmap::fromImage(mirroredImage));
 }

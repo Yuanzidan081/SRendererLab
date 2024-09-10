@@ -3,7 +3,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QFileDialog>
-#include "Render/Texture2D.h"
+#include "Render/Texture.h"
 
 ImagePanel::ImagePanel(QWidget *parent) : QWidget(parent),
                                           ui(new Ui::ImagePanel)
@@ -78,18 +78,18 @@ void ImagePanel::ShowTexture()
     }
     if (m_textureDisplay)
         delete m_textureDisplay;
-    m_textureDisplay = new Texture2D(*m_texture);
+    m_textureDisplay = new Texture(*m_texture);
 
     QImage *tmp;
     if (m_textureDisplay->GetChannels() == 3)
-        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGB888);
+        tmp = new QImage(m_textureDisplay->GetTextureDataLDR(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGB888);
     else if (m_textureDisplay->GetChannels() == 4)
-        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGBA8888);
+        tmp = new QImage(m_textureDisplay->GetTextureDataLDR(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_RGBA8888);
     else if (m_textureDisplay->GetChannels() == 1)
-        tmp = new QImage(m_textureDisplay->GetTextureData(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_Grayscale8);
-    QImage image = tmp->scaled(100, 100);
-    ui->imageLabel->setPixmap(QPixmap::fromImage(image));
-    // QPixmap pixmap(QString::fromStdString(*m_texture));
-
-    // ui->imageLabel->setPixmap(pixmap);
+        tmp = new QImage(m_textureDisplay->GetTextureDataLDR(), m_textureDisplay->GetWidth(), m_textureDisplay->GetHeight(), QImage::Format_Grayscale8);
+    // QImage image = tmp->scaled(100, 100);
+    // ui->imageLabel->setPixmap(QPixmap::fromImage(image));
+    QImage image = tmp->scaled(ui->imageLabel->geometry().width(), ui->imageLabel->geometry().height());
+    QImage mirroredImage = image.mirrored(false, true);
+    ui->imageLabel->setPixmap(QPixmap::fromImage(mirroredImage));
 }

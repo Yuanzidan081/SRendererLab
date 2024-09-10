@@ -39,6 +39,7 @@ MainWidget::MainWidget(std::shared_ptr<Light> &light, QWidget *parent) : QWidget
     m_inputTimer = new QTimer(this);
     SetUpModelTabWidget();
     SetUpLightTabWidget();
+    SetUpConfigTabWidget();
 }
 
 MainWidget::~MainWidget()
@@ -102,27 +103,27 @@ void MainWidget::DealInput()
 {
     if (m_pressedKeys.contains(Qt::Key_W))
     {
-        m_config->m_fpsCamera->MoveForward(-0.2);
+        m_config->m_fpsCamera->MoveForward(-1.0);
     }
     if (m_pressedKeys.contains(Qt::Key_S))
     {
-        m_config->m_fpsCamera->MoveForward(0.2);
+        m_config->m_fpsCamera->MoveForward(1.0);
     }
     if (m_pressedKeys.contains(Qt::Key_A))
     {
-        m_config->m_fpsCamera->MoveRight(-0.2);
+        m_config->m_fpsCamera->MoveRight(-1.0);
     }
     if (m_pressedKeys.contains(Qt::Key_D))
     {
-        m_config->m_fpsCamera->MoveRight(0.2);
+        m_config->m_fpsCamera->MoveRight(1.0);
     }
     if (m_pressedKeys.contains(Qt::Key_Q))
     {
-        m_config->m_fpsCamera->MoveUp(0.2);
+        m_config->m_fpsCamera->MoveUp(1.0);
     }
     if (m_pressedKeys.contains(Qt::Key_E))
     {
-        m_config->m_fpsCamera->MoveUp(-0.2);
+        m_config->m_fpsCamera->MoveUp(-1.0);
     }
 }
 
@@ -183,6 +184,17 @@ void MainWidget::SetUpLightTabWidget()
     lightWidgetLayout->addWidget(lightWidget);
     ui->propTabWidget->insertTab(1, lightWidgetPage, "Light");
     connect(lightWidget, static_cast<void (LightWidget::*)(int)>(&LightWidget::ChangeSelectedLight), this, static_cast<void (MainWidget::*)(int)>(&MainWidget::OnChangeSelectedLight));
+}
+
+void MainWidget::SetUpConfigTabWidget()
+{
+    QWidget *configWidgetPage = new QWidget();
+    QHBoxLayout *configWidgetLayout = new QHBoxLayout(configWidgetPage);
+    configWidget = new ConfigWidget(m_config);
+    configWidget->Init();
+    configWidgetLayout->setContentsMargins(0, 0, 0, 0);
+    configWidgetLayout->addWidget(configWidget);
+    ui->propTabWidget->insertTab(2, configWidgetPage, "Config");
 }
 
 void MainWidget::UpdateSelectedLightProperty()

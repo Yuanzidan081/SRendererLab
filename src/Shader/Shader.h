@@ -3,7 +3,7 @@
 #include "Math/MathGroup.h"
 #include "Core/Base.h"
 #include "Render/Vertex.h"
-#include "Render/Texture2D.h"
+#include "Render/Texture.h"
 #include <vector>
 #include <memory>
 class Light;
@@ -31,14 +31,14 @@ public:
     // Material *m_material;
     std::vector<std::shared_ptr<Light>> *m_lights;
     // LightGroup *m_lights;
-    Texture2D *m_mainTex;
-    Texture2D *m_normalTex;
-    Texture2D *m_metallicTex;
-    Texture2D *m_roughnessTex;
-    Texture2D *m_aoTex;
-    Texture2D *m_emissionTex;
+    Texture *m_mainTex;
+    Texture *m_normalTex;
+    Texture *m_metallicTex;
+    Texture *m_roughnessTex;
+    Texture *m_aoTex;
+    Texture *m_emissionTex;
 
-    CubeMap *m_cubeMap;
+    std::shared_ptr<CubeMap> m_cubeMap;
     Uniform();
     Uniform(const Mat4x4 m,
             const Mat4x4 v,
@@ -53,7 +53,7 @@ public:
 
     virtual void Destroy() {}
     virtual ~Shader() = default;
-    virtual void BindShaderTexture(Texture2D *tex) {}
+    virtual void BindShaderTexture(Texture *tex) {}
     virtual VertexOut VertexShader(const Vertex &in) { return VertexOut(); }
     virtual Vec4 FragmentShader(const VertexOut &in) { return Vec4(); }
 

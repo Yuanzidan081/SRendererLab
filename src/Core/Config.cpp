@@ -59,8 +59,8 @@ void Config::Destroy()
         delete m_fpsCamera;
     if (m_skyBox)
         delete m_skyBox;
-    if (m_cubeMap)
-        delete m_cubeMap;
+    // if (m_cubeMap)
+    //     delete m_cubeMap;
     for (size_t i = 0; i < m_models.size(); ++i)
     {
         m_models[i].reset();
@@ -82,7 +82,7 @@ void Config::Destroy()
     m_frontBuffer = nullptr;
     m_fpsCamera = nullptr;
     m_skyBox = nullptr;
-    m_cubeMap = nullptr;
+    // m_cubeMap = nullptr;
 }
 // Config *Config::GetInstance()
 std::shared_ptr<Config> Config::GetInstance()
@@ -105,6 +105,14 @@ void Config::Initialize(int width, int height)
     m_fpsCamera = new EulerFPSCamera(Vec3(0.0f, 0.0f, 8.0f));
     m_skyBox = new Model(Mesh::CreateBox(2.0f, 2.0f, 2.0f), "skybox");
     m_skyBox->SetShader(SkyBoxShader::GetInstance());
+    // m_cubeMap = std::make_shared<CubeMap>();
+    m_cubeMap = std::make_shared<CubeMap>(
+        new Texture("res/skybox_sea/right.jpg"),
+        new Texture("res/skybox_sea/left.jpg"),
+        new Texture("res/skybox_sea/top.jpg"),
+        new Texture("res/skybox_sea/bottom.jpg"),
+        new Texture("res/skybox_sea/back.jpg"),
+        new Texture("res/skybox_sea/front.jpg"));
 }
 
 void Config::NewLightProperty(int lightIndex)

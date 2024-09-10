@@ -88,6 +88,8 @@
         "qvector": "cpp",
         "qcolordialog": "cpp",
         "qmenu": "cpp",
-        "qaction": "cpp"
+        "qaction": "cpp",
+        "qtoolbutton": "cpp",
+        "qfiledialog": "cpp"
     }
 }

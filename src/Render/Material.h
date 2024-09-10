@@ -1,7 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 #include "Math/Vec4.h"
-#include "Render/Texture2D.h"
+#include "Render/Texture.h"
 #include "Shader/Shader.h"
 class Shader;
 class Uniform;
@@ -15,9 +15,9 @@ public:
     float m_metallic;
     float m_ao;
     Vec3 m_emission;
-    // std::shared_ptr<Texture2D> m_mainTex;
-    // std::shared_ptr<Texture2D> m_normalTex;
-    // std::shared_ptr<Texture2D> m_metallicTex;
+    // std::shared_ptr<Texture> m_mainTex;
+    // std::shared_ptr<Texture> m_normalTex;
+    // std::shared_ptr<Texture> m_metallicTex;
 
     std::string m_mainTexPath;
     std::string m_normalTexPath;

@@ -1,14 +1,14 @@
 #ifndef TEXTURE_MANAGER_H
 #define TEXTURE_MANAGER_H
 #include <memory>
-#include "Texture2D.h"
+#include "Texture.h"
 #include <string>
 #include <unordered_map>
 class ResourceManager
 {
 public:
     static ResourceManager *GetInstance();
-    std::shared_ptr<Texture2D> LoadFromFile(const std::string &path)
+    std::shared_ptr<Texture> LoadFromFile(const std::string &path)
     {
         // 检查纹理是否已加载
         auto it = textureCache.find(path);
@@ -18,7 +18,7 @@ public:
             return it->second->textureUnit;
         }
 
-        std::shared_ptr<Texture2D> texture = std::make_shared<Texture2D>();
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>();
         bool flag = path != "" && texture->LoadTexture(path);
         if (!flag)
             return nullptr;
@@ -45,9 +45,9 @@ private:
     static ResourceManager *s_resourceManager;
     struct TextureResource
     {
-        std::shared_ptr<Texture2D> textureUnit;
+        std::shared_ptr<Texture> textureUnit;
         int referenceCount = 0;
-        TextureResource(const std::shared_ptr<Texture2D> &texture_, int referenceCount_) : textureUnit(texture_), referenceCount(referenceCount_) {}
+        TextureResource(const std::shared_ptr<Texture> &texture_, int referenceCount_) : textureUnit(texture_), referenceCount(referenceCount_) {}
     };
     std::unordered_map<std::string, std::shared_ptr<TextureResource>> textureCache;
 };

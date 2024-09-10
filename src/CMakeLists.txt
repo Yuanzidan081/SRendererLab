@@ -56,10 +56,3 @@ endif()
 
 add_library(${MATH_LIB} STATIC ${MATH_FILES})
 target_include_directories(${MATH_LIB} PUBLIC ${MATH_DIR})
-add_library(${RENDER_LIB} STATIC 
-"${RENDER_DIR}/Model.cpp" 
-"${RENDER_DIR}/Model.h" 
-"${RENDER_DIR}/Texture2D.h" 
-"${RENDER_DIR}/Texture2D.cpp" 
-${MATH_FILES})
-target_include_directories(${RENDER_LIB} PUBLIC ${SRC_PATH} ${DEP_PATH})

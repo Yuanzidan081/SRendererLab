@@ -6,7 +6,7 @@
 #include "imageWidget.h"
 #include "lightWidget.h"
 #include "modelWidget.h"
-
+#include "configwidget.h"
 #include "Core/Application.h"
 #include "Core/Config.h"
 #include <QStandardItemModel>
@@ -28,6 +28,7 @@ public:
     // Set up
     void SetUpModelTabWidget();
     void SetUpLightTabWidget();
+    void SetUpConfigTabWidget();
 
     void DealInput();
 
@@ -37,6 +38,8 @@ public:
     // response to mouse click
     void OnChangeSelectedModel(int index);
     void OnChangeSelectedLight(int index);
+
+    // void OnChange
 
     // set command
     void SetNewLightPropertyCommand(std::shared_ptr<ICommandBase> command);
@@ -68,6 +71,7 @@ private:
     // UI pointer
     LightWidget *lightWidget;
     ModelWidget *modelWidget;
+    ConfigWidget *configWidget;
 
     // mouseMove
     bool m_firstMouseMove;

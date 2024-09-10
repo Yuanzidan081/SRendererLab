@@ -7,7 +7,7 @@ namespace Ui
 {
     class ImageSlider;
 }
-class Texture2D;
+class Texture;
 class ImageSlider : public QWidget
 {
     Q_OBJECT
@@ -27,7 +27,7 @@ private:
     Ui::ImageSlider *ui;
     std::string *m_texture;
     float *m_factor;
-    Texture2D *m_textureDisplay;
+    Texture *m_textureDisplay;
     void ShowTexture();
 
     void ChangeFactorLineEdit();

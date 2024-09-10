@@ -89,10 +89,6 @@ Vec4 PBRShader::FragmentShader(const VertexOut &in)
         worldNormal = Normalize(in.normal);
     // worldViewDir
     Vec3 worldViewDir = Normalize(m_uniform->m_eyePos - in.worldPos);
-
-    // Vec3 albedo = in.color;
-    // albedo
-    // Vec3 albedo = Vec3(0.5f, 0.0f, 0.0f);
     Vec4 albedo = m_uniform->m_diffuse;
 
     if (m_uniform->m_mainTex)

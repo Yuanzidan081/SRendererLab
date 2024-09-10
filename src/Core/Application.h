@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QThread>
 #include "Render/FrameBuffer.h"
-#include "Render/Pipeline.h"
+#include "Render/CorePipeline.h"
 
 class Application : public QObject
 {
@@ -28,7 +28,7 @@ signals:
 
 private:
     bool m_stopped;
-    Pipeline *m_pipeline;
+    CorePipeline *m_pipeline;
     int m_fps;
     int m_width;
     int m_height;

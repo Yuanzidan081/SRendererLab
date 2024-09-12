@@ -35,7 +35,8 @@ public:
     Model(const Model &model, const std::string &name = "Unknown")
         : m_objects(model.m_objects), m_objectNum(model.m_objectNum),
           m_minPoint(model.m_minPoint), m_maxPoint(model.m_maxPoint),
-          m_transform(model.m_transform), m_vertexNum(model.m_vertexNum), m_triangleNum(model.m_triangleNum)
+          m_transform(model.m_transform), m_vertexNum(model.m_vertexNum),
+          m_triangleNum(model.m_triangleNum)
     {
         if (name != "Unknown")
             m_name = name;

@@ -16,8 +16,6 @@ public:
 
     void Stop();
 
-    int GetHeight() { return m_pipeline->GetWidth(); }
-    int GetWidth() { return m_pipeline->GetHeight(); }
     int GetFps() { return m_fps; }
     void ResetFps() { m_fps = 0; }
 
@@ -25,6 +23,10 @@ public:
 
 signals:
     void frameReady(unsigned char *image);
+
+    void frameReadyGbufferPos(float *position);
+    void frameReadyGbufferColor(float *color);
+    void frameReadyGbufferNormal(float *normal);
 
 private:
     bool m_stopped;

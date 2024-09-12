@@ -36,7 +36,7 @@ ConfigWidget::~ConfigWidget()
 
 void ConfigWidget::SetSkyBoxImage(int index, QLabel *&lbl)
 {
-    QFileDialog *fileDialog = new QFileDialog(this, QString::fromLocal8Bit("Open Texture"), "./obj", "*Texture File(*.bmp *.jpg *.jpeg *.png *.tga *.hdr)");
+    QFileDialog *fileDialog = new QFileDialog(this, QString::fromLocal8Bit("Open Texture"), "./res", "*Texture File(*.bmp *.jpg *.jpeg *.png *.tga *.hdr)");
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
     fileDialog->setViewMode(QFileDialog::Detail);
     QStringList fileNames;
@@ -45,11 +45,11 @@ void ConfigWidget::SetSkyBoxImage(int index, QLabel *&lbl)
         fileNames = fileDialog->selectedFiles();
         std::shared_ptr<Texture> tex = std::make_shared<Texture>(fileNames[0].toStdString());
         m_config.lock()->m_cubeMap->SetTexture(index, tex);
-        ShowTexture(tex, lbl, TextureFormat::LDR);
+        ShowTexture(tex, lbl, TextureRangeFormat::UNSIGNED_CHAR);
     }
 }
 
-void ConfigWidget::ShowTexture(std::shared_ptr<Texture> &tex, QLabel *&lbl, TextureFormat format)
+void ConfigWidget::ShowTexture(std::shared_ptr<Texture> &tex, QLabel *&lbl, TextureRangeFormat format)
 {
     if (tex == nullptr)
     {
@@ -57,7 +57,7 @@ void ConfigWidget::ShowTexture(std::shared_ptr<Texture> &tex, QLabel *&lbl, Text
         return;
     }
     QImage *tmp;
-    if (format == TextureFormat::LDR)
+    if (format == TextureRangeFormat::UNSIGNED_CHAR)
     {
         if (tex->GetChannels() == 3)
             tmp = new QImage(tex->GetTextureDataLDR(), tex->GetWidth(), tex->GetHeight(), QImage::Format_RGB888);
@@ -104,22 +104,22 @@ void ConfigWidget::OpenHDRFile()
     {
         fileNames = fileDialog->selectedFiles();
         m_config.lock()->m_cubeMap = std::make_shared<CubeMap>(fileNames[0].toStdString());
-        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(0), ui->xposImage, TextureFormat::HDR);
-        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(1), ui->yposImage, TextureFormat::HDR);
-        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(2), ui->zposImage, TextureFormat::HDR);
-        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(3), ui->xnegImage, TextureFormat::HDR);
-        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(4), ui->ynegImage, TextureFormat::HDR);
-        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(5), ui->znegImage, TextureFormat::HDR);
+        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(0), ui->xposImage, TextureRangeFormat::FLOAT);
+        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(1), ui->yposImage, TextureRangeFormat::FLOAT);
+        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(2), ui->zposImage, TextureRangeFormat::FLOAT);
+        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(3), ui->xnegImage, TextureRangeFormat::FLOAT);
+        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(4), ui->ynegImage, TextureRangeFormat::FLOAT);
+        ShowTexture(m_config.lock()->m_cubeMap->GetTexture(5), ui->znegImage, TextureRangeFormat::FLOAT);
         // ShowTexture(tex, lbl);
     }
 }
 
 void ConfigWidget::Init()
 {
-    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(0), ui->xposImage, TextureFormat::LDR);
-    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(1), ui->yposImage, TextureFormat::LDR);
-    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(2), ui->zposImage, TextureFormat::LDR);
-    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(3), ui->xnegImage, TextureFormat::LDR);
-    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(4), ui->ynegImage, TextureFormat::LDR);
-    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(5), ui->znegImage, TextureFormat::LDR);
+    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(0), ui->xposImage, TextureRangeFormat::UNSIGNED_CHAR);
+    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(1), ui->yposImage, TextureRangeFormat::UNSIGNED_CHAR);
+    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(2), ui->zposImage, TextureRangeFormat::UNSIGNED_CHAR);
+    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(3), ui->xnegImage, TextureRangeFormat::UNSIGNED_CHAR);
+    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(4), ui->ynegImage, TextureRangeFormat::UNSIGNED_CHAR);
+    ShowTexture(m_config.lock()->m_cubeMap->GetTexture(5), ui->znegImage, TextureRangeFormat::UNSIGNED_CHAR);
 }

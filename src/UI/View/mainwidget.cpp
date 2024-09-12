@@ -32,6 +32,10 @@ MainWidget::MainWidget(std::shared_ptr<Light> &light, QWidget *parent) : QWidget
     // https://blog.debao.me/2013/08/how-to-use-qthread-in-the-right-way-part-1/
     connect(m_timer, &QTimer::timeout, this, &MainWidget::DisplayFps);
     connect(m_app, &Application::frameReady, ui->imageWidget, &ImageWidget::reveiveFrame);
+    connect(m_app, &Application::frameReadyGbufferPos, ui->imageWidget, &ImageWidget::reveiveFramePos);
+    connect(m_app, &Application::frameReadyGbufferColor, ui->imageWidget, &ImageWidget::reveiveFrameColor);
+    connect(m_app, &Application::frameReadyGbufferNormal, ui->imageWidget, &ImageWidget::reveiveFrameNormal);
+
     this->setWindowTitle("SRendererLab");
     m_timer->start(1000);
     m_appThread->start();

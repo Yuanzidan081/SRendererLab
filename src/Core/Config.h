@@ -17,6 +17,16 @@ class EulerFPSCamera;
 class CubeMap;
 class LightGroup;
 
+class DeferredGBuffer
+{
+public:
+    std::shared_ptr<FrameBuffer> m_GBufferPosition;
+    std::shared_ptr<FrameBuffer> m_GBufferNormal;
+    std::shared_ptr<FrameBuffer> m_GBufferColor;
+    DeferredGBuffer() : m_GBufferPosition(), m_GBufferNormal(), m_GBufferColor() {}
+    DeferredGBuffer(int w, int h);
+};
+
 class Config : public QObject, public Proxy_PropertyNotification<Config>, public Proxy_CommandNotification<Config>
 {
     Q_OBJECT
@@ -38,6 +48,7 @@ public:
     bool m_viewCull;
 
     FaceCullMode m_faceCullMode;
+    ShadingMode m_shadingMode;
 
     // creted by pipeline
     int m_width;
@@ -68,6 +79,9 @@ public:
     // provide for view
     std::shared_ptr<Light> m_currentLight;
 
+    // deferred rendering
+    std::shared_ptr<DeferredGBuffer> m_deferredBuffer;
+
     // static Config *GetInstance();
     static std::shared_ptr<Config> GetInstance();
     void Initialize(int width, int height);
@@ -86,6 +100,9 @@ public:
     void AddModel(const std::shared_ptr<Model> &model);
 
     void AddLight(const std::shared_ptr<Light> light);
+
+    void SetVertexBuffer(const std::vector<Vertex> *vertices) { m_vertices = vertices; }
+    void SetIndexBuffer(const std::vector<unsigned int> *indices) { m_indices = indices; }
 signals:
     void TreeNodeChanged();
     void LightChanged();

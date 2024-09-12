@@ -20,6 +20,9 @@ if (Win32)
     add_compile_options("$<$<CONFIG:>: /utf-8>")
 endif()
 
+set(THREADS_PREFER_PTHREAD_FLAG ON) # 新添加语句
+find_package(Threads REQUIRED) # 新添加语句
+
 set(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib) # 指定库的输出路径
 set(SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src) # 指定源文件的输出路径
 set(BIN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)  # 指定可执行文件的输出路径

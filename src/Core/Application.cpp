@@ -41,7 +41,14 @@ void Application::Run()
         m_pipeline->DrawScene();
 
         m_pipeline->SwapFrameBuffer();
+        // if (m_pipeline->m_config->m_shadingMode == ForwardMode)
         emit frameReady(m_pipeline->GetFrameResult());
+        if (m_pipeline->m_config->m_shadingMode == DeferredMode)
+        {
+            // emit frameReadyGbufferPos(m_pipeline->GetGBufferPositionResult());
+            // emit frameReadyGbufferColor(m_pipeline->GetGbufferColorResult());
+            // emit frameReadyGbufferNormal(m_pipeline->GetGbufferNormalResult());
+        }
         ++m_fps;
     }
 }

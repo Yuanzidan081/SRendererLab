@@ -6,6 +6,8 @@
 #include "Render/Texture.h"
 #include <vector>
 #include <memory>
+#include <string>
+class FrameBuffer;
 class Light;
 class Material;
 class LightGroup;
@@ -38,11 +40,20 @@ public:
     Texture *m_aoTex;
     Texture *m_emissionTex;
 
+    ShadingMode m_shadingMode;
+
     std::shared_ptr<CubeMap> m_cubeMap;
+    // std::shared_ptr<FrameBuffer> m_posGBuffer;
+    // std::shared_ptr<FrameBuffer> m_colorGBuffer;
+    // std::shared_ptr<FrameBuffer> m_normalGBuffer;
     Uniform();
     Uniform(const Mat4x4 m,
             const Mat4x4 v,
             const Mat4x4 p);
+    Uniform(const Mat4x4 m,
+            const Mat4x4 v,
+            const Mat4x4 p,
+            ShadingMode mode);
 };
 class Shader
 {
@@ -50,6 +61,7 @@ class Shader
 public:
     Shader() = default;
     Uniform *m_uniform;
+    std::string m_name;
 
     virtual void Destroy() {}
     virtual ~Shader() = default;

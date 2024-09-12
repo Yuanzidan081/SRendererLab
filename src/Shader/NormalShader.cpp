@@ -3,6 +3,11 @@
 #include "Render/Material.h"
 NormalShader *NormalShader::s_shader = nullptr;
 
+NormalShader::NormalShader()
+{
+    m_name = "NormalShader";
+}
+
 NormalShader *NormalShader::GetInstance()
 {
     if (s_shader == nullptr)

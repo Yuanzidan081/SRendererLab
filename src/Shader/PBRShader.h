@@ -7,7 +7,7 @@ class SpotLight;
 class PBRShader : public Shader
 {
 private:
-    PBRShader() = default;
+    PBRShader();
     PBRShader(const PBRShader &s) = delete;
     static PBRShader *s_shader;
 

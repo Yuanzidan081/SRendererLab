@@ -43,7 +43,7 @@ ${SHADER_FILES}
 )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets stb_lib)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets stb_lib ${CMAKE_THREAD_LIBS_INIT})
 target_include_directories(${PROJECT_NAME} PRIVATE 
 ${SRC_PATH} ${DEP_PATH})
 

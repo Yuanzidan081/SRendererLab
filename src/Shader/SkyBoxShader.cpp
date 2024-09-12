@@ -2,6 +2,11 @@
 
 SkyBoxShader *SkyBoxShader::s_shader = nullptr;
 
+SkyBoxShader::SkyBoxShader()
+{
+    m_name = "SkyBoxShader";
+}
+
 SkyBoxShader *SkyBoxShader::GetInstance()
 {
     if (s_shader == nullptr)
@@ -31,10 +36,18 @@ VertexOut SkyBoxShader::VertexShader(const Vertex &in)
 
 Vec4 SkyBoxShader::FragmentShader(const VertexOut &in)
 {
-
+    Vec4 litColor;
     // Vec3 uv = in.worldPos.GetNormalize3D();
-    Vec4 litColor = in.color;
-    if (m_uniform->m_cubeMap)
-        litColor = m_uniform->m_cubeMap->SampleCubeMap(in.worldPos);
+    if (m_uniform->m_shadingMode == ForwardMode)
+    {
+        litColor = in.color;
+        if (m_uniform->m_cubeMap)
+            litColor = m_uniform->m_cubeMap->SampleCubeMap(in.worldPos);
+    }
+    else
+    {
+        litColor = in.color;
+    }
+
     return litColor;
 }

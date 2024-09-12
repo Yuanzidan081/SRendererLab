@@ -5,7 +5,7 @@ class SimpleShader : public Shader
 {
 
 private:
-    SimpleShader() = default;
+    SimpleShader();
 
     SimpleShader(const SimpleShader &s) = delete;
     static SimpleShader *s_shader;

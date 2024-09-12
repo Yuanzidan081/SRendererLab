@@ -6,6 +6,7 @@
 #include "Algorithm/Clip.h"
 #include "Algorithm/Common.h"
 #include "material.h"
+#include <thread>
 CorePipeline::CorePipeline(int width, int height)
 {
     m_config = Config::GetInstance();
@@ -25,6 +26,78 @@ void CorePipeline::ClearFrameBuffer(const Vec4 &color)
 unsigned char *CorePipeline::GetFrameResult()
 {
     return m_config->m_frontBuffer->GetColorBuffer();
+}
+
+float *CorePipeline::GetGBufferPositionResult()
+{
+    return m_config->m_deferredBuffer->m_GBufferPosition->GetGBuffer();
+}
+
+float *CorePipeline::GetGbufferColorResult()
+{
+    return m_config->m_deferredBuffer->m_GBufferColor->GetGBuffer();
+}
+
+float *CorePipeline::GetGbufferNormalResult()
+{
+    return m_config->m_deferredBuffer->m_GBufferNormal->GetGBuffer();
+}
+
+void CorePipeline::RenderLighting()
+{
+    // Uniform u(model->GetTransform(), m_viewMatrix, m_projectMatrix, m_config->m_shadingMode);
+    Uniform u;
+    u.m_viewMatrix = m_viewMatrix;
+    u.m_projectMatrix = m_projectMatrix;
+    u.m_cubeMap = m_config->m_cubeMap;
+    u.m_shadingMode = m_config->m_shadingMode;
+    u.m_ambient = m_config->m_ambient;
+    u.m_lights = &(m_config->m_lights);
+    // u.m_lights = (m_config->m_lightGroup);
+    u.m_eyePos = m_config->m_fpsCamera->GetPosition();
+    m_config->m_shader->SetUniform(&u);
+    // single thread
+    // for (int x = 0; x < m_config->m_width; x++)
+    // {
+    //     for (int y = 0; y < m_config->m_height; y++)
+    //     {
+    //         VertexOut v;
+
+    //         v.worldPos = m_config->m_deferredBuffer->m_GBufferPosition->SampleGbufferData3(x, y);
+    //         v.color = m_config->m_deferredBuffer->m_GBufferColor->SampleGbufferData4(x, y);
+    //         v.normal = m_config->m_deferredBuffer->m_GBufferNormal->SampleGbufferData3(x, y);
+    //         m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(v));
+    //     }
+    // }
+
+    // multi-thread
+    int nums_threads = 10;
+    int thread_height = screenHeight / nums_threads;
+    int thread_width = screenWidth / nums_threads;
+    std::vector<std::thread> th;
+    // 定义renderRows 函数作为多线程的入口
+    auto renderRows = [&](int start_height, int end_height)
+    {
+        VertexOut v;
+        for (uint32_t y = start_height; y < end_height; ++y)
+        {
+            for (uint32_t x = 0; x < screenWidth; ++x)
+            {
+                v.worldPos = m_config->m_deferredBuffer->m_GBufferPosition->SampleGbufferData3(x, y);
+                v.color = m_config->m_deferredBuffer->m_GBufferColor->SampleGbufferData4(x, y);
+                v.normal = m_config->m_deferredBuffer->m_GBufferNormal->SampleGbufferData3(x, y);
+                m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(v));
+            }
+        }
+    };
+    for (int i = 0; i < nums_threads; ++i)
+    {
+        th.emplace_back(std::thread(renderRows, i * thread_height, (i + 1) * thread_height));
+    }
+    for (int i = 0; i < nums_threads; ++i)
+    {
+        th[i].join();
+    }
 }
 
 void CorePipeline::SwapFrameBuffer()
@@ -69,6 +142,11 @@ void CorePipeline::DrawScene()
     if (m_config->m_useSkyBox)
     {
         DrawSkyBox(m_config->m_skyBox);
+    }
+    m_config->m_shader = PhongShader::GetInstance();
+    if (m_config->m_shadingMode == DeferredMode)
+    {
+        RenderLighting();
     }
 }
 
@@ -169,7 +247,7 @@ void CorePipeline::DrawModel(const std::shared_ptr<Model> &model)
 
     for (size_t i = 0; i < model->m_objectNum; ++i)
     {
-        Uniform u(model->GetTransform(), m_viewMatrix, m_projectMatrix);
+        Uniform u(model->GetTransform(), m_viewMatrix, m_projectMatrix, m_config->m_shadingMode);
         u.m_ambient = m_config->m_ambient;
         u.m_lights = &(m_config->m_lights);
         // u.m_lights = (m_config->m_lightGroup);
@@ -186,8 +264,9 @@ void CorePipeline::DrawSkyBox(Model *model)
     u.m_viewMatrix = m_viewMatrix;
     u.m_projectMatrix = m_projectMatrix;
     u.m_cubeMap = m_config->m_cubeMap;
-    SetVertexBuffer(&(m_config->m_skyBox->m_objects[0].m_mesh->m_vertices));
-    SetIndexBuffer(&(m_config->m_skyBox->m_objects[0].m_mesh->m_indices));
+    u.m_shadingMode = m_config->m_shadingMode;
+    m_config->SetVertexBuffer(&(m_config->m_skyBox->m_objects[0].m_mesh->m_vertices));
+    m_config->SetIndexBuffer(&(m_config->m_skyBox->m_objects[0].m_mesh->m_indices));
     m_config->m_shader->SetUniform(&u);
     DrawMesh();
     m_config->m_faceCullMode = BackFaceCull;
@@ -198,8 +277,8 @@ void CorePipeline::DrawObject(const Object &obj, Uniform &u)
     m_config->m_shader = obj.GetShader();
     obj.m_material->SetupUniform(u);
 
-    SetVertexBuffer(&obj.m_mesh->m_vertices);
-    SetIndexBuffer(&obj.m_mesh->m_indices);
+    m_config->SetVertexBuffer(&obj.m_mesh->m_vertices);
+    m_config->SetIndexBuffer(&obj.m_mesh->m_indices);
     m_config->m_shader->SetUniform(&u);
     DrawMesh();
 }
@@ -225,19 +304,55 @@ void CorePipeline::RasterTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
         for (int y = startY; y <= endY; y++)
         {
             Vec3 weight = Barycentric2D((float)(x + 0.5), (float)(y + 0.5), v1.clipPos, v2.clipPos, v3.clipPos);
-
-            if (IsInsideTriangle(weight.x, weight.y, weight.z))
+            if (m_config->m_shadingMode == ForwardMode)
             {
-                VertexOut current = Lerp(v1, v2, v3, weight);
-                if (m_config->m_depthTesting)
+                if (IsInsideTriangle(weight.x, weight.y, weight.z))
                 {
-                    float pixelDepth = m_config->m_backBuffer->GetPixelDepth(x, y);
-                    if (current.clipPos.z > pixelDepth)
-                        continue;
-                    m_config->m_backBuffer->SetPixelDepth(x, y, current.clipPos.z);
+                    VertexOut current = Lerp(v1, v2, v3, weight);
+                    if (m_config->m_depthTesting)
+                    {
+                        float pixelDepth = m_config->m_backBuffer->GetPixelDepth(x, y);
+                        if (current.clipPos.z > pixelDepth)
+                            continue;
+                        m_config->m_backBuffer->SetPixelDepth(x, y, current.clipPos.z);
+                    }
+                    PerspectiveRestore(current);
+
+                    m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(current));
+                    //             Vec4 color = if (m_uniform->m_mainTex)
+                    // albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
+                    // Vec4 color = (m_config->m_shader->m_uniform->m_mainTex) ? m_config->m_shader->m_uniform->m_mainTex->SampleTexture(current.texcoord) : current.color;
+                    // m_config->m_backBuffer->SetPixelColor(x, y, color); // diffuse
+                    // m_config->m_backBuffer->SetPixelColor(x, y, Vec4(current.normal, 1.0f)); // normalworld
+                    // m_config->m_backBuffer->SetPixelColor(x, y, Vec4(current.worldPos, 1.0f)); // positionworld
+                    // m_config->m_backBuffer->SetPixelColor(x, y, Vec4(current.texcoord.x, current.texcoord.y, 0.0f, 1.0f)); // texcoordworld
                 }
-                PerspectiveRestore(current);
-                m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(current));
+            }
+            else if (m_config->m_shadingMode == DeferredMode)
+            {
+                if (IsInsideTriangle(weight.x, weight.y, weight.z))
+                {
+                    VertexOut current = Lerp(v1, v2, v3, weight);
+                    if (m_config->m_depthTesting)
+                    {
+                        float pixelDepth = m_config->m_backBuffer->GetPixelDepth(x, y);
+                        if (current.clipPos.z > pixelDepth)
+                            continue;
+                        m_config->m_backBuffer->SetPixelDepth(x, y, current.clipPos.z);
+                    }
+                    PerspectiveRestore(current);
+                    // m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(current));
+                    // m_config->m_deferredBuffer->m_GBufferPosition;
+                    Vec4 color;
+                    if (m_config->m_shader->m_name == "SkyBoxShader")
+                        color = (m_config->m_shader->m_uniform->m_cubeMap.get()) ? m_config->m_shader->m_uniform->m_cubeMap->SampleCubeMap(current.worldPos) : current.color;
+                    else
+                        color = (m_config->m_shader->m_uniform->m_mainTex) ? m_config->m_shader->m_uniform->m_mainTex->SampleTexture(current.texcoord) : current.color;
+                    m_config->m_deferredBuffer->m_GBufferColor->SetPixelGBufferData4(x, y, color);                      // diffuse
+                    m_config->m_deferredBuffer->m_GBufferPosition->SetPixelGBufferData3(x, y, current.worldPos);        // normalworld
+                    m_config->m_deferredBuffer->m_GBufferNormal->SetPixelGBufferData3(x, y, Normalize(current.normal)); // positionworld
+                    // m_config->m_backBuffer->SetPixelColor(x, y, Vec4(current.texcoord.x, current.texcoord.y, 0.0f, 1.0f)); // texcoordworld
+                }
             }
         }
     }

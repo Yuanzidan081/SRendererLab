@@ -3,10 +3,18 @@
 #include "Render/Material.h"
 GouraudShader *GouraudShader::s_shader = nullptr;
 
+GouraudShader::GouraudShader()
+{
+    m_name = "GouraudShader";
+}
+
 GouraudShader *GouraudShader::GetInstance()
 {
     if (s_shader == nullptr)
+    {
+
         s_shader = new GouraudShader();
+    }
     return s_shader;
 }
 

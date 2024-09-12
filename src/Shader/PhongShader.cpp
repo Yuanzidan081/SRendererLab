@@ -39,17 +39,32 @@ VertexOut PhongShader::VertexShader(const Vertex &in)
 
 Vec4 PhongShader::FragmentShader(const VertexOut &in)
 {
-    Vec3 worldNormal = Normalize(in.normal);
-    if (m_uniform->m_normalTex)
+    Vec3 worldNormal;
+    Vec3 albedo;
+    if (m_uniform->m_shadingMode == ForwardMode)
     {
-        worldNormal = Normalize(in.TBN * (m_uniform->m_normalTex->SampleTexture(in.texcoord) * 2.0f - 1.0f));
+        worldNormal = Normalize(in.normal);
+        if (m_uniform->m_normalTex)
+        {
+            worldNormal = Normalize(in.TBN * (m_uniform->m_normalTex->SampleTexture(in.texcoord) * 2.0f - 1.0f));
+        }
+
+        // Vec4 albedo = in.color;
+        albedo = m_uniform->m_diffuse;
+
+        if (m_uniform->m_mainTex)
+            albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
     }
+    else
+    {
+        worldNormal = in.normal;
 
-    // Vec4 albedo = in.color;
-    Vec4 albedo = m_uniform->m_diffuse;
+        // worldViewDir
+        albedo = in.color;
+    }
+    // Deferred Mode
+    // worldNormal
 
-    if (m_uniform->m_mainTex)
-        albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
     Vec3 result = m_uniform->m_ambient * albedo;
     Vec3 worldViewDir = Normalize(Vec3(m_uniform->m_eyePos - in.worldPos));
     for (size_t i = 0; i < m_uniform->m_lights->size(); ++i)

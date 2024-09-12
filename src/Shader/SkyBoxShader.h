@@ -4,7 +4,7 @@
 class SkyBoxShader : public Shader
 {
 private:
-    SkyBoxShader() = default;
+    SkyBoxShader();
     SkyBoxShader(const SkyBoxShader &s) = delete;
     static SkyBoxShader *s_shader;
 

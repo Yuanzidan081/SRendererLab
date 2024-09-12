@@ -6,11 +6,12 @@
 #include "Math/Vec2.h"
 #include "Math/Vec4.h"
 #include <vector>
-enum class TextureFormat
+enum class TextureRangeFormat
 {
-    LDR,
-    HDR
+    UNSIGNED_CHAR,
+    FLOAT
 };
+
 class Texture
 {
 
@@ -18,8 +19,8 @@ public:
     Texture();
     Texture(const char *filename, bool m_flipped = false);
     Texture(const std::string &filename, bool m_flipped = false);
-    Texture(int w, int h, int c, TextureFormat f, bool m_flipped = false);
-    void CreateTexture(int w, int h, int c, TextureFormat f);
+    Texture(int w, int h, int c, TextureRangeFormat f, bool m_flipped = false);
+    void CreateTexture(int w, int h, int c, TextureRangeFormat f);
     ~Texture();
     const int &GetWidth() const { return m_Width; }
     int &GetWidth() { return m_Width; }
@@ -38,10 +39,10 @@ public:
 
 private:
     int m_Width, m_Height, m_Channels;
-    unsigned char *m_texelBufferLDR;
-    float *m_texelBufferHDR;
+    unsigned char *m_textureBufferUC;
+    float *m_textureBufferF;
     bool m_flipped;
-    TextureFormat m_format;
+    TextureRangeFormat m_format;
 };
 
 class CubeMap

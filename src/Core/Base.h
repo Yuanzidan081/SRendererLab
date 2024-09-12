@@ -48,17 +48,23 @@ enum PolygonMode
     Wire = 0,
     Fill
 };
-enum ShadingMode
-{
-    Simple,
-    Gouraud,
-    Phong
-};
 
 enum FaceCullMode
 {
     BackFaceCull,
     FrontFaceCull
+};
+
+enum ShadingMode
+{
+    ForwardMode,
+    DeferredMode
+};
+
+enum FrameBufferMode
+{
+    NormalBuffer,
+    GBuffer
 };
 #define EPSILON 1e-5f
 const int screenWidth = 500;

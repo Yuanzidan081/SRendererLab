@@ -7,7 +7,7 @@ class SpotLight;
 class GouraudShader : public Shader
 {
 private:
-    GouraudShader() = default;
+    GouraudShader();
     GouraudShader(const GouraudShader &s) = delete;
     static GouraudShader *s_shader;
 

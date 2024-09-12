@@ -25,6 +25,10 @@ public:
 
 public slots:
     void reveiveFrame(unsigned char *image);
+    void reveiveFramePos(float *image);
+
+    void reveiveFrameColor(float *image);
+    void reveiveFrameNormal(float *image);
 
 private:
     QImage *m_canvas;

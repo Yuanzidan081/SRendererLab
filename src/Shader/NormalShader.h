@@ -7,7 +7,7 @@ class SpotLight;
 class NormalShader : public Shader
 {
 private:
-    NormalShader() = default;
+    NormalShader();
     NormalShader(const NormalShader &s) = delete;
     static NormalShader *s_shader;
 

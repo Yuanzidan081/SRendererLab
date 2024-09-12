@@ -4,6 +4,11 @@
 #include "Algorithm/ToneMapping.h"
 PBRShader *PBRShader::s_shader = nullptr;
 
+PBRShader::PBRShader()
+{
+    m_name = "PBRShader";
+}
+
 float PBRShader::D_GGX_TR(const Vec3 &nDir, const Vec3 &hDir, float roughness)
 {
 
@@ -79,20 +84,35 @@ VertexOut PBRShader::VertexShader(const Vertex &in)
 
 Vec4 PBRShader::FragmentShader(const VertexOut &in)
 {
-    // worldNormal
     Vec3 worldNormal;
-    if (m_uniform->m_normalTex)
+    Vec3 albedo;
+    if (m_uniform->m_shadingMode == ForwardMode)
     {
-        worldNormal = Normalize(in.TBN * (m_uniform->m_normalTex->SampleTexture(in.texcoord) * 2.0f - 1.0f));
+        // worldNormal
+        // Vec3 worldNormal;
+        if (m_uniform->m_normalTex)
+        {
+            worldNormal = Normalize(in.TBN * (m_uniform->m_normalTex->SampleTexture(in.texcoord) * 2.0f - 1.0f));
+        }
+        else
+            worldNormal = Normalize(in.normal);
+        // worldViewDir
+        // Vec4 albedo = m_uniform->m_diffuse;
+        albedo = m_uniform->m_diffuse;
+
+        if (m_uniform->m_mainTex)
+            albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
     }
     else
-        worldNormal = Normalize(in.normal);
-    // worldViewDir
-    Vec3 worldViewDir = Normalize(m_uniform->m_eyePos - in.worldPos);
-    Vec4 albedo = m_uniform->m_diffuse;
+    {
+        worldNormal = in.normal;
 
-    if (m_uniform->m_mainTex)
-        albedo = m_uniform->m_mainTex->SampleTexture(in.texcoord);
+        // worldViewDir
+        albedo = in.color;
+    }
+    // Deferred Mode
+    // worldNormal
+    Vec3 worldViewDir = Normalize(m_uniform->m_eyePos - in.worldPos);
     // metallic
     float metallic = m_uniform->m_metallic;
     if (m_uniform->m_metallicTex)

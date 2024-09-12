@@ -2,6 +2,11 @@
 
 SimpleShader *SimpleShader::s_shader = nullptr;
 
+SimpleShader::SimpleShader()
+{
+    m_name = "SimpleShader";
+}
+
 SimpleShader *SimpleShader::GetInstance()
 {
     if (s_shader == nullptr)

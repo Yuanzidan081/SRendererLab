@@ -4,29 +4,29 @@
 #include "stb_image.h"
 // one divide 255
 #define INV_SCALE 0.003921568627451
-Texture::Texture() : m_Width(0), m_Height(0), m_Channels(0), m_texelBufferLDR(nullptr), m_flipped(true), m_texelBufferHDR(nullptr)
+Texture::Texture() : m_Width(0), m_Height(0), m_Channels(0), m_textureBufferUC(nullptr), m_flipped(true), m_textureBufferF(nullptr)
 {
 }
 
-Texture::Texture(const char *filename, bool m_flipped) : m_Width(0), m_Height(0), m_Channels(0), m_texelBufferLDR(nullptr), m_flipped(true), m_texelBufferHDR(nullptr)
+Texture::Texture(const char *filename, bool m_flipped) : m_Width(0), m_Height(0), m_Channels(0), m_textureBufferUC(nullptr), m_flipped(true), m_textureBufferF(nullptr)
 {
     LoadTexture(filename);
 }
 
-Texture::Texture(const std::string &filename, bool m_flipped) : m_Width(0), m_Height(0), m_Channels(0), m_texelBufferLDR(nullptr), m_flipped(true), m_texelBufferHDR(nullptr)
+Texture::Texture(const std::string &filename, bool m_flipped) : m_Width(0), m_Height(0), m_Channels(0), m_textureBufferUC(nullptr), m_flipped(true), m_textureBufferF(nullptr)
 {
     LoadTexture(filename.c_str());
 }
-Texture::Texture(int w, int h, int c, TextureFormat f, bool m_flipped) : m_texelBufferLDR(nullptr), m_texelBufferHDR(nullptr)
+Texture::Texture(int w, int h, int c, TextureRangeFormat f, bool m_flipped) : m_textureBufferUC(nullptr), m_textureBufferF(nullptr)
 {
     CreateTexture(w, h, c, f);
 }
-void Texture::CreateTexture(int w, int h, int c, TextureFormat f)
+void Texture::CreateTexture(int w, int h, int c, TextureRangeFormat f)
 {
-    if (f == TextureFormat::HDR)
+    if (f == TextureRangeFormat::FLOAT)
     {
-        m_texelBufferHDR = (float *)malloc(w * h * c * sizeof(float));
-        m_texelBufferLDR = nullptr;
+        m_textureBufferF = (float *)malloc(w * h * c * sizeof(float));
+        m_textureBufferUC = nullptr;
         m_Width = w;
         m_Height = h;
         m_Channels = c;
@@ -34,8 +34,8 @@ void Texture::CreateTexture(int w, int h, int c, TextureFormat f)
     }
     else
     {
-        m_texelBufferLDR = (unsigned char *)malloc(w * h * c);
-        m_texelBufferHDR = nullptr;
+        m_textureBufferUC = (unsigned char *)malloc(w * h * c);
+        m_textureBufferF = nullptr;
         m_Width = w;
         m_Height = h;
         m_Channels = c;
@@ -53,27 +53,27 @@ bool Texture::LoadTexture(const std::string &filename)
     const char *extension = strrchr(filename.c_str(), '.') + 1;
     if (strcmp(extension, "hdr") == 0)
     {
-        if (m_texelBufferHDR)
-            delete m_texelBufferHDR;
+        if (m_textureBufferF)
+            delete m_textureBufferF;
         // stbi_set_flip_vertically_on_load(true);
-        m_texelBufferHDR = stbi_loadf(filename.c_str(), &m_Width, &m_Height, &m_Channels, 0);
+        m_textureBufferF = stbi_loadf(filename.c_str(), &m_Width, &m_Height, &m_Channels, 0);
         // channel = 4;
         // linear 2 srgb
-        m_format = TextureFormat::HDR;
+        m_format = TextureRangeFormat::FLOAT;
         // Linear2Srgb();
         // stbi_set_flip_vertically_on_load(false);
-        return m_texelBufferHDR != nullptr;
+        return m_textureBufferF != nullptr;
     }
 
-    if (m_texelBufferLDR)
-        delete m_texelBufferLDR;
+    if (m_textureBufferUC)
+        delete m_textureBufferUC;
     if (m_flipped)
         stbi_set_flip_vertically_on_load(true);
 
-    m_texelBufferLDR = stbi_load(filename.c_str(), &m_Width, &m_Height, &m_Channels, 0);
+    m_textureBufferUC = stbi_load(filename.c_str(), &m_Width, &m_Height, &m_Channels, 0);
     // channel = 4;
-    m_format = TextureFormat::LDR;
-    if (!m_texelBufferLDR)
+    m_format = TextureRangeFormat::UNSIGNED_CHAR;
+    if (!m_textureBufferUC)
     {
         m_Width = -1;
         m_Height = -1;
@@ -81,25 +81,25 @@ bool Texture::LoadTexture(const std::string &filename)
         std::cout << "Failed to load texture " << filename << std::endl;
     }
 
-    return m_texelBufferLDR != nullptr;
+    return m_textureBufferUC != nullptr;
 }
 
 unsigned char *&Texture::GetTextureDataLDR()
 {
-    return m_texelBufferLDR;
+    return m_textureBufferUC;
 }
 float *&Texture::GetTextureDataHDR()
 {
-    return m_texelBufferHDR;
+    return m_textureBufferF;
 }
 void Texture::Release()
 {
-    if (m_texelBufferLDR)
-        stbi_image_free(m_texelBufferLDR);
-    if (m_texelBufferHDR)
-        stbi_image_free(m_texelBufferHDR);
-    m_texelBufferLDR = nullptr;
-    m_texelBufferHDR = nullptr;
+    if (m_textureBufferUC)
+        stbi_image_free(m_textureBufferUC);
+    if (m_textureBufferF)
+        stbi_image_free(m_textureBufferF);
+    m_textureBufferUC = nullptr;
+    m_textureBufferF = nullptr;
 }
 const Vec4 Texture::SampleTexture(const Vec2 &texCoords) const
 {
@@ -116,9 +116,9 @@ const Vec4 Texture::SampleTexture(const Vec2 &texCoords) const
     Vec4 res;
     ind = (y * m_Width + x) * m_Channels;
 
-    if (m_format == TextureFormat::HDR)
+    if (m_format == TextureRangeFormat::FLOAT)
     {
-        float *p = m_texelBufferHDR;
+        float *p = m_textureBufferF;
         if (m_Channels == 1)
             return Vec4(*(p + ind), 1.0f, 1.0f, 1.0f);
         if (m_Channels == 3)
@@ -130,7 +130,7 @@ const Vec4 Texture::SampleTexture(const Vec2 &texCoords) const
     }
     else
     {
-        unsigned char *p = m_texelBufferLDR;
+        unsigned char *p = m_textureBufferUC;
         if (m_Channels == 3)
             return Vec4(*(p + ind) * INV_SCALE, *(p + ind + 1) * INV_SCALE, *(p + ind + 2) * INV_SCALE, 1.0f);
         if (m_Channels == 4)
@@ -143,17 +143,17 @@ const Vec4 Texture::SampleTexture(const Vec2 &texCoords) const
 
     // if (m_Channels == 3)
     // {
-    //     res.r = m_texelBufferLDR[ind + 0] * INV_SCALE;
-    //     res.g = m_texelBufferLDR[ind + 1] * INV_SCALE;
-    //     res.b = m_texelBufferLDR[ind + 2] * INV_SCALE;
+    //     res.r = m_textureBufferUC[ind + 0] * INV_SCALE;
+    //     res.g = m_textureBufferUC[ind + 1] * INV_SCALE;
+    //     res.b = m_textureBufferUC[ind + 2] * INV_SCALE;
     //     res.a = 1.0f;
     // }
     // else if (m_Channels == 4)
     // {
-    //     res.r = m_texelBufferLDR[ind + 0] * INV_SCALE;
-    //     res.g = m_texelBufferLDR[ind + 1] * INV_SCALE;
-    //     res.b = m_texelBufferLDR[ind + 2] * INV_SCALE;
-    //     res.a = m_texelBufferLDR[ind + 3] * INV_SCALE;
+    //     res.r = m_textureBufferUC[ind + 0] * INV_SCALE;
+    //     res.g = m_textureBufferUC[ind + 1] * INV_SCALE;
+    //     res.b = m_textureBufferUC[ind + 2] * INV_SCALE;
+    //     res.a = m_textureBufferUC[ind + 3] * INV_SCALE;
     // }
     return res;
 }
@@ -200,7 +200,7 @@ CubeMap::CubeMap(const std::string &filename)
 
     for (int face = 0; face < 6; ++face)
     {
-        std::shared_ptr<Texture> tmp = std::make_shared<Texture>(CUBEMAP_SIZE, CUBEMAP_SIZE, channels, TextureFormat::HDR);
+        std::shared_ptr<Texture> tmp = std::make_shared<Texture>(CUBEMAP_SIZE, CUBEMAP_SIZE, channels, TextureRangeFormat::FLOAT);
         float *src = image->GetTextureDataHDR();
         float *dst = tmp->GetTextureDataHDR();
         for (int y = 0; y < CUBEMAP_SIZE; ++y)

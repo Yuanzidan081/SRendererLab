@@ -19,7 +19,7 @@ Config::Config() : m_depthTesting(true),
                    m_useSkyBox(true),
                    m_viewCull(true),
                    m_faceCullMode(BackFaceCull),
-
+                   m_shadingMode(DeferredMode),
                    m_width(0),
                    m_height(0),
                    m_backBuffer(nullptr),
@@ -37,7 +37,8 @@ Config::Config() : m_depthTesting(true),
                    m_skyBox(nullptr),
                    m_cubeMap(nullptr),
                    m_ambient(Vec4(0.1f, 0.1f, 0.1f, 1.0f)),
-                   m_currentLight()
+                   m_currentLight(),
+                   m_deferredBuffer(nullptr)
 
 {
 }
@@ -113,6 +114,7 @@ void Config::Initialize(int width, int height)
         new Texture("res/skybox_sea/bottom.jpg"),
         new Texture("res/skybox_sea/back.jpg"),
         new Texture("res/skybox_sea/front.jpg"));
+    m_deferredBuffer = std::make_shared<DeferredGBuffer>(m_width, m_height);
 }
 
 void Config::NewLightProperty(int lightIndex)
@@ -143,3 +145,8 @@ void Config::AddLight(const std::shared_ptr<Light> light)
 {
     m_lights.push_back(light);
 }
+
+DeferredGBuffer::DeferredGBuffer(int w, int h)
+    : m_GBufferPosition(std::make_shared<FrameBuffer>(w, h, 3, GBuffer)),
+      m_GBufferNormal(std::make_shared<FrameBuffer>(w, h, 3, GBuffer)),
+      m_GBufferColor(std::make_shared<FrameBuffer>(w, h, 4, GBuffer)) {}

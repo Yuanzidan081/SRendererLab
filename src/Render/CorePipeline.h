@@ -17,21 +17,15 @@ public:
     CorePipeline(int width, int height);
     ~CorePipeline();
 
-    // state settings
-    void SetDepthTesting(bool open) { m_config->m_depthTesting = open; }
-    void SetBackFaceCulling(bool open) { m_config->m_backFaceCulling = open; }
-
     // buffer settings
     void ClearFrameBuffer(const Vec4 &color);
     unsigned char *GetFrameResult();
+    float *GetGBufferPositionResult();
+    float *GetGbufferColorResult();
+    float *GetGbufferNormalResult();
+
+    void RenderLighting();
     void SwapFrameBuffer();
-    void SetVertexBuffer(const std::vector<Vertex> *vertices) { m_config->m_vertices = vertices; }
-    void SetIndexBuffer(const std::vector<unsigned int> *indices) { m_config->m_indices = indices; }
-    int GetWidth()
-    {
-        return m_config->m_width;
-    }
-    int GetHeight() { return m_config->m_height; }
 
     // Illumination setting
     void SetPolygonMode(PolygonMode mode) { m_config->m_polygonMode = mode; }

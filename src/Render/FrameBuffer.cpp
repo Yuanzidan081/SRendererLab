@@ -183,6 +183,57 @@ Vec4 FrameBuffer::SampleGbufferData4(const unsigned int x, const unsigned int y)
                 m_gBuffer[ind * m_Channels + 3]);
 }
 
+void FrameBuffer::ClearGbufferData()
+{
+    // m_gBuffer.resize(m_Width * m_Height * m_Channels, 1.0f);
+    for (int x = 0; x < m_Width; ++x)
+    {
+        for (int y = 0; y < m_Height; ++y)
+        {
+            int ind = y * m_Width + x;
+            /* color buffer*/
+            if (m_Channels == 3)
+            {
+                m_gBuffer[ind * m_Channels + 0] = static_cast<unsigned char>(0);
+                m_gBuffer[ind * m_Channels + 1] = static_cast<unsigned char>(0);
+                m_gBuffer[ind * m_Channels + 2] = static_cast<unsigned char>(0);
+            }
+            else if (m_Channels == 4)
+            {
+                m_gBuffer[ind * m_Channels + 0] = static_cast<unsigned char>(0);
+                m_gBuffer[ind * m_Channels + 1] = static_cast<unsigned char>(0);
+                m_gBuffer[ind * m_Channels + 2] = static_cast<unsigned char>(0);
+                m_gBuffer[ind * m_Channels + 3] = static_cast<unsigned char>(0);
+            }
+        }
+    }
+}
+
+void FrameBuffer::ClearGbufferData(const Vec4 &color)
+{
+    for (int x = 0; x < m_Width; ++x)
+    {
+        for (int y = 0; y < m_Height; ++y)
+        {
+            int ind = y * m_Width + x;
+            /* color buffer*/
+            if (m_Channels == 3)
+            {
+                m_gBuffer[ind * m_Channels + 0] = color.r;
+                m_gBuffer[ind * m_Channels + 1] = color.g;
+                m_gBuffer[ind * m_Channels + 2] = color.b;
+            }
+            else if (m_Channels == 4)
+            {
+                m_gBuffer[ind * m_Channels + 0] = color.r;
+                m_gBuffer[ind * m_Channels + 1] = color.g;
+                m_gBuffer[ind * m_Channels + 2] = color.b;
+                m_gBuffer[ind * m_Channels + 3] = color.a;
+            }
+        }
+    }
+}
+
 void FrameBuffer::SetPixelGBufferData2(const unsigned int x, const unsigned int y, const Vec2 &data)
 {
 

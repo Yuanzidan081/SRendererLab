@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>326</width>
+    <width>265</width>
     <height>30</height>
    </rect>
   </property>
@@ -25,6 +25,9 @@ background: &quot;#CFDDEE&quot;;
 }</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>3</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -47,15 +50,20 @@ background: &quot;#CFDDEE&quot;;
      </property>
      <property name="minimumSize">
       <size>
-       <width>120</width>
+       <width>80</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>120</width>
+       <width>80</width>
        <height>30</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>prop</string>
@@ -67,6 +75,11 @@ background: &quot;#CFDDEE&quot;;
    </item>
    <item>
     <widget class="QLabel" name="subprop1">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>a</string>
      </property>
@@ -79,9 +92,14 @@ background: &quot;#CFDDEE&quot;;
     <widget class="QDoubleSpinBox" name="spinBox1">
      <property name="maximumSize">
       <size>
-       <width>60</width>
+       <width>45</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">QDoubleSpinBox {
@@ -99,7 +117,7 @@ border-color: &quot;#C0DCF2&quot;;
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>4</number>
+      <number>2</number>
      </property>
      <property name="minimum">
       <double>-1000.000000000000000</double>
@@ -108,12 +126,17 @@ border-color: &quot;#C0DCF2&quot;;
       <double>1000.000000000000000</double>
      </property>
      <property name="singleStep">
-      <double>0.100000000000000</double>
+      <double>0.500000000000000</double>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QLabel" name="subprop2">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>b</string>
      </property>
@@ -126,9 +149,14 @@ border-color: &quot;#C0DCF2&quot;;
     <widget class="QDoubleSpinBox" name="spinBox2">
      <property name="maximumSize">
       <size>
-       <width>60</width>
+       <width>45</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">QDoubleSpinBox {
@@ -143,7 +171,7 @@ border-color: &quot;#C0DCF2&quot;;
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>4</number>
+      <number>2</number>
      </property>
      <property name="minimum">
       <double>-1000.000000000000000</double>
@@ -152,12 +180,17 @@ border-color: &quot;#C0DCF2&quot;;
       <double>1000.000000000000000</double>
      </property>
      <property name="singleStep">
-      <double>0.100000000000000</double>
+      <double>0.500000000000000</double>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QLabel" name="subprop3">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>c</string>
      </property>
@@ -170,9 +203,14 @@ border-color: &quot;#C0DCF2&quot;;
     <widget class="QDoubleSpinBox" name="spinBox3">
      <property name="maximumSize">
       <size>
-       <width>60</width>
+       <width>45</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
      <property name="contextMenuPolicy">
       <enum>Qt::PreventContextMenu</enum>
@@ -196,7 +234,7 @@ border-color: &quot;#C0DCF2&quot;;
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>4</number>
+      <number>2</number>
      </property>
      <property name="minimum">
       <double>-1000.000000000000000</double>
@@ -205,7 +243,7 @@ border-color: &quot;#C0DCF2&quot;;
       <double>1000.000000000000000</double>
      </property>
      <property name="singleStep">
-      <double>0.100000000000000</double>
+      <double>0.500000000000000</double>
      </property>
      <property name="value">
       <double>0.000000000000000</double>

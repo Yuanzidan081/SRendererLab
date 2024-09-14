@@ -10,10 +10,10 @@ LightWidget::LightWidget(QWidget *parent) : TabWidget(parent),
     Clear();
     lightPropLayout = new QVBoxLayout();
     lightPropLayout->setAlignment(Qt::AlignTop);
+    lightPropLayout->setSpacing(3);
     ui->propWidget->setLayout(lightPropLayout);
     ui->addToolButton->setIcon(QIcon(QString("./res/icon/addIcon.png")));
     ui->removeToolButton->setIcon(QIcon(QString("./res/icon/minusIcon.png")));
-
 
     QMenu *addToolButtonMenu = new QMenu(ui->addToolButton);
 

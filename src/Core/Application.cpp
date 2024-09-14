@@ -37,9 +37,24 @@ void Application::Run()
     m_fps = 0;
     while (!m_stopped)
     {
+        // if (m_pipeline->m_config->m_shadingMode == ForwardMode)
+        // {
         m_pipeline->ClearFrameBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+        // }
+        // else if (m_pipeline->m_config->m_shadingMode == DeferredMode)
+        // {
+        //     m_pipeline->m_config->m_deferredBuffer->clearGBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+        // }
+        // if (m_pipeline->m_config->m_shadingMode == DeferredMode)
+        // {
+        //     m_pipeline->m_config->m_deferredBuffer->clearGBuffer();
+        //     // emit frameReadyGbufferPos(m_pipeline->GetGBufferPositionResult());
+        //     // emit frameReadyGbufferColor(m_pipeline->GetGbufferColorResult());
+        //     // emit frameReadyGbufferNormal(m_pipeline->GetGbufferNormalResult());
+        // }
+        // m_pipeline->m_config->m_mutex.lock();
         m_pipeline->DrawScene();
-
+        // m_pipeline->m_config->m_mutex.unlock();
         m_pipeline->SwapFrameBuffer();
         // if (m_pipeline->m_config->m_shadingMode == ForwardMode)
         emit frameReady(m_pipeline->GetFrameResult());

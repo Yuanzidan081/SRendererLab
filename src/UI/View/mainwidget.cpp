@@ -98,7 +98,9 @@ void MainWidget::keyReleaseEvent(QKeyEvent *event)
     if (m_inputTimer->isActive() && !m_pressedKeys.isEmpty())
     {
         m_inputTimer->stop();
+        // m_config->m_mutex.lock();
         DealInput();
+        // m_config->m_mutex.unlock();
     }
     m_pressedKeys.removeAll(static_cast<Qt::Key>(event->key()));
 }
@@ -107,6 +109,7 @@ void MainWidget::DealInput()
 {
     if (m_pressedKeys.contains(Qt::Key_W))
     {
+
         m_config->m_fpsCamera->MoveForward(-1.0);
     }
     if (m_pressedKeys.contains(Qt::Key_S))

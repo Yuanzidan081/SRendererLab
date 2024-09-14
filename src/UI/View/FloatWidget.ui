@@ -84,6 +84,11 @@
        <height>16777215</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QDoubleSpinBox {
 background: &quot;#EAF7FF&quot;;

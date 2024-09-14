@@ -9,14 +9,22 @@ ModelWidget::ModelWidget(QWidget *parent) : TabWidget(parent),
     Clear();
     modelTransformPropLayout = new QVBoxLayout();
     modelTransformPropLayout->setAlignment(Qt::AlignTop);
+    // modelTransformPropLayout->setContentsMargins(0, 0, 0, 0);
+    modelTransformPropLayout->setSpacing(3);
     ui->transformPropWidget->setLayout(modelTransformPropLayout);
 
     modelMeshInfoLayout = new QVBoxLayout();
     modelMeshInfoLayout->setAlignment(Qt::AlignTop);
+    // modelMeshInfoLayout->setContentsMargins(0, 0, 0, 0);
+    modelMeshInfoLayout->setSpacing(3);
+
     ui->meshInfoPropWidget->setLayout(modelMeshInfoLayout);
 
     modelMaterialPropLayout = new QVBoxLayout();
     modelMaterialPropLayout->setAlignment(Qt::AlignTop);
+    // modelMaterialPropLayout->setContentsMargins(0, 0, 0, 0);
+    modelMaterialPropLayout->setSpacing(3);
+
     ui->materialPropWidget->setLayout(modelMaterialPropLayout);
 }
 

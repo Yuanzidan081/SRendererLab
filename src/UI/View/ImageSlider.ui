@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>393</width>
+    <width>262</width>
     <height>30</height>
    </rect>
   </property>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
-    <number>7</number>
+    <number>3</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -39,15 +39,20 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>120</width>
+       <width>80</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>120</width>
+       <width>80</width>
        <height>30</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>prop</string>
@@ -106,6 +111,12 @@ border: 1px solid rgb(220, 220, 220);
    </item>
    <item>
     <widget class="QSlider" name="factorSlider">
+     <property name="maximumSize">
+      <size>
+       <width>80</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="maximum">
       <number>100</number>
      </property>
@@ -124,6 +135,11 @@ border: 1px solid rgb(220, 220, 220);
        <width>50</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
     </widget>
    </item>

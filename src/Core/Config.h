@@ -8,6 +8,7 @@
 #include <memory>
 #include "UI/Common/CommandBase.h"
 #include <memory>
+#include <QMutex>
 class Model;
 class Vertex;
 class FrameBuffer;
@@ -25,6 +26,7 @@ public:
     std::shared_ptr<FrameBuffer> m_GBufferColor;
     DeferredGBuffer() : m_GBufferPosition(), m_GBufferNormal(), m_GBufferColor() {}
     DeferredGBuffer(int w, int h);
+    void clearGBuffer(const Vec4 &color);
 };
 
 class Config : public QObject, public Proxy_PropertyNotification<Config>, public Proxy_CommandNotification<Config>
@@ -83,12 +85,22 @@ public:
     std::shared_ptr<DeferredGBuffer> m_deferredBuffer;
 
     // static Config *GetInstance();
+    QMutex m_mutex;
     static std::shared_ptr<Config> GetInstance();
     void Initialize(int width, int height);
     void NotifyTreeNodeChanged()
     {
         emit TreeNodeChanged();
     }
+
+    // void Lock()
+    // {
+    //     m_mutex.lock();
+    // }
+    // void Unlock()
+    // {
+    //     m_mutex.unlock();
+    // }
     void NotifyLightChanged()
     {
         emit LightChanged();

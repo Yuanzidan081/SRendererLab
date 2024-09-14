@@ -29,6 +29,8 @@ public:
     void SetPixelGBufferData4(const unsigned int x, const unsigned int y, const Vec4 &data);
     Vec3 SampleGbufferData3(const unsigned int x, const unsigned int y);
     Vec4 SampleGbufferData4(const unsigned int x, const unsigned int y);
+    void ClearGbufferData();
+    void ClearGbufferData(const Vec4 &color);
 
     float *GetGBuffer();
 

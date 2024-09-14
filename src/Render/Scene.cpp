@@ -343,7 +343,7 @@ void SetTestSceneSkyBox(const std::shared_ptr<Config> &config)
     ponycar->SetShader(shaderPBR);
     ponycar->SetScale(Vec3(0.05f, 0.05f, 0.05f));
     ponycar->SetRotation(Vec3(-90.0, 0.0f, 0.0f));
-    ponycar->SetTranslate(Vec3(23.0f, -14.5f, 1.5f));
+    ponycar->SetTranslate(Vec3(17.0f, -14.5f, 5.5f));
 
     config->AddModel(ponycar);
 

@@ -71,11 +71,12 @@ void CorePipeline::RenderLighting()
     // }
 
     // multi-thread
-    int nums_threads = 10;
+    int nums_threads = 25;
     int thread_height = screenHeight / nums_threads;
     int thread_width = screenWidth / nums_threads;
     std::vector<std::thread> th;
     // 定义renderRows 函数作为多线程的入口
+
     auto renderRows = [&](int start_height, int end_height)
     {
         VertexOut v;
@@ -102,9 +103,12 @@ void CorePipeline::RenderLighting()
 
 void CorePipeline::SwapFrameBuffer()
 {
+
     FrameBuffer *temp = m_config->m_frontBuffer;
     m_config->m_frontBuffer = m_config->m_backBuffer;
     m_config->m_backBuffer = temp;
+
+    // m_config->m_deferredBuffer->clearGBuffer();
 }
 
 void CorePipeline::AddDirectionLight(const Vec3 &dir, const Vec4 &color)
@@ -135,18 +139,27 @@ void CorePipeline::DrawScene()
 {
     m_viewMatrix = m_config->m_fpsCamera->GetViewMatrix();
     m_projectMatrix = m_config->m_fpsCamera->GetPerspectiveMatrix();
+    if (m_config->m_useSkyBox)
+    {
+        m_config->m_deferredBuffer->clearGBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+    }
+
     for (size_t i = 0; i < m_config->m_models.size(); ++i)
     {
         DrawModel(m_config->m_models[i]);
     }
-    if (m_config->m_useSkyBox)
-    {
-        DrawSkyBox(m_config->m_skyBox);
-    }
+
     m_config->m_shader = PhongShader::GetInstance();
     if (m_config->m_shadingMode == DeferredMode)
     {
         RenderLighting();
+    }
+
+    if (m_config->m_useSkyBox)
+    {
+        m_config->m_shadingMode = ForwardMode;
+        DrawSkyBox(m_config->m_skyBox);
+        m_config->m_shadingMode = DeferredMode;
     }
 }
 
@@ -344,13 +357,16 @@ void CorePipeline::RasterTriangle(VertexOut &v1, VertexOut &v2, VertexOut &v3)
                     // m_config->m_backBuffer->SetPixelColor(x, y, m_config->m_shader->FragmentShader(current));
                     // m_config->m_deferredBuffer->m_GBufferPosition;
                     Vec4 color;
-                    if (m_config->m_shader->m_name == "SkyBoxShader")
-                        color = (m_config->m_shader->m_uniform->m_cubeMap.get()) ? m_config->m_shader->m_uniform->m_cubeMap->SampleCubeMap(current.worldPos) : current.color;
-                    else
+                    if (m_config->m_useSkyBox && m_config->m_shader->m_name == "SkyBoxShader")
+                        color = m_config->m_shader->m_uniform->m_cubeMap->SampleCubeMap(current.worldPos);
+                    else if (m_config->m_shader->m_name != "SkyBoxShader")
                         color = (m_config->m_shader->m_uniform->m_mainTex) ? m_config->m_shader->m_uniform->m_mainTex->SampleTexture(current.texcoord) : current.color;
-                    m_config->m_deferredBuffer->m_GBufferColor->SetPixelGBufferData4(x, y, color);                      // diffuse
-                    m_config->m_deferredBuffer->m_GBufferPosition->SetPixelGBufferData3(x, y, current.worldPos);        // normalworld
-                    m_config->m_deferredBuffer->m_GBufferNormal->SetPixelGBufferData3(x, y, Normalize(current.normal)); // positionworld
+
+                    Vec3 normal = m_config->m_shader->m_uniform->m_normalTex ? Normalize(current.TBN * (m_config->m_shader->m_uniform->m_normalTex->SampleTexture(current.texcoord) * 2.0f - 1.0f)) : Normalize(current.normal);
+
+                    m_config->m_deferredBuffer->m_GBufferColor->SetPixelGBufferData4(x, y, color);               // diffuse
+                    m_config->m_deferredBuffer->m_GBufferPosition->SetPixelGBufferData3(x, y, current.worldPos); // normalworld
+                    m_config->m_deferredBuffer->m_GBufferNormal->SetPixelGBufferData3(x, y, normal);             // positionworld
                     // m_config->m_backBuffer->SetPixelColor(x, y, Vec4(current.texcoord.x, current.texcoord.y, 0.0f, 1.0f)); // texcoordworld
                 }
             }

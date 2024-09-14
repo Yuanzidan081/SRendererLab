@@ -150,3 +150,10 @@ DeferredGBuffer::DeferredGBuffer(int w, int h)
     : m_GBufferPosition(std::make_shared<FrameBuffer>(w, h, 3, GBuffer)),
       m_GBufferNormal(std::make_shared<FrameBuffer>(w, h, 3, GBuffer)),
       m_GBufferColor(std::make_shared<FrameBuffer>(w, h, 4, GBuffer)) {}
+
+void DeferredGBuffer::clearGBuffer(const Vec4 &color)
+{
+    m_GBufferColor->ClearGbufferData(color);
+    m_GBufferNormal->ClearGbufferData();
+    m_GBufferPosition->ClearGbufferData();
+}

@@ -24,6 +24,10 @@
 + 常规光源：点光源、方向光、聚光灯
 + ACES ToneMapping
 
+渲染管线：
+1. forward pipeline
+2. deferred pipeline
+
 三种光源（点光源、方向光、聚光灯）【使用Blinn-Phong模型和切线空间的法线贴图】：
 
 ![LightTest](image/screenshots/LightTest.png)
@@ -49,6 +53,13 @@ PBR材质
 	<img src="image/screenshots/pbr.png" align="middle" width="250" />
 </div>
 
+deferred shading G-buffer
+
+![Deferred Shading](image/screenshots/deferredShading.png)
+
+irradiance生成
+
+![Deferred Shading](image/screenshots/irradiance.png)
 
 # 相机控制
 + 按住鼠标左键并拖动改变相机的Pitch和Raw以实现旋转

@@ -13,5 +13,5 @@ void SetTestScenePBRHelmet(const std::shared_ptr<Config> &config);
 void SetTestSceneBlinnPhong(const std::shared_ptr<Config> &config);
 
 void SetTestSceneSkyBox(const std::shared_ptr<Config> &config);
-
+void SetTestSceneGouraud(const std::shared_ptr<Config> &config);
 #endif // SCENE_H

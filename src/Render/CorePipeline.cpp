@@ -139,7 +139,7 @@ void CorePipeline::DrawScene()
 {
     m_viewMatrix = m_config->m_fpsCamera->GetViewMatrix();
     m_projectMatrix = m_config->m_fpsCamera->GetPerspectiveMatrix();
-    if (m_config->m_useSkyBox)
+    if (!m_config->m_useSkyBox)
     {
         m_config->m_deferredBuffer->clearGBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
     }
@@ -149,7 +149,7 @@ void CorePipeline::DrawScene()
         DrawModel(m_config->m_models[i]);
     }
 
-    m_config->m_shader = PhongShader::GetInstance();
+    m_config->m_shader = GouraudShader::GetInstance();
     if (m_config->m_shadingMode == DeferredMode)
     {
         RenderLighting();
@@ -157,9 +157,9 @@ void CorePipeline::DrawScene()
 
     if (m_config->m_useSkyBox)
     {
-        m_config->m_shadingMode = ForwardMode;
+        // m_config->m_shadingMode = ForwardMode;
         DrawSkyBox(m_config->m_skyBox);
-        m_config->m_shadingMode = DeferredMode;
+        // m_config->m_shadingMode = DeferredMode;
     }
 }
 

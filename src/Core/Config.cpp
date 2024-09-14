@@ -19,7 +19,7 @@ Config::Config() : m_depthTesting(true),
                    m_useSkyBox(true),
                    m_viewCull(true),
                    m_faceCullMode(BackFaceCull),
-                   m_shadingMode(DeferredMode),
+                   m_shadingMode(ForwardMode),
                    m_width(0),
                    m_height(0),
                    m_backBuffer(nullptr),
@@ -107,13 +107,21 @@ void Config::Initialize(int width, int height)
     m_skyBox = new Model(Mesh::CreateBox(2.0f, 2.0f, 2.0f), "skybox");
     m_skyBox->SetShader(SkyBoxShader::GetInstance());
     // m_cubeMap = std::make_shared<CubeMap>();
+    // m_cubeMap = std::make_shared<CubeMap>(
+    //     new Texture("res/skybox_sea/right.jpg"),
+    //     new Texture("res/skybox_sea/left.jpg"),
+    //     new Texture("res/skybox_sea/top.jpg"),
+    //     new Texture("res/skybox_sea/bottom.jpg"),
+    //     new Texture("res/skybox_sea/back.jpg"),
+    //     new Texture("res/skybox_sea/front.jpg"));
     m_cubeMap = std::make_shared<CubeMap>(
-        new Texture("res/skybox_sea/right.jpg"),
-        new Texture("res/skybox_sea/left.jpg"),
-        new Texture("res/skybox_sea/top.jpg"),
-        new Texture("res/skybox_sea/bottom.jpg"),
-        new Texture("res/skybox_sea/back.jpg"),
-        new Texture("res/skybox_sea/front.jpg"));
+        new Texture("res/skybox_avenue/posx.bmp"),
+        new Texture("res/skybox_avenue/negx.bmp"),
+        new Texture("res/skybox_avenue/posy.bmp"),
+        new Texture("res/skybox_avenue/negy.bmp"),
+        new Texture("res/skybox_avenue/negz.bmp"),
+        new Texture("res/skybox_avenue/posz.bmp"));
+
     m_deferredBuffer = std::make_shared<DeferredGBuffer>(m_width, m_height);
 }
 

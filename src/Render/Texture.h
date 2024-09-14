@@ -66,6 +66,7 @@ public:
     ~CubeMap();
     Vec4 SampleCubeMap(const Vec3 &dir) const;
     Vec2 GetUV(int index, const Vec3 &dir) const;
+    Vec3 GetCubeViewWolrdPos(int index, int x, int y, float imageLength = 255);
     int GetFaceID(const Vec3 &dir) const;
     std::shared_ptr<Texture> &GetTexture(int index);
 

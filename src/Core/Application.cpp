@@ -30,7 +30,8 @@ void Application::Run()
     // SetTestScenePBRSphere(m_pipeline->m_config);
     // SetTestSceneBlinnPhong(m_pipeline->m_config);
     // SetTestScenePBRHelmet(m_pipeline->m_config);
-    SetTestSceneSkyBox(m_pipeline->m_config);
+    // SetTestSceneSkyBox(m_pipeline->m_config);
+    SetTestSceneGouraud(m_pipeline->m_config);
 
     m_pipeline->m_config->NotifyTreeNodeChanged();
     m_pipeline->m_config->NotifyLightChanged();
@@ -41,10 +42,7 @@ void Application::Run()
         // {
         m_pipeline->ClearFrameBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
         // }
-        // else if (m_pipeline->m_config->m_shadingMode == DeferredMode)
-        // {
-        //     m_pipeline->m_config->m_deferredBuffer->clearGBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
-        // }
+
         // if (m_pipeline->m_config->m_shadingMode == DeferredMode)
         // {
         //     m_pipeline->m_config->m_deferredBuffer->clearGBuffer();

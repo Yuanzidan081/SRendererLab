@@ -297,6 +297,7 @@ Vec4 CubeMap::SampleCubeMap(const Vec3 &dir) const
 Vec2 CubeMap::GetUV(int index, const Vec3 &dir) const
 {
     float u = 0.0f, v = 0.0f, factor;
+    // factor归一化，永远是正值
     switch (index)
     {
     case right:
@@ -313,7 +314,6 @@ Vec2 CubeMap::GetUV(int index, const Vec3 &dir) const
     case front:
         factor = 1 / dir[2];
         u = 1 - dir[0] * factor;
-
         v = 1 + dir[1] * factor;
         break;
     case left:
@@ -334,6 +334,49 @@ Vec2 CubeMap::GetUV(int index, const Vec3 &dir) const
         break;
     }
     return Vec2(u / 2, v / 2);
+}
+
+Vec3 CubeMap::GetCubeViewWolrdPos(int index, int x, int y, float imageLength)
+{
+    // nx,ny,nz 的原点在图像的中心，要加上0.5偏移，图像归一化是[-0.5,0.5]*[-0.5,0.5]，而另一个固定坐标范围自然也是0.5
+    float nx = 0.0f, ny = 0.0f, nz = 0.0f;
+    switch (index)
+    {
+    case right:
+        nx = 0.5f;
+        ny = -0.5f + y / imageLength;
+        nz = -0.5f + x / imageLength;
+        break;
+    case up:
+        nx = -0.5f + x / imageLength;
+        ny = 0.5f;
+        nz = -0.5f + y / imageLength;
+        break;
+    case front:
+        nx = 0.5f - x / imageLength;
+        ny = -0.5f + y / imageLength;
+        nz = 0.5f;
+        break;
+    case left:
+        nx = -0.5f;
+        ny = -0.5f + y / imageLength;
+        nz = 0.5f - x / imageLength;
+        break;
+    case bottom:
+        nx = -0.5f + x / imageLength;
+        ny = -0.5f;
+        nz = 0.5f - y / imageLength;
+        break;
+    case back:
+        nx = -0.5f + x / imageLength;
+        ny = -0.5f + y / imageLength;
+        nz = -0.5f;
+
+        break;
+    default:
+        break;
+    }
+    return Vec3(nx, ny, nz);
 }
 
 int CubeMap::GetFaceID(const Vec3 &dir) const

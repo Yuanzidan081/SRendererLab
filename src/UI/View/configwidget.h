@@ -23,6 +23,9 @@ public:
     void ShowTexture(std::shared_ptr<Texture> &tex, QLabel *&lbl, TextureRangeFormat format);
     void OpenHDRFile();
     void Init();
+    void UseSkyBoxCheckBoxChanged(bool checked);
+
+    void ShowIrradianceMap(QLabel *&lbl);
 
 private:
     Ui::ConfigWidget *ui;

@@ -7,7 +7,7 @@
 #include "lightWidget.h"
 #include "modelWidget.h"
 #include "configwidget.h"
-#include "Core/Application.h"
+#include "Core/RenderLoop.h"
 #include "Core/Config.h"
 #include <QStandardItemModel>
 #include <QVector>
@@ -57,7 +57,7 @@ public slots:
 private:
     Ui::MainWidget *ui;
 
-    Application *m_app;
+    RenderLoop *m_app;
     QThread *m_appThread;
     QTimer *m_timer;
     std::shared_ptr<Config> m_config;

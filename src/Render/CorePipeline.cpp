@@ -53,7 +53,6 @@ void CorePipeline::RenderLighting()
     u.m_shadingMode = m_config->m_shadingMode;
     u.m_ambient = m_config->m_ambient;
     u.m_lights = &(m_config->m_lights);
-    // u.m_lights = (m_config->m_lightGroup);
     u.m_eyePos = m_config->m_fpsCamera->GetPosition();
     m_config->m_shader->SetUniform(&u);
     // single thread
@@ -75,7 +74,6 @@ void CorePipeline::RenderLighting()
     int thread_height = screenHeight / nums_threads;
     int thread_width = screenWidth / nums_threads;
     std::vector<std::thread> th;
-    // 定义renderRows 函数作为多线程的入口
 
     auto renderRows = [&](int start_height, int end_height)
     {
@@ -107,39 +105,18 @@ void CorePipeline::SwapFrameBuffer()
     FrameBuffer *temp = m_config->m_frontBuffer;
     m_config->m_frontBuffer = m_config->m_backBuffer;
     m_config->m_backBuffer = temp;
-
-    // m_config->m_deferredBuffer->clearGBuffer();
 }
 
-void CorePipeline::AddDirectionLight(const Vec3 &dir, const Vec4 &color)
+void CorePipeline::DrawScene(const Vec4 &clearColor)
 {
-    std::shared_ptr<DirectionalLight> light = std::make_shared<DirectionalLight>();
-    light->SetDirectionalLight(dir, color);
-    std::shared_ptr<Light> m_light = light;
-    m_config->m_lights.push_back(m_light);
-}
-
-void CorePipeline::AddPointLight(Vec3 pos, Vec3 atte, const Vec4 &color)
-{
-    std::shared_ptr<PointLight> light = std::make_shared<PointLight>();
-    light->SetPointLight(pos, atte, color);
-    std::shared_ptr<Light> m_light = light;
-    m_config->m_lights.push_back(m_light);
-}
-
-void CorePipeline::AddSpotLight(double cutoff, Vec3 pos, Vec3 dir, Vec3 atte, const Vec4 &color)
-{
-    std::shared_ptr<SpotLight> light = std::make_shared<SpotLight>();
-    light->SetSpotLight(pos, dir, atte, cutoff, color);
-    std::shared_ptr<Light> m_light = light;
-    m_config->m_lights.push_back(m_light);
-}
-
-void CorePipeline::DrawScene()
-{
+    ClearFrameBuffer(clearColor);
     m_viewMatrix = m_config->m_fpsCamera->GetViewMatrix();
     m_projectMatrix = m_config->m_fpsCamera->GetPerspectiveMatrix();
-    if (!m_config->m_useSkyBox)
+    if (m_config->m_pipelineMode == AllForwardMode)
+        DrawSceneAllForwardMode();
+    else if (m_config->m_pipelineMode == MixDeferredModeAndForwardMode)
+        DrawSceneMixForwardModeDeferredMode(clearColor);
+    /* if (!m_config->m_useSkyBox)
     {
         m_config->m_deferredBuffer->clearGBuffer(Vec4(0.2f, 0.2f, 0.2f, 1.0f));
     }
@@ -148,8 +125,7 @@ void CorePipeline::DrawScene()
     {
         DrawModel(m_config->m_models[i]);
     }
-
-    m_config->m_shader = GouraudShader::GetInstance();
+    // m_config->m_shader = GouraudShader::GetInstance();
     if (m_config->m_shadingMode == DeferredMode)
     {
         RenderLighting();
@@ -157,9 +133,41 @@ void CorePipeline::DrawScene()
 
     if (m_config->m_useSkyBox)
     {
-        // m_config->m_shadingMode = ForwardMode;
+        m_config->m_shadingMode = ForwardMode;
         DrawSkyBox(m_config->m_skyBox);
-        // m_config->m_shadingMode = DeferredMode;
+        m_config->m_shadingMode = DeferredMode;
+    } */
+}
+
+void CorePipeline::DrawSceneAllForwardMode()
+{
+    m_config->m_shadingMode = ForwardMode;
+    for (size_t i = 0; i < m_config->m_models.size(); ++i)
+    {
+        DrawModel(m_config->m_models[i]);
+    }
+    if (m_config->m_useSkyBox)
+    {
+        DrawSkyBox(m_config->m_skyBox);
+    }
+}
+
+void CorePipeline::DrawSceneMixForwardModeDeferredMode(const Vec4 &clearColor)
+{
+    m_config->m_shadingMode = DeferredMode;
+    m_config->m_deferredBuffer->clearGBuffer(clearColor);
+
+    for (size_t i = 0; i < m_config->m_models.size(); ++i)
+    {
+        DrawModel(m_config->m_models[i]);
+    }
+
+    RenderLighting();
+
+    if (m_config->m_useSkyBox)
+    {
+        m_config->m_shadingMode = ForwardMode;
+        DrawSkyBox(m_config->m_skyBox);
     }
 }
 

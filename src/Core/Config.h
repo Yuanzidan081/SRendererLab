@@ -51,6 +51,7 @@ public:
 
     FaceCullMode m_faceCullMode;
     ShadingMode m_shadingMode;
+    PipelineMode m_pipelineMode;
 
     // creted by pipeline
     int m_width;
@@ -93,14 +94,6 @@ public:
         emit TreeNodeChanged();
     }
 
-    // void Lock()
-    // {
-    //     m_mutex.lock();
-    // }
-    // void Unlock()
-    // {
-    //     m_mutex.unlock();
-    // }
     void NotifyLightChanged()
     {
         emit LightChanged();
@@ -111,7 +104,7 @@ public:
 
     void AddModel(const std::shared_ptr<Model> &model);
 
-    void AddLight(const std::shared_ptr<Light> light);
+    void AddLight(const std::shared_ptr<Light> &light);
 
     void SetVertexBuffer(const std::vector<Vertex> *vertices) { m_vertices = vertices; }
     void SetIndexBuffer(const std::vector<unsigned int> *indices) { m_indices = indices; }

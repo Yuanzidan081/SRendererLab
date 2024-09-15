@@ -1,7 +1,7 @@
 #include "GouraudShader.h"
 #include "Render/Light.h"
 #include "Render/Material.h"
-#include "algorithm/ToneMapping.h"
+#include "algorithm/ColorAlgorithm.h"
 GouraudShader *GouraudShader::s_shader = nullptr;
 
 GouraudShader::GouraudShader()

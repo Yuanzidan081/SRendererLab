@@ -1,7 +1,7 @@
 #include "PBRShader.h"
 #include "Render/Material.h"
 #include "Render/Light.h"
-#include "Algorithm/ToneMapping.h"
+#include "Algorithm/ColorAlgorithm.h"
 PBRShader *PBRShader::s_shader = nullptr;
 
 PBRShader::PBRShader()

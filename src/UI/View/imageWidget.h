@@ -6,7 +6,7 @@
 #include <QThread>
 #include <QPainter>
 #include "Core/Base.h"
-#include "Core/Application.h"
+#include "Core/RenderLoop.h"
 #include <QTimer>
 #include <QPixmap>
 #include <memory>

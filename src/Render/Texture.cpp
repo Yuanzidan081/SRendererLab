@@ -2,6 +2,7 @@
 #define STB_IMAGE_STATIC
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "Algorithm/ColorAlgorithm.h"
 // one divide 255
 #define INV_SCALE 0.003921568627451
 Texture::Texture() : m_Width(0), m_Height(0), m_Channels(0), m_textureBufferUC(nullptr), m_flipped(true), m_textureBufferF(nullptr)
@@ -141,20 +142,6 @@ const Vec4 Texture::SampleTexture(const Vec2 &texCoords) const
             return Vec4(*(p + ind) * INV_SCALE, *(p + ind + 1) * INV_SCALE, 1.0f, 1.0f);
     }
 
-    // if (m_Channels == 3)
-    // {
-    //     res.r = m_textureBufferUC[ind + 0] * INV_SCALE;
-    //     res.g = m_textureBufferUC[ind + 1] * INV_SCALE;
-    //     res.b = m_textureBufferUC[ind + 2] * INV_SCALE;
-    //     res.a = 1.0f;
-    // }
-    // else if (m_Channels == 4)
-    // {
-    //     res.r = m_textureBufferUC[ind + 0] * INV_SCALE;
-    //     res.g = m_textureBufferUC[ind + 1] * INV_SCALE;
-    //     res.b = m_textureBufferUC[ind + 2] * INV_SCALE;
-    //     res.a = m_textureBufferUC[ind + 3] * INV_SCALE;
-    // }
     return res;
 }
 
@@ -182,6 +169,7 @@ CubeMap::CubeMap(Texture *rightTex, Texture *leftTex,
     cubeImage[back].reset(backTex);
 }
 
+// use hdr
 CubeMap::CubeMap(const std::string &filename)
 {
     cubeImage.resize(6, nullptr);
@@ -263,10 +251,43 @@ CubeMap::CubeMap(const std::string &filename)
 
                 // 获取像素颜色
                 int hdrIndex = (hdrY * width + hdrX) * channels;
-                int cubemapIndex = (y * CUBEMAP_SIZE + x) * 3;
-                dst[cubemapIndex + 0] = src[hdrIndex + 0];
-                dst[cubemapIndex + 1] = src[hdrIndex + 1];
-                dst[cubemapIndex + 2] = src[hdrIndex + 2];
+                //         if (m_Channels == 1)
+                //     return Vec4(*(p + ind), 1.0f, 1.0f, 1.0f);
+                // if (m_Channels == 3)
+                //     return Vec4(*(p + ind), *(p + ind + 1), *(p + ind + 2), 1.0f);
+                // if (m_Channels == 4)
+                //     return Vec4(*(p + ind), *(p + ind + 1), *(p + ind + 2), *(p + ind + 3));
+                // if (m_Channels == 2)
+                //     return Vec4(*(p + ind), *(p + ind + 1), 1.0f, 1.0f);
+                int cubemapIndex = (y * CUBEMAP_SIZE + x) * channels;
+                if (channels == 1)
+                {
+                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
+                    dst[cubemapIndex + 1] = 1.0f;
+                    dst[cubemapIndex + 2] = 1.0f;
+                    dst[cubemapIndex + 3] = 1.0f;
+                }
+                else if (channels == 2)
+                {
+                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
+                    dst[cubemapIndex + 1] = GammaCorrection(src[hdrIndex + 1]);
+                    dst[cubemapIndex + 2] = 1.0f;
+                    dst[cubemapIndex + 3] = 1.0f;
+                }
+                else if (channels == 3)
+                {
+                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
+                    dst[cubemapIndex + 1] = GammaCorrection(src[hdrIndex + 1]);
+                    dst[cubemapIndex + 2] = GammaCorrection(src[hdrIndex + 2]);
+                    dst[cubemapIndex + 3] = 1.0f;
+                }
+                else if (channels == 4)
+                {
+                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
+                    dst[cubemapIndex + 1] = GammaCorrection(src[hdrIndex + 1]);
+                    dst[cubemapIndex + 2] = GammaCorrection(src[hdrIndex + 2]);
+                    dst[cubemapIndex + 3] = GammaCorrection(src[hdrIndex + 3]);
+                }
             }
         }
         cubeImage[face] = tmp;

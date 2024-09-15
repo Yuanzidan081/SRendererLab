@@ -30,13 +30,15 @@ public:
     // Illumination setting
     void SetPolygonMode(PolygonMode mode) { m_config->m_polygonMode = mode; }
     // Light
-    void AddDirectionLight(const Vec3 &dir, const Vec4 &color);
-    void AddPointLight(Vec3 pos, Vec3 atte, const Vec4 &color);
-    void AddSpotLight(double cutoff,
-                      Vec3 pos, Vec3 dir, Vec3 atte, const Vec4 &color);
+    // void AddDirectionLight(const Vec3 &dir, const Vec4 &color);
+    // void AddPointLight(Vec3 pos, Vec3 atte, const Vec4 &color);
+    // void AddSpotLight(double cutoff,
+    //                   Vec3 pos, Vec3 dir, Vec3 atte, const Vec4 &color);
 
     // start the rendering pipeline
-    void DrawScene();
+    void DrawScene(const Vec4 &clearColor);
+    void DrawSceneAllForwardMode();
+    void DrawSceneMixForwardModeDeferredMode(const Vec4 &clearColor);
     void DrawMesh();
     void DrawTriangle(Vertex &p1, Vertex &p2, Vertex &p3);
     void DrawModel(const std::shared_ptr<Model> &model);

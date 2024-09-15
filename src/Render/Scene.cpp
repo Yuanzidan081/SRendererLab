@@ -67,7 +67,6 @@ void SetTestScenePBRHelmet(const std::shared_ptr<Config> &config)
     light->SetDirectionalLight(Vec3(1.5, -1, -1), Vec4(0.6f, 0.6f, 0.6f, 1.0f));
     std::shared_ptr<Light> m_light = light;
     config->m_lights.push_back(m_light);
-    config->m_useSkyBox = false;
     config->m_fpsCamera->SetPosition(Vec3(0.0f, 0.0f, 75.0f));
 }
 

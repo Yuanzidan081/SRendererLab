@@ -6,7 +6,7 @@
 #include "Render/Texture.h"
 #include "stdio.h"
 #include <iostream>
-#include "algorithm/ToneMapping.h"
+#include "algorithm/ColorAlgorithm.h"
 ConfigWidget::ConfigWidget(const std::shared_ptr<Config> &config, QWidget *parent) : QWidget(parent),
                                                                                      ui(new Ui::ConfigWidget),
                                                                                      m_config(config)

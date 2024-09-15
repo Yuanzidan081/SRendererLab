@@ -61,6 +61,12 @@ enum ShadingMode
     DeferredMode
 };
 
+enum PipelineMode
+{
+    AllForwardMode,
+    MixDeferredModeAndForwardMode
+};
+
 enum FrameBufferMode
 {
     NormalBuffer,

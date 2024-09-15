@@ -1,7 +1,7 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 #include <QDebug>
-#include "Core/Application.h"
+#include "Core/RenderLoop.h"
 #include "Core/Base.h"
 #include <QKeyEvent>
 MainWidget::MainWidget(std::shared_ptr<Light> &light, QWidget *parent) : QWidget(parent),
@@ -19,10 +19,10 @@ MainWidget::MainWidget(std::shared_ptr<Light> &light, QWidget *parent) : QWidget
     ui->imageWidget->setMouseTracking(true);
     ui->imageWidget->installEventFilter(this);
     m_timer = new QTimer(this);
-    m_app = new Application(screenWidth, screenHeight);
+    m_app = new RenderLoop(screenWidth, screenHeight);
     m_appThread = new QThread(this);
 
-    connect(m_appThread, &QThread::started, m_app, &Application::Run);
+    connect(m_appThread, &QThread::started, m_app, &RenderLoop::Run);
     connect(m_appThread, &QThread::finished, m_app, &QObject::deleteLater);
     connect(m_config.get(), &Config::TreeNodeChanged, this, &MainWidget::UpdateModelHierachyListView);
     connect(m_config.get(), &Config::LightChanged, this, &MainWidget::UpdateLightWidget);
@@ -31,10 +31,10 @@ MainWidget::MainWidget(std::shared_ptr<Light> &light, QWidget *parent) : QWidget
 
     // https://blog.debao.me/2013/08/how-to-use-qthread-in-the-right-way-part-1/
     connect(m_timer, &QTimer::timeout, this, &MainWidget::DisplayFps);
-    connect(m_app, &Application::frameReady, ui->imageWidget, &ImageWidget::reveiveFrame);
-    connect(m_app, &Application::frameReadyGbufferPos, ui->imageWidget, &ImageWidget::reveiveFramePos);
-    connect(m_app, &Application::frameReadyGbufferColor, ui->imageWidget, &ImageWidget::reveiveFrameColor);
-    connect(m_app, &Application::frameReadyGbufferNormal, ui->imageWidget, &ImageWidget::reveiveFrameNormal);
+    connect(m_app, &RenderLoop::frameReady, ui->imageWidget, &ImageWidget::reveiveFrame);
+    connect(m_app, &RenderLoop::frameReadyGbufferPos, ui->imageWidget, &ImageWidget::reveiveFramePos);
+    connect(m_app, &RenderLoop::frameReadyGbufferColor, ui->imageWidget, &ImageWidget::reveiveFrameColor);
+    connect(m_app, &RenderLoop::frameReadyGbufferNormal, ui->imageWidget, &ImageWidget::reveiveFrameNormal);
 
     this->setWindowTitle("SRendererLab");
     m_timer->start(1000);

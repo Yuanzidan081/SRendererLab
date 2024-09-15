@@ -19,7 +19,8 @@ Config::Config() : m_depthTesting(true),
                    m_useSkyBox(true),
                    m_viewCull(true),
                    m_faceCullMode(BackFaceCull),
-                   m_shadingMode(ForwardMode),
+                   m_shadingMode(DeferredMode),
+                   m_pipelineMode(MixDeferredModeAndForwardMode),
                    m_width(0),
                    m_height(0),
                    m_backBuffer(nullptr),
@@ -149,7 +150,7 @@ std::shared_ptr<Light> &Config::GetCurrentLight()
     return m_currentLight;
 }
 
-void Config::AddLight(const std::shared_ptr<Light> light)
+void Config::AddLight(const std::shared_ptr<Light> &light)
 {
     m_lights.push_back(light);
 }

@@ -2,7 +2,7 @@
 #include "Render/Material.h"
 #include "Render/Light.h"
 #include <iostream>
-#include "Algorithm/ToneMapping.h"
+#include "Algorithm/ColorAlgorithm.h"
 PhongShader *PhongShader::s_shader = nullptr;
 PhongShader *PhongShader::GetInstance()
 {

@@ -32,6 +32,13 @@ T max(T a, T b)
     return a < b ? b : a;
 }
 
+// template <>
+// Vec3 max(Vec3 a, Vec3 b)
+// {
+//     return Vec3(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z));
+// }
+// float max(float a, float b);
+
 inline float Clamp(float val, float min, float max)
 {
     return (val > max ? max : (val < min ? min : val));

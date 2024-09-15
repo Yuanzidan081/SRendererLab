@@ -84,7 +84,7 @@
               <height>498</height>
              </rect>
             </property>
-            <widget class="QWidget" name="">
+            <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
               <rect>
                <x>11</x>
@@ -204,7 +204,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="">
+            <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
               <rect>
                <x>11</x>
@@ -324,7 +324,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="">
+            <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
               <rect>
                <x>11</x>
@@ -371,7 +371,7 @@
                <x>10</x>
                <y>180</y>
                <width>251</width>
-               <height>21</height>
+               <height>30</height>
               </rect>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -379,6 +379,13 @@
                <widget class="QCheckBox" name="UseIBLcheckBox">
                 <property name="text">
                  <string>UseIBL</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="GenerateButton">
+                <property name="text">
+                 <string>Generate</string>
                 </property>
                </widget>
               </item>
@@ -453,8 +460,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>289</width>
-        <height>399</height>
+        <width>100</width>
+        <height>30</height>
        </rect>
       </property>
       <attribute name="label">

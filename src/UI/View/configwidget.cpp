@@ -31,6 +31,7 @@ ConfigWidget::ConfigWidget(const std::shared_ptr<Config> &config, QWidget *paren
     connect(ui->loadHDRBtn, static_cast<void (QPushButton::*)(bool)>(&QPushButton::clicked), this, [&]()
             { OpenHDRFile(); });
     connect(ui->useSkyBox, static_cast<void (QCheckBox::*)(bool)>(&QCheckBox::clicked), this, &ConfigWidget::UseSkyBoxCheckBoxChanged);
+    connect(ui->GenerateButton, static_cast<void (QPushButton::*)(bool)>(&QPushButton::clicked), this, &ConfigWidget::GenerateIBLTexture);
 }
 
 ConfigWidget::~ConfigWidget()
@@ -114,7 +115,7 @@ void ConfigWidget::OpenHDRFile()
         ShowTexture(m_config.lock()->m_cubeMap->GetTexture(3), ui->xnegImage, TextureRangeFormat::FLOAT);
         ShowTexture(m_config.lock()->m_cubeMap->GetTexture(4), ui->ynegImage, TextureRangeFormat::FLOAT);
         ShowTexture(m_config.lock()->m_cubeMap->GetTexture(5), ui->znegImage, TextureRangeFormat::FLOAT);
-        ShowIrradianceMap(ui->irradianceImage);
+        // ShowIrradianceMap(ui->irradianceImage);
 
         // ShowTexture(tex, lbl);
     }
@@ -128,13 +129,18 @@ void ConfigWidget::Init()
     ShowTexture(m_config.lock()->m_cubeMap->GetTexture(3), ui->xnegImage, TextureRangeFormat::UNSIGNED_CHAR);
     ShowTexture(m_config.lock()->m_cubeMap->GetTexture(4), ui->ynegImage, TextureRangeFormat::UNSIGNED_CHAR);
     ShowTexture(m_config.lock()->m_cubeMap->GetTexture(5), ui->znegImage, TextureRangeFormat::UNSIGNED_CHAR);
-    ShowIrradianceMap(ui->irradianceImage);
+    // ShowIrradianceMap(ui->irradianceImage);
 }
 
 void ConfigWidget::UseSkyBoxCheckBoxChanged(bool checked)
 {
     // std::cout << checked << std::endl;
     m_config.lock()->m_useSkyBox = checked;
+}
+
+void ConfigWidget::GenerateIBLTexture()
+{
+    ShowIrradianceMap(ui->irradianceImage);
 }
 
 /* diffuse part */

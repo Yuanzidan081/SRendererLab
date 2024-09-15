@@ -24,7 +24,7 @@ public:
     void OpenHDRFile();
     void Init();
     void UseSkyBoxCheckBoxChanged(bool checked);
-
+    void GenerateIBLTexture();
     void ShowIrradianceMap(QLabel *&lbl);
 
 private:

@@ -16,6 +16,7 @@ private:
 
     float GeometrySmith(const Vec3 &N, const Vec3 &V, const Vec3 &L, float k);
     Vec3 fresnelSchlick(float cosTheta, const Vec3 &F0);
+    Vec3 fresnelSchlickRoughness(float cosTheta, const Vec3 &F0, float roughness);
 
 public:
     static PBRShader *GetInstance();

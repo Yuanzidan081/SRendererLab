@@ -61,6 +61,26 @@ bool Texture::LoadTexture(const std::string &filename)
         // channel = 4;
         // linear 2 srgb
         m_format = TextureRangeFormat::FLOAT;
+        if (m_textureBufferF != nullptr)
+        {
+            if (m_Channels == 3)
+            {
+                for (int i = 0; i < m_Width * m_Height * m_Channels; ++i)
+                {
+                    m_textureBufferF[i] = GammaCorrection(m_textureBufferF[i]);
+                }
+            }
+            else if (m_Channels == 4)
+            {
+                for (int i = 0; i < m_Width * m_Height * m_Channels; ++i)
+                {
+                    if (i % 4 != 3)
+                        m_textureBufferF[i] = GammaCorrection(m_textureBufferF[i]);
+                }
+            }
+
+            // Linear2Srgb();
+        }
         // Linear2Srgb();
         // stbi_set_flip_vertically_on_load(false);
         return m_textureBufferF != nullptr;
@@ -184,7 +204,8 @@ CubeMap::CubeMap(const std::string &filename)
     int width = image->GetWidth();
     int height = image->GetHeight();
     int channels = image->GetChannels();
-    const int CUBEMAP_SIZE = 512;
+    // std::cout << channels << std::endl;
+    const int CUBEMAP_SIZE = 1024;
 
     for (int face = 0; face < 6; ++face)
     {
@@ -205,38 +226,38 @@ CubeMap::CubeMap(const std::string &filename)
                 if (face == right)
                 {
                     dirX = 1.0f;
-                    dirY = -v;
-                    dirZ = -u;
+                    dirY = v;
+                    dirZ = u;
                 }
                 else if (face == left)
                 {
                     dirX = -1.0f;
-                    dirY = -v;
-                    dirZ = u;
+                    dirY = v;
+                    dirZ = -u;
                 }
                 else if (face == bottom)
-                {
-                    dirX = u;
-                    dirY = 1.0f;
-                    dirZ = v;
-                }
-                else if (face == up)
                 {
                     dirX = u;
                     dirY = -1.0f;
                     dirZ = -v;
                 }
+                else if (face == up)
+                {
+                    dirX = u;
+                    dirY = 1.0f;
+                    dirZ = v;
+                }
                 else if (face == back)
                 {
                     dirX = u;
-                    dirY = -v;
-                    dirZ = 1.0f;
+                    dirY = v;
+                    dirZ = -1.0f;
                 }
                 else if (face == front)
                 {
                     dirX = -u;
-                    dirY = -v;
-                    dirZ = -1.0f;
+                    dirY = v;
+                    dirZ = 1.0f;
                 }
 
                 // 归一化方向向量
@@ -247,7 +268,7 @@ CubeMap::CubeMap(const std::string &filename)
 
                 // 映射方向向量到 HDR 图像坐标
                 int hdrX = static_cast<int>((0.5f + std::atan2(dirZ, dirX) / (2.0f * M_PI)) * width);
-                int hdrY = static_cast<int>((0.5f - std::asin(dirY) / M_PI) * height);
+                int hdrY = static_cast<int>((0.5f + std::asin(dirY) / M_PI) * height);
 
                 // 获取像素颜色
                 int hdrIndex = (hdrY * width + hdrX) * channels;
@@ -262,31 +283,31 @@ CubeMap::CubeMap(const std::string &filename)
                 int cubemapIndex = (y * CUBEMAP_SIZE + x) * channels;
                 if (channels == 1)
                 {
-                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
+                    dst[cubemapIndex + 0] = (src[hdrIndex + 0]);
                     dst[cubemapIndex + 1] = 1.0f;
                     dst[cubemapIndex + 2] = 1.0f;
                     dst[cubemapIndex + 3] = 1.0f;
                 }
                 else if (channels == 2)
                 {
-                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
-                    dst[cubemapIndex + 1] = GammaCorrection(src[hdrIndex + 1]);
+                    dst[cubemapIndex + 0] = (src[hdrIndex + 0]);
+                    dst[cubemapIndex + 1] = (src[hdrIndex + 1]);
                     dst[cubemapIndex + 2] = 1.0f;
                     dst[cubemapIndex + 3] = 1.0f;
                 }
                 else if (channels == 3)
                 {
-                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
-                    dst[cubemapIndex + 1] = GammaCorrection(src[hdrIndex + 1]);
-                    dst[cubemapIndex + 2] = GammaCorrection(src[hdrIndex + 2]);
+                    dst[cubemapIndex + 0] = (src[hdrIndex + 0]);
+                    dst[cubemapIndex + 1] = (src[hdrIndex + 1]);
+                    dst[cubemapIndex + 2] = (src[hdrIndex + 2]);
                     dst[cubemapIndex + 3] = 1.0f;
                 }
                 else if (channels == 4)
                 {
-                    dst[cubemapIndex + 0] = GammaCorrection(src[hdrIndex + 0]);
-                    dst[cubemapIndex + 1] = GammaCorrection(src[hdrIndex + 1]);
-                    dst[cubemapIndex + 2] = GammaCorrection(src[hdrIndex + 2]);
-                    dst[cubemapIndex + 3] = GammaCorrection(src[hdrIndex + 3]);
+                    dst[cubemapIndex + 0] = (src[hdrIndex + 0]);
+                    dst[cubemapIndex + 1] = (src[hdrIndex + 1]);
+                    dst[cubemapIndex + 2] = (src[hdrIndex + 2]);
+                    dst[cubemapIndex + 3] = (src[hdrIndex + 3]);
                 }
             }
         }

@@ -21,9 +21,12 @@ MainWidget::MainWidget(std::shared_ptr<Light> &light, QWidget *parent) : QWidget
     m_timer = new QTimer(this);
     m_app = new RenderLoop(screenWidth, screenHeight);
     m_appThread = new QThread(this);
+    // todo : m_loadAssetThread
+    // m_loadAssetThread = new QThread(this);
 
     connect(m_appThread, &QThread::started, m_app, &RenderLoop::Run);
     connect(m_appThread, &QThread::finished, m_app, &QObject::deleteLater);
+    // connect(m_loadAssetThread, &QThread::finished, m_app, &QObject::deleteLater);
     connect(m_config.get(), &Config::TreeNodeChanged, this, &MainWidget::UpdateModelHierachyListView);
     connect(m_config.get(), &Config::LightChanged, this, &MainWidget::UpdateLightWidget);
 

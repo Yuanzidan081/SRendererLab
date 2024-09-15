@@ -51,6 +51,12 @@ Vec3 PBRShader::fresnelSchlick(float cosTheta, const Vec3 &F0)
     return F0 + (-F0 + 1.0f) * pow(Clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
 }
 
+// Vec3 PBRShader::fresnelSchlickRoughness(float cosTheta, const Vec3 &F0, float roughness)
+// {
+
+//     return F0 + (max(Vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+// }
+
 PBRShader *PBRShader::GetInstance()
 {
     if (s_shader == nullptr)

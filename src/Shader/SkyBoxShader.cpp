@@ -1,5 +1,5 @@
 #include "SkyBoxShader.h"
-
+#include "Algorithm/ColorAlgorithm.h"
 SkyBoxShader *SkyBoxShader::s_shader = nullptr;
 
 SkyBoxShader::SkyBoxShader()
@@ -43,6 +43,7 @@ Vec4 SkyBoxShader::FragmentShader(const VertexOut &in)
         litColor = in.color;
         if (m_uniform->m_cubeMap)
             litColor = m_uniform->m_cubeMap->SampleCubeMap(in.worldPos);
+        // litColor = GammaCorrection(litColor);
     }
     else
     {

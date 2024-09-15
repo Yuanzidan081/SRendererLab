@@ -59,6 +59,7 @@ private:
 
     RenderLoop *m_app;
     QThread *m_appThread;
+    QThread *m_loadAssetThread;
     QTimer *m_timer;
     std::shared_ptr<Config> m_config;
     QStandardItemModel *m_itemMdl;

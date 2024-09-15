@@ -136,4 +136,6 @@ Vec3 Pow(const Vec3 &v1, const Vec3 &v2);
 Vec3 operator/(const Vec3 &v1, const Vec3 &v2);
 
 Vec3 Lerp3(const Vec3 &v1, const Vec3 &v2, const Vec3 &v3, const Vec3 &weight);
+// Vec3 max(const Vec3 &a, const Vec3 &b);
+
 #endif // VEC_2_H

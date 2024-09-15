@@ -18,9 +18,12 @@ Vec3 GammaCorrection(const Vec3 &color)
     return ret;
 }
 
+// 显示器的会变暗，为了符合人眼的直觉使用gamma校正变回线性空间，让图像变的更亮一点
 float GammaCorrection(const float &color)
 {
+    // gamma校正将把线性颜色空间转变为非线性空间
     float ret = color / (color + 1.0f);
     ret = pow(ret, 1.0f / 2.2f);
     return ret;
+    // return color;
 }

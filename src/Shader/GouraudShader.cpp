@@ -54,11 +54,11 @@ VertexOut GouraudShader::VertexShader(const Vertex &in)
     // result.color = Vec4(resultColor, 1.0f);
     result.color = Vec4(Clamp(resultColor.x, 0.0, 1.0), Clamp(resultColor.y, 0.0, 1.0),
                         Clamp(resultColor.z, 0.0, 1.0), 1.0f);
-    // for (size_t i = 0; i < 3; ++i)
-    // {
-    //     result.color[i] = ACES_TONEMapping(result.color[i]);
-    //     result.color[i] = std::pow(result.color[i], 1.0 / 2.2);
-    // }
+    for (size_t i = 0; i < 3; ++i)
+    {
+        result.color[i] = ACES_TONEMapping(result.color[i]);
+        result.color[i] = std::pow(result.color[i], 1.0 / 2.2);
+    }
     return result;
 }
 

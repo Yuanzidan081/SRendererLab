@@ -543,23 +543,23 @@ void SetTestSceneGouraud(const std::shared_ptr<Config> &config)
     std::shared_ptr<Light> m_light = light;
     config->AddLight(m_light);
 
-    std::shared_ptr<PointLight> light2 = std::make_shared<PointLight>();
-    light2->SetPointLight(Vec3(8.6, -13.5, -1.0),
-                          Vec3(1.0f, 0.07f, 0.017f), Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    std::shared_ptr<Light> m_light2 = light2;
-    config->AddLight(m_light2);
+    // std::shared_ptr<PointLight> light2 = std::make_shared<PointLight>();
+    // light2->SetPointLight(Vec3(8.6, -13.5, -1.0),
+    //                       Vec3(1.0f, 0.07f, 0.017f), Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    // std::shared_ptr<Light> m_light2 = light2;
+    // config->AddLight(m_light2);
 
-    std::shared_ptr<PointLight> light3 = std::make_shared<PointLight>();
-    light3->SetPointLight(Vec3(-17.6, 1.5, 8.8),
-                          Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-    std::shared_ptr<Light> m_light3 = light3;
-    config->AddLight(m_light3);
+    // std::shared_ptr<PointLight> light3 = std::make_shared<PointLight>();
+    // light3->SetPointLight(Vec3(-17.6, 1.5, 8.8),
+    //                       Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    // std::shared_ptr<Light> m_light3 = light3;
+    // config->AddLight(m_light3);
 
-    std::shared_ptr<PointLight> light4 = std::make_shared<PointLight>();
-    light4->SetPointLight(Vec3(19.7, 6.4, 10.0),
-                          Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-    std::shared_ptr<Light> m_light4 = light4;
-    config->AddLight(m_light4);
+    // std::shared_ptr<PointLight> light4 = std::make_shared<PointLight>();
+    // light4->SetPointLight(Vec3(19.7, 6.4, 10.0),
+    //                       Vec3(1.0f, 0.07f, 0.017f), Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+    // std::shared_ptr<Light> m_light4 = light4;
+    // config->AddLight(m_light4);
 
     // m_pipeline->AddPointLight(Vec3(8.6, -13.5, -1.0),
     //   Vec3(1.0f, 0.07f, 0.017f), Vec4(1.0f, 0.0f, 0.0f, 1.0f));

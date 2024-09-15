@@ -51,12 +51,14 @@ VertexOut GouraudShader::VertexShader(const Vertex &in)
         else if ((*(m_uniform->m_lights))[i]->m_tag == "SpotLight")
             resultColor += CalSpotLight(std::dynamic_pointer_cast<SpotLight>((*(m_uniform->m_lights))[i]), worldNormal, worldViewDir, result.worldPos, albedo);
     }
-    result.color = Vec4(resultColor, 1.0f);
-    for (size_t i = 0; i < 3; ++i)
-    {
-        result.color[i] = ACES_TONEMapping(result.color[i]);
-        result.color[i] = std::pow(result.color[i], 1.0 / 2.2);
-    }
+    // result.color = Vec4(resultColor, 1.0f);
+    result.color = Vec4(Clamp(resultColor.x, 0.0, 1.0), Clamp(resultColor.y, 0.0, 1.0),
+                        Clamp(resultColor.z, 0.0, 1.0), 1.0f);
+    // for (size_t i = 0; i < 3; ++i)
+    // {
+    //     result.color[i] = ACES_TONEMapping(result.color[i]);
+    //     result.color[i] = std::pow(result.color[i], 1.0 / 2.2);
+    // }
     return result;
 }
 
@@ -75,14 +77,14 @@ Vec3 GouraudShader::CalDirectionalLight(const std::shared_ptr<DirectionalLight> 
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
     float spec = std::pow(std::max(0.0f, halfwayDir.GetDotProduct(worldNormal)), m_uniform->m_shiness);
     Vec3 specular = spec * (m_uniform->m_specular) * (light->m_color);
     Vec3 result = diffuse + specular;
-    return result;
+    return diffuse;
 }
 
 Vec3 GouraudShader::CalPointLight(const std::shared_ptr<PointLight> &light, const Vec3 &worldNormal, const Vec3 &worldViewDir, const Vec4 &worldPos, const Vec3 &albedo)
@@ -94,7 +96,7 @@ Vec3 GouraudShader::CalPointLight(const std::shared_ptr<PointLight> &light, cons
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
@@ -118,7 +120,7 @@ Vec3 GouraudShader::CalSpotLight(const std::shared_ptr<SpotLight> &light, const 
 
     // diffuse
     float diff = std::max(0.0f, worldNormal.GetDotProduct(worldLightDir));
-    Vec3 diffuse = diff * (m_uniform->m_diffuse * albedo) * (light->m_color);
+    Vec3 diffuse = diff * (albedo) * (light->m_color);
 
     // specular
     Vec3 halfwayDir = Normalize(worldViewDir + worldLightDir);
